@@ -24,7 +24,7 @@ describe("helmet", () => {
     const { header } = await request(app.getHttpServer()).get("/hello");
 
     expect(header).toBeDefined();
-    expect(header).toHaveProperty("X-Response-Time");
+    expect(header).toHaveProperty("content-security-policy");
     expect(header).toHaveProperty("cross-origin-opener-policy");
     expect(header).toHaveProperty("cross-origin-resource-policy");
   });
