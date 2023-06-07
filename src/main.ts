@@ -1,11 +1,12 @@
 import { Logger, VersioningType } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { NestFactory } from "@nestjs/core";
+import { NestApplication, NestFactory } from "@nestjs/core";
 import { useContainer } from "class-validator";
 import { AppModule } from "./app/app.module";
+import swaggerInit from "./swagger";
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app: NestApplication = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
   const host: string = configService.get<string>("app.http.host");
   const port: number = configService.get<number>("app.http.port");
@@ -33,7 +34,8 @@ async function bootstrap() {
     });
   }
 
-  //TODO: add swagger
+  // Swagger
+  await swaggerInit(app);
 
   await app.listen(port, host);
 
@@ -42,7 +44,7 @@ async function bootstrap() {
   // logger.log(`Environment Variable`, "NestApplication");
   // logger.log(JSON.parse(JSON.stringify(process.env)), "NestApplication");
 
-  logger.log(`==========================================================`);
+  // logger.log(`==========================================================`);
 
   logger.log(
     `Http is ${httpEnable}, ${httpEnable ? "routes registered" : "no routes registered"}`,
