@@ -1,9 +1,13 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
+import { MongooseModule } from "@nestjs/mongoose";
 import Joi from "joi";
 import { APP_LANGUAGE } from "src/app/constants/app.constant";
 import { ENUM_APP_ENVIRONMENT } from "src/app/constants/app.enum.constant";
 import configs from "src/configs";
+import { DATABASE_CONNECTION_NAME } from "./database/constants/database.constant";
+import { DatabaseOptionsModule } from "./database/database.module";
+import { DatabaseOptionsService } from "./database/services/database.options-service.interface";
 import { ENUM_MESSAGE_LANGUAGE } from "./message/constants/message.enum.constant";
 
 @Module({
@@ -47,6 +51,13 @@ import { ENUM_MESSAGE_LANGUAGE } from "./message/constants/message.enum.constant
         allowUnknown: true,
         abortEarly: true,
       },
+    }),
+    MongooseModule.forRootAsync({
+      connectionName: DATABASE_CONNECTION_NAME,
+      imports: [DatabaseOptionsModule],
+      inject: [DatabaseOptionsService],
+      useFactory: (databaseOptionsService: DatabaseOptionsService) =>
+        databaseOptionsService.createOptions(),
     }),
   ],
 })
