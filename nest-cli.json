@@ -1,0 +1,15 @@
+{
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "src",
+  "compilerOptions": {
+    "assets": [
+      {
+        "include": "languages/**/*",
+        "outDir": "dist/src"
+      }
+    ],
+    "webpack": false,
+    "deleteOutDir": true,
+    "watchAssets": false
+  }
+}
