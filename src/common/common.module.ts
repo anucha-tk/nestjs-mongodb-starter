@@ -8,7 +8,12 @@ import configs from "src/configs";
 import { DATABASE_CONNECTION_NAME } from "./database/constants/database.constant";
 import { DatabaseOptionsModule } from "./database/database.module";
 import { DatabaseOptionsService } from "./database/services/database.options-service.interface";
+import { ErrorModule } from "./error/error.module";
+import { HelperModule } from "./helper/helper.module";
 import { ENUM_MESSAGE_LANGUAGE } from "./message/constants/message.enum.constant";
+import { MessageModule } from "./message/message.module";
+import { RequestModule } from "./request/request.module";
+import { ResponseModule } from "./response/response.module";
 
 @Module({
   controllers: [],
@@ -59,6 +64,11 @@ import { ENUM_MESSAGE_LANGUAGE } from "./message/constants/message.enum.constant
       useFactory: (databaseOptionsService: DatabaseOptionsService) =>
         databaseOptionsService.createOptions(),
     }),
+    MessageModule,
+    HelperModule,
+    RequestModule,
+    ResponseModule,
+    ErrorModule,
   ],
 })
 export class CommonModule {}
