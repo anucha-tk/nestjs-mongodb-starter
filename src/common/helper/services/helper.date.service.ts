@@ -30,4 +30,14 @@ export class HelperDateService implements IHelperDateService {
   format(date: Date, options?: IHelperDateOptionsFormat): string {
     return moment(date).format(options?.format ?? ENUM_HELPER_DATE_FORMAT.DATE);
   }
+
+  create(date?: string | number | Date, options?: IHelperDateOptionsCreate): Date {
+    const mDate = moment(date ?? undefined);
+
+    if (options?.startOfDay) {
+      mDate.startOf("day");
+    }
+
+    return mDate.toDate();
+  }
 }
