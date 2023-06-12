@@ -10,6 +10,7 @@ import { DatabaseOptionsModule } from "./database/database.module";
 import { DatabaseOptionsService } from "./database/services/database.options-service.interface";
 import { ErrorModule } from "./error/error.module";
 import { HelperModule } from "./helper/helper.module";
+import { LoggerModule } from "./logger/logger.module";
 import { ENUM_MESSAGE_LANGUAGE } from "./message/constants/message.enum.constant";
 import { MessageModule } from "./message/message.module";
 import { RequestModule } from "./request/request.module";
@@ -69,6 +70,7 @@ import { ResponseModule } from "./response/response.module";
     RequestModule,
     ResponseModule,
     ErrorModule,
+    LoggerModule,
   ],
 })
 export class CommonModule {}
