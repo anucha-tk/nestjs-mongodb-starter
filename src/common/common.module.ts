@@ -7,7 +7,7 @@ import { ENUM_APP_ENVIRONMENT } from "src/app/constants/app.enum.constant";
 import configs from "src/configs";
 import { DATABASE_CONNECTION_NAME } from "./database/constants/database.constant";
 import { DatabaseOptionsModule } from "./database/database.module";
-import { DatabaseOptionsService } from "./database/services/database.options-service.interface";
+import { DatabaseOptionsService } from "./database/services/database.options.service";
 import { ErrorModule } from "./error/error.module";
 import { HelperModule } from "./helper/helper.module";
 import { LoggerModule } from "./logger/logger.module";
