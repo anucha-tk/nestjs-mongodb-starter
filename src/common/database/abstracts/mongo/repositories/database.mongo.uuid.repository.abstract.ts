@@ -6,13 +6,13 @@ export abstract class DatabaseMongoUUIDRepositoryAbstract<
   EntityDocument,
 > extends DatabaseBaseRepositoryAbstract<EntityDocument> {
   protected _repository: Model<Entity>;
-  // protected _joinOnFind?: PopulateOptions | PopulateOptions[];
+  protected _joinOnFind?: PopulateOptions | PopulateOptions[];
 
   constructor(repository: Model<Entity>, options?: PopulateOptions | PopulateOptions[]) {
     super();
 
     this._repository = repository;
-    // this._joinOnFind = options;
+    this._joinOnFind = options;
   }
 
   async create<Dto = any>(data: Dto): Promise<EntityDocument> {
