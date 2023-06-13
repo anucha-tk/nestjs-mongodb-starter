@@ -136,7 +136,7 @@ describe("app", () => {
       expect(body.statusCode).toBe(5025);
       expect(body.message).toMatch(/Invalid API Key/i);
     });
-    it.skip("should have apiKey in header req when success validate x-api-key", async () => {
+    it("should have apiKey in req header when success validate x-api-key", async () => {
       const currentDate = new Date();
 
       jest.spyOn(apiKeyRepository, "findOne").mockResolvedValue({
@@ -149,14 +149,13 @@ describe("app", () => {
         startDate: currentDate.setDate(currentDate.getDate() - 5),
         endDate: currentDate.setDate(currentDate.getDate() + 10),
       });
-      const { body, header } = await request(app.getHttpServer())
+      const { body } = await request(app.getHttpServer())
         .get("/hello/api-key")
         .set("x-api-key", "abc:xyz");
 
       expect(body).toBeDefined();
       expect(body.statusCode).toBe(200);
       expect(body.message).toMatch(/This is test endpoint service/i);
-      //TODO: expect req.apikey
     });
   });
 });
