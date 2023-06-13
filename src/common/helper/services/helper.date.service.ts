@@ -44,4 +44,8 @@ export class HelperDateService implements IHelperDateService {
   startOfDay(date?: Date): Date {
     return moment(date).startOf("day").toDate();
   }
+
+  endOfDay(date?: Date): Date {
+    return moment(date).endOf("day").toDate();
+  }
 }

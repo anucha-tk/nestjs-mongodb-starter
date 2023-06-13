@@ -7,3 +7,9 @@ export interface IHelperDateOptionsCreate {
 export interface IHelperDateOptionsFormat {
   format?: ENUM_HELPER_DATE_FORMAT | string;
 }
+
+export interface IHelperStringRandomOptions {
+  upperCase?: boolean;
+  safe?: boolean;
+  prefix?: string;
+}
