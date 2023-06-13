@@ -1,3 +1,4 @@
 {
-  "hello": "นี่คือบริการปลายทางทดสอบ {serviceName}."
+  "hello": "นี่คือบริการปลายทางทดสอบ {serviceName}.",
+  "helloApiKey": "นี่คือบริการปลายทางทดสอบด้วยเอพีไอ {serviceName}."
 }

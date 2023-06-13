@@ -35,7 +35,8 @@ export class LoggerInterceptor implements NestInterceptor<any> {
   ): Promise<Observable<Promise<any> | string>> {
     if (context.getType() === "http") {
       const ctx: HttpArgumentsHost = context.switchToHttp();
-      const { apiKey, method, originalUrl, user, __id, body, params, path } =
+      // WARN: user extract from ctx.getRequest
+      const { apiKey, method, originalUrl, __id, body, params, path } =
         ctx.getRequest<IRequestApp>();
       const responseExpress = ctx.getResponse<Response>();
 
@@ -62,11 +63,12 @@ export class LoggerInterceptor implements NestInterceptor<any> {
                 loggerOptions?.description ??
                 `Request ${method} called, url ${originalUrl}, and action ${loggerAction}`,
               apiKey: apiKey?._id,
-              user: user?._id,
+              // WARN: user is wrong, me check user is same apikey, just fix valid return user
+              // user: user?._id,
+              // role: user?.role,
+              // type: user?.type,
               requestId: __id,
               method: method as ENUM_REQUEST_METHOD,
-              role: user?.role,
-              type: user?.type,
               params,
               bodies: body,
               path,
