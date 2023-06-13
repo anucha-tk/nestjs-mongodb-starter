@@ -51,7 +51,7 @@ export class AppController {
   }
 
   @AppHelloApiKeyDoc()
-  @Response("app.hello", { serialization: AppHelloSerialization })
+  @Response("app.helloApiKey", { serialization: AppHelloSerialization })
   @Logger(ENUM_LOGGER_ACTION.TEST, { tags: ["test"] })
   @ApiKeyPublicProtected()
   @Get("/hello/api-key")

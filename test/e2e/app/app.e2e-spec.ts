@@ -155,7 +155,7 @@ describe("app", () => {
 
       expect(body).toBeDefined();
       expect(body.statusCode).toBe(200);
-      expect(body.message).toMatch(/This is test endpoint service/i);
+      expect(body.message).toMatch(/This is test apikey endpoint service/i);
     });
   });
 });
