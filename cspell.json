@@ -1,4 +1,14 @@
 {
   "language": "en",
-  "words": ["nestjs", "dbdata", "INITDB", "middlewares", "auths", "dtos", "maxlength", "apikeys"]
+  "words": [
+    "nestjs",
+    "dbdata",
+    "INITDB",
+    "middlewares",
+    "auths",
+    "dtos",
+    "maxlength",
+    "apikeys",
+    "headerapikey"
+  ]
 }
