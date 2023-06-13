@@ -1,0 +1,10 @@
+{
+  "error": {
+    "keyNeeded": "Api Key is missing",
+    "invalid": "Invalid API Key",
+    "notFound": "API Key not found",
+    "inactive": "Auth API Inactive",
+    "notActiveYet": "Api Key not active yet",
+    "expired": "API Key expired"
+  }
+}
