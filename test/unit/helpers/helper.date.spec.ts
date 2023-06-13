@@ -42,7 +42,7 @@ describe("helper date service", () => {
     });
   });
   describe("startOfDay", () => {
-    it.only("should instanceof Date", () => {
+    it("should instanceof Date", () => {
       const currentDate = new Date(); // Get the current date and time
       const expectedDate = new Date(
         currentDate.getFullYear(),
