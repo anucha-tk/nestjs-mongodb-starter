@@ -6,7 +6,8 @@
   "testMatch": [
     "<rootDir>/test/e2e/request/*.e2e-spec.ts",
     "<rootDir>/test/e2e/response/*.e2e-spec.ts",
-    "<rootDir>/test/e2e/app/*.e2e-spec.ts"
+    "<rootDir>/test/e2e/app/*.e2e-spec.ts",
+    "<rootDir>/test/e2e/language/*.e2e-spec.ts"
   ],
   "collectCoverage": true,
   "coverageDirectory": "coverage-e2e",

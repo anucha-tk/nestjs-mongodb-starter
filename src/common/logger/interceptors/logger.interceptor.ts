@@ -17,6 +17,7 @@ import {
 import { ILoggerOptions } from "src/common/logger/interfaces/logger.interface";
 import { ConfigService } from "@nestjs/config";
 import { ENUM_APP_ENVIRONMENT } from "src/app/constants/app.enum.constant";
+import { ENUM_ROLE_TYPE } from "src/modules/role/constants/role.enum.constant";
 
 @Injectable()
 export class LoggerInterceptor implements NestInterceptor<any> {
@@ -35,8 +36,7 @@ export class LoggerInterceptor implements NestInterceptor<any> {
   ): Promise<Observable<Promise<any> | string>> {
     if (context.getType() === "http") {
       const ctx: HttpArgumentsHost = context.switchToHttp();
-      // WARN: user extract from ctx.getRequest
-      const { apiKey, method, originalUrl, __id, body, params, path } =
+      const { apiKey, method, originalUrl, user, __id, body, params, path } =
         ctx.getRequest<IRequestApp>();
       const responseExpress = ctx.getResponse<Response>();
 
@@ -63,12 +63,10 @@ export class LoggerInterceptor implements NestInterceptor<any> {
                 loggerOptions?.description ??
                 `Request ${method} called, url ${originalUrl}, and action ${loggerAction}`,
               apiKey: apiKey?._id,
-              // WARN: user is wrong, me check user is same apikey, just fix valid return user
-              // user: user?._id,
-              // role: user?.role,
-              // type: user?.type,
+              user: user?._id,
               requestId: __id,
               method: method as ENUM_REQUEST_METHOD,
+              type: user?.role,
               params,
               bodies: body,
               path,
