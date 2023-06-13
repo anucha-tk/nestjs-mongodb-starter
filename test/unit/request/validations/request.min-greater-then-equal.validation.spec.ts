@@ -2,7 +2,7 @@ import { ValidationArguments } from "class-validator";
 import {
   MinGreaterThanEqual,
   MinGreaterThanEqualConstraint,
-} from "src/common/request/validations/request.min-greater-then-equal.validation";
+} from "src/common/request/validations/request.min-greater-than-equal.validation";
 
 describe("MinGreaterThanEqual", () => {
   const propertyName = "myProperty";
