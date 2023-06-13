@@ -6,4 +6,5 @@ export abstract class DatabaseBaseRepositoryAbstract<Entity> {
     find: Record<string, any>,
     options?: IDatabaseFindOneOptions<any>,
   ): Promise<T>;
+  abstract deleteMany(find: Record<string, any>): Promise<boolean>;
 }

@@ -46,4 +46,15 @@ export abstract class DatabaseMongoUUIDRepositoryAbstract<
 
     return findOne.exec() as any;
   }
+
+  async deleteMany(find: Record<string, any>): Promise<boolean> {
+    const del = this._repository.deleteMany(find);
+
+    try {
+      await del;
+      return true;
+    } catch (err: unknown) {
+      throw err;
+    }
+  }
 }
