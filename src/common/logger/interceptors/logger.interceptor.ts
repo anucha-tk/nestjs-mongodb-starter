@@ -17,7 +17,6 @@ import {
 import { ILoggerOptions } from "src/common/logger/interfaces/logger.interface";
 import { ConfigService } from "@nestjs/config";
 import { ENUM_APP_ENVIRONMENT } from "src/app/constants/app.enum.constant";
-import { ENUM_ROLE_TYPE } from "src/modules/role/constants/role.enum.constant";
 
 @Injectable()
 export class LoggerInterceptor implements NestInterceptor<any> {
