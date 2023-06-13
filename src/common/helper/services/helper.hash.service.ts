@@ -7,4 +7,7 @@ export class HelperHashService implements IHelperHashService {
   sha256(string: string): string {
     return SHA256(string).toString(enc.Hex);
   }
+  sha256Compare(hashOne: string, hashTwo: string): boolean {
+    return hashOne === hashTwo;
+  }
 }
