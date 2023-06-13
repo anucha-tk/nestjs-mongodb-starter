@@ -3,10 +3,13 @@
   "rootDir": "../../",
   "modulePaths": ["."],
   "testEnvironment": "node",
-  "testMatch": ["<rootDir>/test/unit/helpers/*.spec.ts"],
+  "testMatch": [
+    "<rootDir>/test/unit/helpers/*.spec.ts",
+    "<rootDir>/test/unit/request/validations/*.spec.ts"
+  ],
   "collectCoverage": true,
   "coverageDirectory": "coverage",
-  "collectCoverageFrom": ["./src/common/helper/services/**"],
+  "collectCoverageFrom": ["./src/common/helper/services/**", "./src/common/request/validations/**"],
   "coverageThreshold": {
     "global": {
       "branches": 100,

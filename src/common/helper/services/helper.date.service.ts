@@ -40,4 +40,8 @@ export class HelperDateService implements IHelperDateService {
 
     return mDate.toDate();
   }
+
+  startOfDay(date?: Date): Date {
+    return moment(date).startOf("day").toDate();
+  }
 }

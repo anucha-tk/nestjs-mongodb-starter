@@ -41,4 +41,21 @@ describe("helper date service", () => {
       expect(typeof timestamp).toBe("number");
     });
   });
+  describe("startOfDay", () => {
+    it.only("should instanceof Date", () => {
+      const currentDate = new Date(); // Get the current date and time
+      const expectedDate = new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth(),
+        currentDate.getDate(),
+        0, // Hours
+        0, // Minutes
+        0, // Seconds
+        0, // Milliseconds
+      );
+      const startOfDay = helperDateService.startOfDay();
+      expect(startOfDay instanceof Date).toBe(true);
+      expect(startOfDay).toEqual(expectedDate);
+    });
+  });
 });
