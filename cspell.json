@@ -1,6 +1,8 @@
 {
   "language": "en",
   "words": [
+    "superadmin",
+    "commitlint",
     "apikey",
     "nestjs",
     "dbdata",

@@ -30,7 +30,9 @@
     "spell:src": "cspell lint --config cspell.json src/**/*.ts --color --gitignore --no-must-find-files --no-summary --no-progress || true",
     "spell:test": "cspell lint --config cspell.json test/**/*.ts --color --gitignore --no-must-find-files --no-summary --no-progress || true",
     "seed:apikey": "nestjs-command seed:apikey",
-    "rollback:apikey": "nestjs-command remove:apikey"
+    "seed:role": "nestjs-command seed:role",
+    "rollback:apikey": "nestjs-command remove:apikey",
+    "rollback:role": "nestjs-command remove:role"
   },
   "dependencies": {
     "@faker-js/faker": "^8.0.2",
