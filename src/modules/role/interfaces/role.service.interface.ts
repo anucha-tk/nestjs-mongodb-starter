@@ -5,4 +5,5 @@ export interface IRoleService {
   create(data: RoleCreateDto): Promise<RoleDoc>;
   createMany(data: RoleCreateDto[]): Promise<boolean>;
   deleteMany(find: Record<string, any>): Promise<boolean>;
+  getTotal(find?: Record<string, any>): Promise<number>;
 }

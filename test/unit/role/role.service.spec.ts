@@ -39,6 +39,7 @@ describe("role service", () => {
               return find;
             }),
             createMany: jest.fn().mockImplementation(() => true),
+            getTotal: jest.fn().mockResolvedValue(1),
           },
         },
       ],
@@ -107,6 +108,15 @@ describe("role service", () => {
 
       expect(roleRepository.createMany).toHaveBeenCalled();
       expect(result).toBeTruthy();
+    });
+  });
+
+  describe("getTotal", () => {
+    it("should count total", async () => {
+      const result = await roleService.getTotal();
+
+      expect(roleRepository.getTotal).toBeCalled();
+      expect(result).toBe(1);
     });
   });
 });

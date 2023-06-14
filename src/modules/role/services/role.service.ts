@@ -1,4 +1,5 @@
 import { Injectable } from "@nestjs/common";
+import { IDatabaseFindAllOptions } from "src/common/database/interfaces/database.interface";
 import { RoleCreateDto } from "../dtos/role.create.dto";
 import { IRoleService } from "../interfaces/role.service.interface";
 import { RoleDoc, RoleEntity } from "../repository/entities/role.entity";
@@ -7,6 +8,13 @@ import { RoleRepository } from "../repository/repositories/role.repository";
 @Injectable()
 export class RoleService implements IRoleService {
   constructor(private readonly roleRepository: RoleRepository) {}
+
+  async findAll(
+    find?: Record<string, any>,
+    options?: IDatabaseFindAllOptions,
+  ): Promise<RoleEntity[]> {
+    return this.roleRepository.findAll<RoleEntity>(find, options);
+  }
 
   async create({ name, description, type, permissions }: RoleCreateDto): Promise<RoleDoc> {
     const create: RoleEntity = new RoleEntity();
@@ -34,5 +42,9 @@ export class RoleService implements IRoleService {
 
   async deleteMany(find: Record<string, any>): Promise<boolean> {
     return this.roleRepository.deleteMany(find);
+  }
+
+  async getTotal(find?: Record<string, any>): Promise<number> {
+    return this.roleRepository.getTotal(find);
   }
 }
