@@ -90,7 +90,7 @@ describe("pagination service", () => {
     });
   });
 
-  describe.only("order", () => {
+  describe("order", () => {
     it("should return createdAt by default and asc", () => {
       const result = paginationService.order();
       expect(result).toHaveProperty("createdAt", "asc");
@@ -104,6 +104,26 @@ describe("pagination service", () => {
         "name",
       ]);
       expect(result).toHaveProperty("name", "desc");
+    });
+  });
+
+  describe("totalPage", () => {
+    it("should return totalPage 5", () => {
+      const result = paginationService.totalPage(100, 20);
+      expect(typeof result).toBe("number");
+      expect(result).toBe(5);
+    });
+
+    it("should return page 1 when data below perPage", () => {
+      const result = paginationService.totalPage(10, 20);
+      expect(typeof result).toBe("number");
+      expect(result).toBe(1);
+    });
+
+    it("should return maxPage when page greater than maxPage", () => {
+      const result = paginationService.totalPage(1000, 20);
+      expect(typeof result).toBe("number");
+      expect(result).toBe(20);
     });
   });
 });

@@ -57,4 +57,10 @@ export class PaginationService implements IPaginationService {
 
     return { [orderBy]: orderDirectionValue };
   }
+
+  totalPage(totalData: number, perPage: number): number {
+    let totalPage = Math.ceil(totalData / perPage);
+    totalPage = totalPage === 0 ? 1 : totalPage;
+    return totalPage > PAGINATION_MAX_PAGE ? PAGINATION_MAX_PAGE : totalPage;
+  }
 }
