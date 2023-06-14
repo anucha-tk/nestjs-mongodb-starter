@@ -1,10 +1,14 @@
 import { Injectable } from "@nestjs/common";
 import {
+  PAGINATION_AVAILABLE_ORDER_BY,
   PAGINATION_MAX_PAGE,
   PAGINATION_MAX_PER_PAGE,
+  PAGINATION_ORDER_BY,
+  PAGINATION_ORDER_DIRECTION,
   PAGINATION_PAGE,
   PAGINATION_PER_PAGE,
 } from "../constants/pagination.constant";
+import { IPaginationOrder } from "../interfaces/pagination.interface";
 import { IPaginationService } from "../interfaces/pagination.service.interface";
 
 @Injectable()
@@ -27,5 +31,30 @@ export class PaginationService implements IPaginationService {
         ? PAGINATION_MAX_PER_PAGE
         : perPage
       : PAGINATION_PER_PAGE;
+  }
+
+  search(searchValue = "", availableSearch: string[]): Record<string, any> | undefined {
+    if (!searchValue) return undefined;
+
+    return {
+      $or: availableSearch.map((val) => ({
+        [val]: {
+          $regex: new RegExp(searchValue),
+          $options: "i",
+        },
+      })),
+    };
+  }
+
+  order(
+    orderByValue = PAGINATION_ORDER_BY,
+    orderDirectionValue = PAGINATION_ORDER_DIRECTION,
+    availableOrderBy = PAGINATION_AVAILABLE_ORDER_BY,
+  ): IPaginationOrder {
+    const orderBy: string = availableOrderBy.includes(orderByValue)
+      ? orderByValue
+      : PAGINATION_ORDER_BY;
+
+    return { [orderBy]: orderDirectionValue };
   }
 }

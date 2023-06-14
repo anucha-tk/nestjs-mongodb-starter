@@ -1,4 +1,5 @@
 import { Test, TestingModule } from "@nestjs/testing";
+import { ENUM_PAGINATION_ORDER_DIRECTION_TYPE } from "src/common/pagination/constants/pagination.enum.constant";
 import { PaginationService } from "src/common/pagination/services/pagination.service";
 
 describe("pagination service", () => {
@@ -71,6 +72,38 @@ describe("pagination service", () => {
       const result = paginationService.perPage(99);
       expect(typeof result).toBe("number");
       expect(result).toBe(99);
+    });
+  });
+
+  describe("search", () => {
+    it("should return undefined when empty valueSearch", () => {
+      const availableSearch: string[] = ["a", "b"];
+      const result = paginationService.search("", availableSearch);
+      expect(result).toBeUndefined();
+    });
+
+    it("should return valid property regex object search", () => {
+      const availableSearch: string[] = ["a", "b"];
+      const result = paginationService.search("abc", availableSearch);
+      expect(result).toHaveProperty("$or");
+      expect(result.$or).toHaveLength(2);
+    });
+  });
+
+  describe.only("order", () => {
+    it("should return createdAt by default and asc", () => {
+      const result = paginationService.order();
+      expect(result).toHaveProperty("createdAt", "asc");
+    });
+    it("should return createdAt when orderbyValue not include in available", () => {
+      const result = paginationService.order("name");
+      expect(result).toHaveProperty("createdAt", "asc");
+    });
+    it("should return name and desc when include in available", () => {
+      const result = paginationService.order("name", ENUM_PAGINATION_ORDER_DIRECTION_TYPE.DESC, [
+        "name",
+      ]);
+      expect(result).toHaveProperty("name", "desc");
     });
   });
 });
