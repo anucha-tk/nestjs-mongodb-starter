@@ -22,6 +22,17 @@ export abstract class DatabaseMongoUUIDRepositoryAbstract<
     return create[0] as EntityDocument;
   }
 
+  async createMany<Dto>(data: Dto[]): Promise<boolean> {
+    const create = this._repository.insertMany(data);
+
+    try {
+      await create;
+      return true;
+    } catch (err: unknown) {
+      throw err;
+    }
+  }
+
   async findOne<T = EntityDocument>(
     find: Record<string, any>,
     options?: IDatabaseFindOneOptions<ClientSession>,
