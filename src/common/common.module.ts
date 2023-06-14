@@ -14,6 +14,7 @@ import { HelperModule } from "./helper/helper.module";
 import { LoggerModule } from "./logger/logger.module";
 import { ENUM_MESSAGE_LANGUAGE } from "./message/constants/message.enum.constant";
 import { MessageModule } from "./message/message.module";
+import { PaginationModule } from "./pagination/pagination.module";
 import { RequestModule } from "./request/request.module";
 import { ResponseModule } from "./response/response.module";
 
@@ -73,6 +74,7 @@ import { ResponseModule } from "./response/response.module";
     ErrorModule,
     LoggerModule,
     ApiKeyModule,
+    PaginationModule,
   ],
 })
 export class CommonModule {}
