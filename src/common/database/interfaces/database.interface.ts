@@ -12,3 +12,7 @@ export interface IDatabaseCreateOptions<T = any>
   extends Pick<IDatabaseFindOneOptions<T>, "session"> {
   _id?: string;
 }
+
+export interface IDatabaseFindAllOptions<T = any>
+  extends IPaginationOptions,
+    Omit<IDatabaseFindOneOptions<T>, "order"> {}

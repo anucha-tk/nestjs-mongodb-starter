@@ -1,5 +1,8 @@
 import { ClientSession, Model, PopulateOptions } from "mongoose";
-import { IDatabaseFindOneOptions } from "src/common/database/interfaces/database.interface";
+import {
+  IDatabaseFindAllOptions,
+  IDatabaseFindOneOptions,
+} from "src/common/database/interfaces/database.interface";
 import { DatabaseBaseRepositoryAbstract } from "../../database.base-repository.abstract";
 
 export abstract class DatabaseMongoUUIDRepositoryAbstract<
@@ -58,6 +61,35 @@ export abstract class DatabaseMongoUUIDRepositoryAbstract<
     return findOne.exec() as any;
   }
 
+  async findAll<T = EntityDocument>(
+    find?: Record<string, any>,
+    options?: IDatabaseFindAllOptions<ClientSession>,
+  ): Promise<T[]> {
+    const findAll = this._repository.find<EntityDocument>(find);
+
+    if (options?.select) {
+      findAll.select(options.select);
+    }
+
+    if (options?.paging) {
+      findAll.limit(options.paging.limit).skip(options.paging.offset);
+    }
+
+    if (options?.order) {
+      findAll.sort(options.order);
+    }
+
+    if (options?.join) {
+      findAll.populate(
+        typeof options.join === "boolean"
+          ? this._joinOnFind
+          : (options.join as PopulateOptions | PopulateOptions[]),
+      );
+    }
+
+    return findAll.lean() as any;
+  }
+
   async deleteMany(find: Record<string, any>): Promise<boolean> {
     const del = this._repository.deleteMany(find);
 
@@ -67,5 +99,10 @@ export abstract class DatabaseMongoUUIDRepositoryAbstract<
     } catch (err: unknown) {
       throw err;
     }
+  }
+
+  async getTotal(find?: Record<string, any>): Promise<number> {
+    const count = this._repository.countDocuments(find);
+    return count;
   }
 }
