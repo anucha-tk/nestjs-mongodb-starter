@@ -7,11 +7,17 @@
     "<rootDir>/test/e2e/request/*.e2e-spec.ts",
     "<rootDir>/test/e2e/response/*.e2e-spec.ts",
     "<rootDir>/test/e2e/app/*.e2e-spec.ts",
-    "<rootDir>/test/e2e/language/*.e2e-spec.ts"
+    "<rootDir>/test/e2e/language/*.e2e-spec.ts",
+    "<rootDir>/test/e2e/role/*.e2e-spec.ts"
   ],
   "collectCoverage": true,
   "coverageDirectory": "coverage-e2e",
-  "collectCoverageFrom": ["./src/common/request/**", "./src/common/response/**", "./src/app/**"],
+  "collectCoverageFrom": [
+    "./src/common/request/**",
+    "./src/common/response/**",
+    "./src/app/**",
+    "./src/modules/**"
+  ],
   "moduleFileExtensions": ["js", "ts", "json"],
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
