@@ -9,4 +9,8 @@ export class HelperArrayService implements IHelperArrayService {
   includes<T>(a: T[], b: T): boolean {
     return _.includes(a, b);
   }
+
+  unique<T>(array: T[]): T[] {
+    return _.uniq(array);
+  }
 }

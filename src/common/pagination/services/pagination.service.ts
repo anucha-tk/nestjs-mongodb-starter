@@ -63,4 +63,12 @@ export class PaginationService implements IPaginationService {
     totalPage = totalPage === 0 ? 1 : totalPage;
     return totalPage > PAGINATION_MAX_PAGE ? PAGINATION_MAX_PAGE : totalPage;
   }
+
+  filterIn<T = string>(field: string, filterValue: T[]): Record<string, { $in: T[] }> {
+    return {
+      [field]: {
+        $in: filterValue,
+      },
+    };
+  }
 }
