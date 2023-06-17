@@ -87,7 +87,7 @@ describe("user service", () => {
                 },
               ];
             }),
-            deleteMany: jest.fn().mockImplementation(({ id: string }) => true),
+            deleteMany: jest.fn().mockResolvedValue(true),
           },
         },
       ],
