@@ -1,4 +1,8 @@
-import { IHelperDateOptionsCreate, IHelperDateOptionsFormat } from "./helper.interface";
+import {
+  IHelperDateOptionsCreate,
+  IHelperDateOptionsFormat,
+  IHelperDateOptionsForward,
+} from "./helper.interface";
 
 export interface IHelperDateService {
   create(date?: string | number | Date, options?: IHelperDateOptionsCreate): Date;
@@ -6,4 +10,5 @@ export interface IHelperDateService {
   timestamp(date?: string | number | Date, options?: IHelperDateOptionsCreate): number;
   startOfDay(date?: Date): Date;
   endOfDay(date?: Date): Date;
+  forwardInSeconds(seconds: number, options?: IHelperDateOptionsForward): Date;
 }

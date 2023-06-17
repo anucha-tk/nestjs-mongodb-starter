@@ -1,6 +1,10 @@
 import { Injectable } from "@nestjs/common";
 import { IHelperDateService } from "../interfaces/helper.date-service.interface";
-import { IHelperDateOptionsCreate, IHelperDateOptionsFormat } from "../interfaces/helper.interface";
+import {
+  IHelperDateOptionsCreate,
+  IHelperDateOptionsFormat,
+  IHelperDateOptionsForward,
+} from "../interfaces/helper.interface";
 import moment from "moment";
 import { ENUM_HELPER_DATE_FORMAT } from "../constants/helper.enum.constant";
 
@@ -47,5 +51,9 @@ export class HelperDateService implements IHelperDateService {
 
   endOfDay(date?: Date): Date {
     return moment(date).endOf("day").toDate();
+  }
+
+  forwardInSeconds(seconds: number, options?: IHelperDateOptionsForward): Date {
+    return moment(options?.fromDate).add(seconds, "s").toDate();
   }
 }

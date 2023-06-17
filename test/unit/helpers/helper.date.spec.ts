@@ -58,4 +58,13 @@ describe("helper date service", () => {
       expect(startOfDay).toEqual(expectedDate);
     });
   });
+
+  describe("forwardInSeconds", () => {
+    it("should add 30s", () => {
+      const date = new Date();
+      const expectedDate = new Date(date.getTime() + 30 * 1000); // Add 30 seconds
+      const result = helperDateService.forwardInSeconds(30, { fromDate: date });
+      expect(result).toEqual(expectedDate);
+    });
+  });
 });

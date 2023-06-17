@@ -1,6 +1,7 @@
 import { Global, Module } from "@nestjs/common";
 import { HelperArrayService } from "./services/helper.array.service";
 import { HelperDateService } from "./services/helper.date.service";
+import { HelperEncryptionService } from "./services/helper.encrypt.service";
 import { HelperHashService } from "./services/helper.hash.service";
 import { HelperNumberService } from "./services/helper.number.service";
 import { HelperStringService } from "./services/helper.string.service";
@@ -13,6 +14,7 @@ import { HelperStringService } from "./services/helper.string.service";
     HelperNumberService,
     HelperStringService,
     HelperHashService,
+    HelperEncryptionService,
   ],
   exports: [
     HelperDateService,
@@ -20,6 +22,7 @@ import { HelperStringService } from "./services/helper.string.service";
     HelperNumberService,
     HelperStringService,
     HelperHashService,
+    HelperEncryptionService,
   ],
   controllers: [],
   imports: [],

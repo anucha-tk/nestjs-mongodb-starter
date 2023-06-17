@@ -13,3 +13,7 @@ export interface IHelperStringRandomOptions {
   safe?: boolean;
   prefix?: string;
 }
+
+export interface IHelperDateOptionsForward {
+  fromDate?: Date;
+}
