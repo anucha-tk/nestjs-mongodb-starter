@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { IHelperHashService } from "../interfaces/helper.hash-service.interface";
 import { SHA256, enc } from "crypto-js";
-import { genSaltSync, hashSync } from "bcryptjs";
+import { compareSync, genSaltSync, hashSync } from "bcryptjs";
 
 @Injectable()
 export class HelperHashService implements IHelperHashService {
@@ -18,5 +18,9 @@ export class HelperHashService implements IHelperHashService {
 
   bcrypt(passwordString: string, salt: string): string {
     return hashSync(passwordString, salt);
+  }
+
+  bcryptCompare(passwordString: string, passwordHashed: string): boolean {
+    return compareSync(passwordString, passwordHashed);
   }
 }

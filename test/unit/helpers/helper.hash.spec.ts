@@ -37,4 +37,27 @@ describe("HelperHashService", () => {
       expect(stringHash).toBeDefined();
     });
   });
+
+  describe("bcryptCompare", () => {
+    it("should return true when password and passwordHash is match", async () => {
+      const password = faker.string.alphanumeric(8);
+      const salt = helperHashService.randomSalt(8);
+      const passwordHash = helperHashService.bcrypt(password, salt);
+      const result = helperHashService.bcryptCompare(password, passwordHash);
+
+      expect(result).toBeDefined();
+      expect(result).toBeTruthy();
+    });
+
+    it("should return false when password and passwordHash is match", async () => {
+      const password = faker.string.alphanumeric(8);
+      const newPassword = faker.string.alphanumeric(8);
+      const salt = helperHashService.randomSalt(8);
+      const passwordHash = helperHashService.bcrypt(password, salt);
+      const result = helperHashService.bcryptCompare(newPassword, passwordHash);
+
+      expect(result).toBeDefined();
+      expect(result).toBeFalsy();
+    });
+  });
 });
