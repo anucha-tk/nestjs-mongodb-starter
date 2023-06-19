@@ -1,4 +1,4 @@
-import { ClientSession, Model, PopulateOptions } from "mongoose";
+import { ClientSession, Model, PopulateOptions, Document } from "mongoose";
 import {
   IDatabaseFindAllOptions,
   IDatabaseFindOneOptions,
@@ -104,5 +104,9 @@ export abstract class DatabaseMongoUUIDRepositoryAbstract<
   async getTotal(find?: Record<string, any>): Promise<number> {
     const count = this._repository.countDocuments(find);
     return count;
+  }
+
+  async save(repository: EntityDocument & Document<string>): Promise<EntityDocument> {
+    return repository.save();
   }
 }

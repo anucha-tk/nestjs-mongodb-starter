@@ -13,4 +13,5 @@ export abstract class DatabaseBaseRepositoryAbstract<Entity> {
   ): Promise<T[]>;
   abstract deleteMany(find: Record<string, any>): Promise<boolean>;
   abstract getTotal(find?: Record<string, any>): Promise<number>;
+  abstract save(repository: Entity): Promise<Entity>;
 }

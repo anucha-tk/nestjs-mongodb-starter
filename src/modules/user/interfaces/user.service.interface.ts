@@ -1,8 +1,12 @@
 import { IAuthPassword } from "src/common/auth/interfaces/auth.interface";
-import { IDatabaseFindAllOptions } from "src/common/database/interfaces/database.interface";
+import {
+  IDatabaseFindAllOptions,
+  IDatabaseFindOneOptions,
+} from "src/common/database/interfaces/database.interface";
 import { UserCreateDto } from "../dtos/user.create.dto";
 import { UserDoc } from "../repository/entities/user.entity";
-import { IUserEntity } from "./user.interface";
+import { UserPayloadSerialization } from "../serializations/user.payload.serialization";
+import { IUserDoc, IUserEntity } from "./user.interface";
 
 export interface IUserService {
   create(
@@ -10,5 +14,10 @@ export interface IUserService {
     { passwordExpired, passwordHash, salt, passwordCreated }: IAuthPassword,
   ): Promise<UserDoc>;
   findAll(find?: Record<string, any>, options?: IDatabaseFindAllOptions): Promise<IUserEntity[]>;
+  findOneByEmail<T>(email: string, options?: IDatabaseFindOneOptions): Promise<T>;
   deleteMany(find: Record<string, any>): Promise<boolean>;
+  resetPasswordAttempt(repository: UserDoc): Promise<UserDoc>;
+  increasePasswordAttempt(repository: UserDoc): Promise<UserDoc>;
+  joinWithRole(repository: UserDoc): Promise<IUserDoc>;
+  payloadSerialization(data: IUserDoc): Promise<UserPayloadSerialization>;
 }

@@ -1,12 +1,18 @@
 import { Injectable } from "@nestjs/common";
+import { plainToInstance } from "class-transformer";
 import { IAuthPassword } from "src/common/auth/interfaces/auth.interface";
-import { IDatabaseFindAllOptions } from "src/common/database/interfaces/database.interface";
+import {
+  IDatabaseFindAllOptions,
+  IDatabaseFindOneOptions,
+} from "src/common/database/interfaces/database.interface";
 import { HelperDateService } from "src/common/helper/services/helper.date.service";
+import { RoleEntity } from "src/modules/role/repository/entities/role.entity";
 import { UserCreateDto } from "../dtos/user.create.dto";
-import { IUserEntity } from "../interfaces/user.interface";
+import { IUserDoc, IUserEntity } from "../interfaces/user.interface";
 import { IUserService } from "../interfaces/user.service.interface";
 import { UserDoc, UserEntity } from "../repository/entities/user.entity";
 import { UserRepository } from "../repository/repositories/user.repository";
+import { UserPayloadSerialization } from "../serializations/user.payload.serialization";
 
 @Injectable()
 export class UserService implements IUserService {
@@ -50,7 +56,36 @@ export class UserService implements IUserService {
     });
   }
 
+  async findOneByEmail<T>(email: string, options?: IDatabaseFindOneOptions): Promise<T> {
+    return this.userRepository.findOne<T>({ email }, options);
+  }
+
   async deleteMany(find: Record<string, any>): Promise<boolean> {
     return this.userRepository.deleteMany(find);
+  }
+
+  async increasePasswordAttempt(repository: UserDoc): Promise<UserDoc> {
+    repository.passwordAttempt = ++repository.passwordAttempt;
+
+    return this.userRepository.save(repository);
+  }
+
+  async joinWithRole(repository: UserDoc): Promise<IUserDoc> {
+    return repository.populate({
+      path: "role",
+      localField: "role",
+      foreignField: "_id",
+      model: RoleEntity.name,
+    });
+  }
+
+  async resetPasswordAttempt(repository: UserDoc): Promise<UserDoc> {
+    repository.passwordAttempt = 0;
+
+    return this.userRepository.save(repository);
+  }
+
+  async payloadSerialization(data: IUserDoc): Promise<UserPayloadSerialization> {
+    return plainToInstance(UserPayloadSerialization, data.toObject());
   }
 }
