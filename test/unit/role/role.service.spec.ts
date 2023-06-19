@@ -39,6 +39,15 @@ describe("role service", () => {
               return find;
             }),
             createMany: jest.fn().mockImplementation(() => true),
+            findAll: jest.fn().mockImplementation(() => {
+              return [
+                { _id: roleKeyId, name: "role_one" },
+                { _id: roleKeyId, name: "role_two" },
+              ];
+            }),
+            findOne: jest.fn().mockImplementation(() => {
+              return { _id: roleKeyId, name: "xyz" };
+            }),
             getTotal: jest.fn().mockResolvedValue(1),
           },
         },
@@ -108,6 +117,29 @@ describe("role service", () => {
 
       expect(roleRepository.createMany).toHaveBeenCalled();
       expect(result).toBeTruthy();
+    });
+  });
+
+  describe("find", () => {
+    describe("findAll", () => {
+      it("should return roleDoc when findAll successful", async () => {
+        const result = await roleService.findAll();
+        expect(result).toBeDefined();
+        expect(result).toEqual([
+          { _id: roleKeyId, name: "role_one" },
+          { _id: roleKeyId, name: "role_two" },
+        ]);
+        expect(roleRepository.findAll).toHaveBeenCalled();
+      });
+    });
+    describe("findOneByName", () => {
+      it("should return roleDoc when findOneByName successful", async () => {
+        const result = await roleService.findOneByName("xyz");
+        expect(result).toBeDefined();
+        expect(result).toEqual({ _id: roleKeyId, name: "xyz" });
+        expect(roleRepository.findOne).toBeCalledWith({ name: "xyz" }, undefined);
+        expect(roleRepository.findOne).toHaveBeenCalled();
+      });
     });
   });
 
