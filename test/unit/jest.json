@@ -9,7 +9,8 @@
     "<rootDir>/test/unit/api-key/*.spec.ts",
     "<rootDir>/test/unit/role/*.spec.ts",
     "<rootDir>/test/unit/pagination/*.spec.ts",
-    "<rootDir>/test/unit/user/*.spec.ts"
+    "<rootDir>/test/unit/user/*.spec.ts",
+    "<rootDir>/test/unit/auth/*.spec.ts"
   ],
   "collectCoverage": true,
   "coverageDirectory": "coverage",
@@ -19,7 +20,8 @@
     "./src/common/api-key/**",
     "./src/modules/role/**",
     "./src/modules/user/**",
-    "./src/common/pagination/**"
+    "./src/common/pagination/**",
+    "./src/common/auth/**"
   ],
   "coverageThreshold": {
     "global": {

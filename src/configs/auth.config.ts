@@ -12,7 +12,6 @@ export default registerAs(
     issuer: process.env.AUTH_JWT_ISSUER,
     prefixAuthorization: "Bearer",
     payloadEncryption: process.env.AUTH_JWT_PAYLOAD_ENCRYPT === "true" ? true : false,
-
     password: {
       attempt: true,
       maxAttempt: 5,
