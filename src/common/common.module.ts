@@ -6,6 +6,7 @@ import { APP_LANGUAGE } from "src/app/constants/app.constant";
 import { ENUM_APP_ENVIRONMENT } from "src/app/constants/app.enum.constant";
 import configs from "src/configs";
 import { ApiKeyModule } from "./api-key/api-key.module";
+import { AuthModule } from "./auth/auth.module";
 import { DATABASE_CONNECTION_NAME } from "./database/constants/database.constant";
 import { DatabaseOptionsModule } from "./database/database.module";
 import { DatabaseOptionsService } from "./database/services/database.options.service";
@@ -17,6 +18,7 @@ import { MessageModule } from "./message/message.module";
 import { PaginationModule } from "./pagination/pagination.module";
 import { RequestModule } from "./request/request.module";
 import { ResponseModule } from "./response/response.module";
+import { SettingModule } from "./setting/setting.module";
 
 @Module({
   controllers: [],
@@ -54,6 +56,12 @@ import { ResponseModule } from "./response/response.module";
         DATABASE_PASSWORD: Joi.string().optional(),
         DATABASE_DEBUG: Joi.boolean().default(false).required(),
         DATABASE_OPTIONS: Joi.string().allow(null, "").optional(),
+
+        AUTH_JWT_SUBJECT: Joi.string().required(),
+        AUTH_JWT_AUDIENCE: Joi.string().required(),
+        AUTH_JWT_ISSUER: Joi.string().required(),
+        AUTH_JWT_PAYLOAD_ENCRYPT: Joi.boolean().default(false).required(),
+        AUTH_JWT_ACCESS_TOKEN_SECRET_KEY: Joi.string().alphanum().min(5).max(50).required(),
       }),
       validationOptions: {
         allowUnknown: true,
@@ -75,6 +83,8 @@ import { ResponseModule } from "./response/response.module";
     LoggerModule,
     ApiKeyModule,
     PaginationModule,
+    AuthModule.forRoot(),
+    SettingModule,
   ],
 })
 export class CommonModule {}
