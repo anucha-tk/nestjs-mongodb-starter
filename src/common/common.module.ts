@@ -49,19 +49,40 @@ import { SettingModule } from "./setting/setting.module";
         HTTP_PORT: Joi.number().required(),
         HTTP_VERSIONING_ENABLE: Joi.boolean().default(true).required(),
         HTTP_VERSION: Joi.number().required(),
-
         DATABASE_HOST: Joi.string().required(),
         DATABASE_NAME: Joi.string().required(),
         DATABASE_USER: Joi.string().allow(null, "").optional(),
         DATABASE_PASSWORD: Joi.string().optional(),
         DATABASE_DEBUG: Joi.boolean().default(false).required(),
         DATABASE_OPTIONS: Joi.string().allow(null, "").optional(),
-
         AUTH_JWT_SUBJECT: Joi.string().required(),
         AUTH_JWT_AUDIENCE: Joi.string().required(),
         AUTH_JWT_ISSUER: Joi.string().required(),
         AUTH_JWT_PAYLOAD_ENCRYPT: Joi.boolean().default(false).required(),
         AUTH_JWT_ACCESS_TOKEN_SECRET_KEY: Joi.string().alphanum().min(5).max(50).required(),
+        AUTH_JWT_ACCESS_TOKEN_EXPIRED: Joi.string().default("15m").required(),
+        AUTH_JWT_PAYLOAD_ACCESS_TOKEN_ENCRYPT_KEY: Joi.string()
+          .allow(null, "")
+          .min(20)
+          .max(50)
+          .optional(),
+        AUTH_JWT_PAYLOAD_ACCESS_TOKEN_ENCRYPT_IV: Joi.string()
+          .allow(null, "")
+          .min(16)
+          .max(50)
+          .optional(),
+        AUTH_JWT_REFRESH_TOKEN_SECRET_KEY: Joi.string().alphanum().min(5).max(50).required(),
+        AUTH_JWT_REFRESH_TOKEN_EXPIRED: Joi.string().default("7d").required(),
+        AUTH_JWT_PAYLOAD_REFRESH_TOKEN_ENCRYPT_KEY: Joi.string()
+          .allow(null, "")
+          .min(20)
+          .max(50)
+          .optional(),
+        AUTH_JWT_PAYLOAD_REFRESH_TOKEN_ENCRYPT_IV: Joi.string()
+          .allow(null, "")
+          .min(16)
+          .max(50)
+          .optional(),
       }),
       validationOptions: {
         allowUnknown: true,

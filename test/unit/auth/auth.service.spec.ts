@@ -1,6 +1,7 @@
 import { faker } from "@faker-js/faker";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { Test, TestingModule } from "@nestjs/testing";
+import { ENUM_AUTH_LOGIN_WITH } from "src/common/auth/constants/auth.enum.constant";
 import { AuthService } from "src/common/auth/services/auth.service";
 import { HelperModule } from "src/common/helper/helper.module";
 import configs from "src/configs";
@@ -19,6 +20,26 @@ describe("auth service", () => {
           return true;
         case "auth.prefixAuthorization":
           return "bearer";
+        case "auth.accessToken.expirationTime":
+          return "1h";
+        case "auth.accessToken.secretKey":
+          return "secretKey_accessToken";
+        case "auth.subject":
+          return "jwt_subject";
+        case "auth.audience":
+          return "jwt_audience";
+        case "auth.issuer":
+          return "jwt_issuer";
+        case "auth.refreshToken.encryptKey":
+          return "AKeyForTestingPurposes";
+        case "auth.refreshToken.encryptIv":
+          return "AnIvForTestingPurposes";
+        case "auth.refreshToken.secretKey":
+          return "secretKey_refreshToken";
+        case "auth.refreshToken.expirationTime":
+          return 60;
+        case "auth.refreshToken.notBeforeExpirationTime":
+          return 0;
       }
     }),
   };
@@ -116,6 +137,89 @@ describe("auth service", () => {
     it("should return string tokenType", async () => {
       const result = await authService.getTokenType();
       expect(result).toBe("bearer");
+    });
+  });
+
+  describe("getAccessTokenExpirationTime", () => {
+    it("should return string expirationTime", async () => {
+      const result = await authService.getAccessTokenExpirationTime();
+      console.log(result);
+    });
+  });
+
+  describe("createPayloadAccessToken", () => {
+    it("should return payload access token", async () => {
+      const payload = { name: "abc" };
+      const result = await authService.createPayloadAccessToken(payload);
+      expect(result).toBeDefined();
+      expect(result).toEqual({ name: "abc" });
+    });
+  });
+
+  describe("createPayloadRefreshToken", () => {
+    it("should return payload refresh token", async () => {
+      const result = await authService.createPayloadRefreshToken(faker.string.uuid(), {
+        loginWith: ENUM_AUTH_LOGIN_WITH.LOCAL,
+      });
+
+      expect(result).toBeDefined();
+      expect(result).toHaveProperty("_id");
+      expect(result).toHaveProperty("loginWith", "LOCAL");
+      expect(result).toHaveProperty("loginDate");
+    });
+  });
+
+  describe("createAccessToken", () => {
+    it("should return string hash access token when payload is string", async () => {
+      const payload = "abc";
+      const result = await authService.createAccessToken(payload);
+
+      expect(result).toBeDefined();
+      expect(typeof result).toBe("string");
+    });
+    it("should return string hash access token when payload is object", async () => {
+      const payload = { name: "abc" };
+      const result = await authService.createAccessToken(payload);
+
+      expect(result).toBeDefined();
+      expect(typeof result).toBe("string");
+    });
+  });
+
+  describe("encryptRefreshToken", () => {
+    it("should return string when encryptRefreshToken", async () => {
+      const payload = { name: "abc" };
+      const result = await authService.encryptRefreshToken(payload);
+
+      expect(result).toBeDefined();
+      expect(typeof result).toBe("string");
+    });
+  });
+
+  describe("createRefreshToken", () => {
+    it("should return string when createRefreshToken", async () => {
+      const payload = { name: "xyz" };
+      const result = await authService.createRefreshToken(payload);
+
+      expect(result).toBeDefined();
+      expect(typeof result).toBe("string");
+    });
+  });
+
+  describe("checkPasswordExpired", () => {
+    it("should return true when not expired", async () => {
+      const soon = faker.date.soon();
+      const result = await authService.checkPasswordExpired(soon);
+
+      expect(result).toBeDefined();
+      expect(result).toBeFalsy();
+    });
+    it("should return false when not expired", async () => {
+      const recent = faker.date.recent();
+      const result = await authService.checkPasswordExpired(recent);
+
+      expect(result).toBeDefined();
+      expect(result).toBeTruthy();
     });
   });
 });

@@ -4,5 +4,14 @@ import DocConfig from "./doc.config";
 import RequestConfig from "./request.config";
 import MessageConfig from "./message.config";
 import AuthConfig from "./auth.config";
+import HelperConfig from "./helper.config";
 
-export default [AppConfig, DatabaseConfig, DocConfig, RequestConfig, MessageConfig, AuthConfig];
+export default [
+  AppConfig,
+  DatabaseConfig,
+  DocConfig,
+  RequestConfig,
+  MessageConfig,
+  AuthConfig,
+  HelperConfig,
+];
