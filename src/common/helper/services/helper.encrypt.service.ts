@@ -1,9 +1,13 @@
 import { Injectable } from "@nestjs/common";
 import { IHelperEncryptionService } from "../interfaces/helper.encryption-service.interface";
 import { AES, enc, mode, pad } from "crypto-js";
+import { IHelperJwtOptions } from "../interfaces/helper.interface";
+import { JwtService } from "@nestjs/jwt";
 
 @Injectable()
 export class HelperEncryptionService implements IHelperEncryptionService {
+  constructor(private readonly jwtService: JwtService) {}
+
   aes256Encrypt(
     data: string | Record<string, any> | Record<string, any>[],
     key: string,
@@ -32,5 +36,16 @@ export class HelperEncryptionService implements IHelperEncryptionService {
     });
 
     return JSON.parse(cipher.toString(enc.Utf8));
+  }
+
+  jwtEncrypt(payload: Record<string, any>, options: IHelperJwtOptions): string {
+    return this.jwtService.sign(payload, {
+      secret: options.secretKey,
+      expiresIn: options.expiredIn,
+      notBefore: options.notBefore ?? 0,
+      audience: options.audience,
+      issuer: options.issuer,
+      subject: options.subject,
+    });
   }
 }
