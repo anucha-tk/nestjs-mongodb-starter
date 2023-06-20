@@ -6,6 +6,7 @@ import { HelperDateService } from "./services/helper.date.service";
 import { HelperEncryptionService } from "./services/helper.encrypt.service";
 import { HelperHashService } from "./services/helper.hash.service";
 import { HelperNumberService } from "./services/helper.number.service";
+import { HelperObjectService } from "./services/helper.object.service";
 import { HelperStringService } from "./services/helper.string.service";
 
 @Global()
@@ -17,6 +18,7 @@ import { HelperStringService } from "./services/helper.string.service";
     HelperStringService,
     HelperHashService,
     HelperEncryptionService,
+    HelperObjectService,
   ],
   exports: [
     HelperDateService,
@@ -25,6 +27,7 @@ import { HelperStringService } from "./services/helper.string.service";
     HelperStringService,
     HelperHashService,
     HelperEncryptionService,
+    HelperObjectService,
   ],
   controllers: [],
   imports: [

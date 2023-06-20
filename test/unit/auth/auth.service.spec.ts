@@ -76,7 +76,7 @@ describe("auth service", () => {
   });
 
   describe("encryptAccessToken", () => {
-    it("should return string decryptAccessToken", async () => {
+    it("should return string encryptAccessToken", async () => {
       const payload = { name: "simple" };
       const encrypted = await authService.encryptAccessToken(payload);
 
@@ -143,7 +143,8 @@ describe("auth service", () => {
   describe("getAccessTokenExpirationTime", () => {
     it("should return string expirationTime", async () => {
       const result = await authService.getAccessTokenExpirationTime();
-      console.log(result);
+      expect(result).toBeDefined();
+      expect(typeof result).toBe("string");
     });
   });
 

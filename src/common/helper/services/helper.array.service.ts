@@ -13,4 +13,8 @@ export class HelperArrayService implements IHelperArrayService {
   unique<T>(array: T[]): T[] {
     return _.uniq(array);
   }
+
+  isJsonArray(value: any): value is Record<string, any>[] {
+    return Array.isArray(value);
+  }
 }

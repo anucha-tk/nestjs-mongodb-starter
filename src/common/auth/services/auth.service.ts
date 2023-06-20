@@ -1,8 +1,10 @@
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
+import { HelperArrayService } from "src/common/helper/services/helper.array.service";
 import { HelperDateService } from "src/common/helper/services/helper.date.service";
 import { HelperEncryptionService } from "src/common/helper/services/helper.encrypt.service";
 import { HelperHashService } from "src/common/helper/services/helper.hash.service";
+import { HelperObjectService } from "src/common/helper/services/helper.object.service";
 import {
   IAuthPassword,
   IAuthPayloadOptions,
@@ -42,6 +44,8 @@ export class AuthService implements IAuthService {
     private readonly helperEncryptionService: HelperEncryptionService,
     private readonly helperHashService: HelperHashService,
     private readonly helperDateService: HelperDateService,
+    private readonly helperArrayService: HelperArrayService,
+    private readonly helperObjectService: HelperObjectService,
   ) {
     this.accessTokenSecretKey = this.configService.get<string>("auth.accessToken.secretKey");
     this.accessTokenExpirationTime = this.configService.get<number>(
@@ -86,11 +90,20 @@ export class AuthService implements IAuthService {
   }
 
   async decryptAccessToken({ data }: Record<string, any>): Promise<Record<string, any>> {
-    return this.helperEncryptionService.aes256Decrypt(
+    const decryptedValue = this.helperEncryptionService.aes256Decrypt(
       data,
       this.accessTokenEncryptKey,
       this.accessTokenEncryptIv,
-    ) as Record<string, any>;
+    );
+
+    if (
+      this.helperObjectService.isJsonObject(decryptedValue) ||
+      this.helperArrayService.isJsonArray(decryptedValue)
+    ) {
+      return decryptedValue;
+    }
+
+    throw new Error("DecryptAccessToken value is not a valid JSON object");
   }
 
   async createSalt(length: number): Promise<string> {
@@ -129,12 +142,12 @@ export class AuthService implements IAuthService {
 
   async createPayloadRefreshToken(
     _id: string,
-    options: IAuthPayloadOptions,
+    { loginWith }: IAuthPayloadOptions,
   ): Promise<Record<string, any>> {
     return {
       _id,
       loginDate: this.helperDateService.create(),
-      loginWith: options.loginWith,
+      loginWith,
     };
   }
 
