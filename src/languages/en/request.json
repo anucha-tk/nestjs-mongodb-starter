@@ -1,0 +1,6 @@
+{
+  "validation": "Validation errors",
+  "maxLength": "{property} has more elements than the maximum allowed.",
+  "isNotEmpty": "{property} cannot be empty.",
+  "isEmail": "{property} should be a type of email."
+}

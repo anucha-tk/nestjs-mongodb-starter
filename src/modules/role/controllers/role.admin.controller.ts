@@ -1,5 +1,6 @@
 import { Controller, Get } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
+import { AuthJwtAdminAccessProtected } from "src/common/auth/decorators/auth.jwt.decorator";
 import {
   PaginationQuery,
   PaginationQueryFilterInBoolean,
@@ -7,6 +8,11 @@ import {
 } from "src/common/pagination/decorators/pagination.decorator";
 import { PaginationListDto } from "src/common/pagination/dtos/pagination.list.dto";
 import { PaginationService } from "src/common/pagination/services/pagination.service";
+import {
+  ENUM_POLICY_ACTION,
+  ENUM_POLICY_SUBJECT,
+} from "src/common/policy/constants/policy.enum.constant";
+import { PolicyAbilityProtected } from "src/common/policy/decorators/policy.decorator";
 import { ResponsePaging } from "src/common/response/decorators/response.decorator";
 import { IResponsePaging } from "src/common/response/interfaces/response.interface";
 import { ENUM_ROLE_TYPE } from "../constants/role.enum.constant";
@@ -39,11 +45,11 @@ export class RoleAdminController {
   @ResponsePaging("role.list", {
     serialization: RoleListSerialization,
   })
-  // @PolicyAbilityProtected({
-  //   subject: ENUM_POLICY_SUBJECT.ROLE,
-  //   action: [ENUM_POLICY_ACTION.READ],
-  // })
-  // @AuthJwtAdminAccessProtected()
+  @PolicyAbilityProtected({
+    subject: ENUM_POLICY_SUBJECT.ROLE,
+    action: [ENUM_POLICY_ACTION.READ],
+  })
+  @AuthJwtAdminAccessProtected()
   @Get("/list")
   async list(
     @PaginationQuery(

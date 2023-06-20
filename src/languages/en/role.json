@@ -1,3 +1,6 @@
 {
-  "list": "Role lists"
+  "list": "Role lists",
+  "error": {
+    "typeForbidden": "Role type not allowed"
+  }
 }
