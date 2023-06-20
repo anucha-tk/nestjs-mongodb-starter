@@ -16,6 +16,7 @@ import { LoggerModule } from "./logger/logger.module";
 import { ENUM_MESSAGE_LANGUAGE } from "./message/constants/message.enum.constant";
 import { MessageModule } from "./message/message.module";
 import { PaginationModule } from "./pagination/pagination.module";
+import { PolicyModule } from "./policy/policy.module";
 import { RequestModule } from "./request/request.module";
 import { ResponseModule } from "./response/response.module";
 import { SettingModule } from "./setting/setting.module";
@@ -106,6 +107,7 @@ import { SettingModule } from "./setting/setting.module";
     PaginationModule,
     AuthModule.forRoot(),
     SettingModule,
+    PolicyModule,
   ],
 })
 export class CommonModule {}
