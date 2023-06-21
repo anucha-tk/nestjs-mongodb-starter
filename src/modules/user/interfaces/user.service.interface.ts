@@ -20,4 +20,7 @@ export interface IUserService {
   increasePasswordAttempt(repository: UserDoc): Promise<UserDoc>;
   joinWithRole(repository: UserDoc): Promise<IUserDoc>;
   payloadSerialization(data: IUserDoc): Promise<UserPayloadSerialization>;
+  blocked(repository: UserDoc): Promise<UserDoc>;
+  inactive(repository: UserDoc): Promise<UserDoc>;
+  inactivePermanent(repository: UserDoc): Promise<UserDoc>;
 }

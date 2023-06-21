@@ -88,4 +88,26 @@ export class UserService implements IUserService {
   async payloadSerialization(data: IUserDoc): Promise<UserPayloadSerialization> {
     return plainToInstance(UserPayloadSerialization, data.toObject());
   }
+
+  async blocked(repository: UserDoc): Promise<UserDoc> {
+    repository.blocked = true;
+    repository.blockedDate = this.helperDateService.create();
+
+    return this.userRepository.save(repository);
+  }
+
+  async inactive(repository: UserDoc): Promise<UserDoc> {
+    repository.isActive = false;
+    repository.inactiveDate = this.helperDateService.create();
+
+    return this.userRepository.save(repository);
+  }
+
+  async inactivePermanent(repository: UserDoc): Promise<UserDoc> {
+    repository.isActive = false;
+    repository.inactivePermanent = true;
+    repository.inactiveDate = this.helperDateService.create();
+
+    return this.userRepository.save(repository);
+  }
 }

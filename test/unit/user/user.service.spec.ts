@@ -147,9 +147,21 @@ describe("user service", () => {
               return { _id: userKeyId, ...userDocWithRole };
             }),
             deleteMany: jest.fn().mockResolvedValue(true),
-            save: jest.fn().mockImplementation(() => {
-              return { _id: userKeyId, passwordAttempt: 0 };
-            }),
+            save: jest
+              .fn()
+              .mockImplementation(
+                ({ blocked, passwordAttempt, isActive, inactiveDate, inactivePermanent }) => {
+                  const find = new userKeyEntityDoc();
+                  find._id = userKeyId;
+                  find.blocked = blocked;
+                  find.passwordAttempt = passwordAttempt;
+                  find.isActive = isActive;
+                  find.inactiveDate = inactiveDate;
+                  find.inactivePermanent = inactivePermanent;
+
+                  return find;
+                },
+              ),
           },
         },
       ],
@@ -249,12 +261,11 @@ describe("user service", () => {
 
   describe("increasePasswordAttempt", () => {
     it("should save successful", async () => {
-      const userDoc: UserDoc = new UserEntity() as UserDoc;
-      const result = await userService.increasePasswordAttempt(userDoc);
+      const result = await userService.increasePasswordAttempt(new userKeyEntityDoc());
 
       expect(result).toBeDefined();
-      expect(userRepository.save).toBeCalledWith(userDoc);
       expect(userRepository.save).toBeCalled();
+      expect(result.passwordAttempt).toBe(1);
     });
   });
 
@@ -280,5 +291,38 @@ describe("user service", () => {
 
   describe("payloadSerialization", () => {
     it.todo("should return user payloadSerialization");
+  });
+
+  describe("blocked", () => {
+    it("should return userDoc true blocked", async () => {
+      const result = await userService.blocked(new userKeyEntityDoc());
+
+      expect(userRepository.save).toHaveBeenCalled();
+      expect(result._id).toBe(userKeyId);
+      expect(result.blocked).toBeTruthy();
+    });
+  });
+
+  describe("inActive", () => {
+    it("should return userDoc false inactive", async () => {
+      const result = await userService.inactive(new userKeyEntityDoc());
+
+      expect(userRepository.save).toHaveBeenCalled();
+      expect(result._id).toBe(userKeyId);
+      expect(result.isActive).toBeFalsy();
+      expect(result.inactiveDate instanceof Date).toBeTruthy();
+    });
+  });
+
+  describe("inactivePermanent", () => {
+    it("should return userDoc true inactivePermanent", async () => {
+      const result = await userService.inactivePermanent(new userKeyEntityDoc());
+
+      expect(userRepository.save).toHaveBeenCalled();
+      expect(result._id).toBe(userKeyId);
+      expect(result.inactivePermanent).toBeTruthy();
+      expect(result.isActive).toBeFalsy();
+      expect(result.inactiveDate instanceof Date).toBeTruthy();
+    });
   });
 });
