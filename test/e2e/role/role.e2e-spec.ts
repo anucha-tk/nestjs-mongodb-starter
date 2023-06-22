@@ -6,6 +6,7 @@ import { RoleService } from "src/modules/role/services/role.service";
 import { UserDoc } from "src/modules/user/repository/entities/user.entity";
 import { UserService } from "src/modules/user/services/user.service";
 import request from "supertest";
+import { createApiKey } from "../helper/apiKey";
 import { createRoleAdmin, createRoleSuperAdmin, createRoleUser } from "../helper/role";
 import { createAdmin, createUser, mockPassword } from "../helper/user";
 
@@ -19,6 +20,7 @@ describe("role e2e", () => {
   let userAccessToken: string;
   let adminAccessToken: string;
   let superAdminAccessToken: string;
+  let xApiKey: string;
 
   beforeAll(async () => {
     const modRef: TestingModule = await Test.createTestingModule({
@@ -38,25 +40,30 @@ describe("role e2e", () => {
     ]);
 
     // create user
-    const users = await Promise.all([
+    const [adminRes, superAdminRes, userRes, apiKeyRes] = await Promise.all([
       createAdmin({ app, roleId: roleAdmin._id }),
       createAdmin({ app, roleId: roleSuperAdmin._id }),
       createUser({ app, roleId: roleUser._id }),
+      createApiKey(app),
     ]);
-    admin = users[0];
-    superAdmin = users[1];
-    user = users[2];
+    admin = adminRes;
+    superAdmin = superAdminRes;
+    user = userRes;
+    xApiKey = `${apiKeyRes.doc.key}:${apiKeyRes.secret}`;
 
     // login by user
     const responses = await Promise.all([
       request(app.getHttpServer())
         .post("/public/user/login")
+        .set("x-api-key", xApiKey)
         .send({ email: admin.email, password: mockPassword }),
       request(app.getHttpServer())
         .post("/public/user/login")
+        .set("x-api-key", xApiKey)
         .send({ email: superAdmin.email, password: mockPassword }),
       request(app.getHttpServer())
         .post("/public/user/login")
+        .set("x-api-key", xApiKey)
         .send({ email: user.email, password: mockPassword }),
     ]);
 
@@ -75,7 +82,9 @@ describe("role e2e", () => {
 
   describe("role list", () => {
     it("should return 401 when not Authorization", async () => {
-      const { body, status } = await request(app.getHttpServer()).get("/admin/role/list");
+      const { body, status } = await request(app.getHttpServer())
+        .get("/admin/role/list")
+        .set("x-api-key", xApiKey);
 
       expect(status).toBe(401);
       expect(body.message).toMatch(/Access Token UnAuthorized/i);
@@ -84,6 +93,7 @@ describe("role e2e", () => {
     it("should return 403 when not policy not allow User", async () => {
       const { body, status } = await request(app.getHttpServer())
         .get("/admin/role/list")
+        .set("x-api-key", xApiKey)
         .set("Authorization", `Bearer ${userAccessToken}`);
 
       expect(status).toBe(403);
@@ -93,6 +103,7 @@ describe("role e2e", () => {
     it("should return pagination response with admin", async () => {
       const response = await request(app.getHttpServer())
         .get("/admin/role/list")
+        .set("x-api-key", xApiKey)
         .set("Authorization", `Bearer ${adminAccessToken}`);
       const body: ResponsePagingSerialization = response.body;
 
@@ -109,6 +120,7 @@ describe("role e2e", () => {
     it("should return pagination response with superAdmin", async () => {
       const response = await request(app.getHttpServer())
         .get("/admin/role/list")
+        .set("x-api-key", xApiKey)
         .set("Authorization", `Bearer ${superAdminAccessToken}`);
       const body: ResponsePagingSerialization = response.body;
 

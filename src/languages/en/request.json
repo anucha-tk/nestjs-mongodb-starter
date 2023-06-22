@@ -2,5 +2,7 @@
   "validation": "Validation errors",
   "maxLength": "{property} has more elements than the maximum allowed.",
   "isNotEmpty": "{property} cannot be empty.",
+  "isNumber": "{property} should be a number {value}.",
+  "isUuid": "{property} should be a uuid.",
   "isEmail": "{property} should be a type of email."
 }

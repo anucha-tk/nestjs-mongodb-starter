@@ -1,5 +1,6 @@
 import { Controller, Get } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
+import { ApiKeyPublicProtected } from "src/common/api-key/decorators/api-key.decorator";
 import { AuthJwtAdminAccessProtected } from "src/common/auth/decorators/auth.jwt.decorator";
 import {
   PaginationQuery,
@@ -30,6 +31,7 @@ import { RoleEntity } from "../repository/entities/role.entity";
 import { RoleListSerialization } from "../serializations/role.list.serialization";
 import { RoleService } from "../services/role.service";
 
+@ApiKeyPublicProtected()
 @ApiTags("common.admin.role")
 @Controller({
   version: "1",

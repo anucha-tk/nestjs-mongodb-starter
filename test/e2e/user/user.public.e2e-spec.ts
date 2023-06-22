@@ -7,6 +7,7 @@ import { UserLoginDto } from "src/modules/user/dtos/user.login.dto";
 import { UserDoc } from "src/modules/user/repository/entities/user.entity";
 import { UserService } from "src/modules/user/services/user.service";
 import request from "supertest";
+import { createApiKey } from "../helper/apiKey";
 import { createRoleUser } from "../helper/role";
 import { createUser, mockPassword } from "../helper/user";
 
@@ -15,6 +16,7 @@ describe("user public e2e", () => {
   let userService: UserService;
   let roleService: RoleService;
   let user: UserDoc;
+  let xApiKey: string;
 
   beforeAll(async () => {
     const modRef: TestingModule = await Test.createTestingModule({
@@ -27,7 +29,12 @@ describe("user public e2e", () => {
     await app.init();
 
     // create userRole
-    const [roleUser] = await Promise.all([createRoleUser(app, "user")]);
+    const [roleUser, apiKeyRes] = await Promise.all([
+      createRoleUser(app, "user"),
+      createApiKey(app),
+    ]);
+
+    xApiKey = `${apiKeyRes.doc.key}:${apiKeyRes.secret}`;
 
     // create user
     user = await createUser({ app, roleId: roleUser._id });
@@ -43,7 +50,9 @@ describe("user public e2e", () => {
   describe("login", () => {
     describe("dto", () => {
       it("should return 422 when empty body", async () => {
-        const { body, status } = await request(app.getHttpServer()).post("/public/user/login");
+        const { body, status } = await request(app.getHttpServer())
+          .post("/public/user/login")
+          .set("x-api-key", xApiKey);
 
         expect(body).toBeDefined();
         expect(status).toBe(422);
@@ -58,6 +67,7 @@ describe("user public e2e", () => {
         };
         const { body, status } = await request(app.getHttpServer())
           .post("/public/user/login")
+          .set("x-api-key", xApiKey)
           .set("application", "json")
           .send(loginDto);
 
@@ -74,6 +84,7 @@ describe("user public e2e", () => {
         };
         const { body, status } = await request(app.getHttpServer())
           .post("/public/user/login")
+          .set("x-api-key", xApiKey)
           .set("application", "json")
           .send(loginDto);
 
@@ -91,6 +102,7 @@ describe("user public e2e", () => {
       };
       const { body, status } = await request(app.getHttpServer())
         .post("/public/user/login")
+        .set("x-api-key", xApiKey)
         .set("application", "json")
         .send(loginDto);
 
@@ -106,6 +118,7 @@ describe("user public e2e", () => {
       };
       const { body, status } = await request(app.getHttpServer())
         .post("/public/user/login")
+        .set("x-api-key", xApiKey)
         .set("application", "json")
         .send(loginDto);
 
@@ -119,6 +132,22 @@ describe("user public e2e", () => {
     it.todo("should return 403 when user is isActive");
     it.todo("should return 403 when role is inActive");
     it.todo("should return 403 when passwordExpired");
+    it("should return 200 when login successful", async () => {
+      const loginDto: UserLoginDto = {
+        email: user.email,
+        password: mockPassword,
+      };
+      const { body, status } = await request(app.getHttpServer())
+        .post("/public/user/login")
+        .set("x-api-key", xApiKey)
+        .set("application", "json")
+        .send(loginDto);
+
+      expect(body).toBeDefined();
+      expect(status).toBe(200);
+      expect(body.data).toHaveProperty("accessToken");
+      expect(body.data).toHaveProperty("refreshToken");
+    });
   });
 
   describe("attempt", () => {
@@ -151,6 +180,7 @@ describe("user public e2e", () => {
         await request(app.getHttpServer())
           .post("/public/user/login")
           .set("application", "json")
+          .set("x-api-key", xApiKey)
           .send(loginDto);
         attempt++;
       }
@@ -158,6 +188,7 @@ describe("user public e2e", () => {
       const { body, status } = await request(app.getHttpServer())
         .post("/public/user/login")
         .set("application", "json")
+        .set("x-api-key", xApiKey)
         .send({ email: user.email, password: mockPassword });
 
       expect(status).toBe(403);
