@@ -7,6 +7,7 @@ export abstract class DatabaseBaseRepositoryAbstract<Entity> {
     find: Record<string, any>,
     options?: IDatabaseFindOneOptions<any>,
   ): Promise<T>;
+  abstract findOneById<T = Entity>(_id: string, options?: IDatabaseFindOneOptions<any>): Promise<T>;
   abstract findAll<T = Entity>(
     find?: Record<string, any>,
     options?: IDatabaseFindAllOptions<any>,

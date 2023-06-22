@@ -14,6 +14,7 @@ export interface IUserService {
     { passwordExpired, passwordHash, salt, passwordCreated }: IAuthPassword,
   ): Promise<UserDoc>;
   findAll(find?: Record<string, any>, options?: IDatabaseFindAllOptions): Promise<IUserEntity[]>;
+  findOneById<T>(_id: string, options?: IDatabaseFindOneOptions): Promise<T>;
   findOneByEmail<T>(email: string, options?: IDatabaseFindOneOptions): Promise<T>;
   deleteMany(find: Record<string, any>): Promise<boolean>;
   resetPasswordAttempt(repository: UserDoc): Promise<UserDoc>;

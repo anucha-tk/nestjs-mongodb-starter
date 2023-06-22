@@ -23,6 +23,8 @@ export default async function (app: NestApplication) {
       .setVersion(docVersion)
       .addTag("API's")
       .addServer(`/`)
+      .addBearerAuth({ type: "http", scheme: "bearer", bearerFormat: "JWT" }, "accessToken")
+      .addBearerAuth({ type: "http", scheme: "bearer", bearerFormat: "JWT" }, "refreshToken")
       .addApiKey({ type: "apiKey", in: "header", name: "x-api-key" }, "apiKey")
       .build();
 

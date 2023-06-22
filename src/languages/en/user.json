@@ -1,8 +1,10 @@
 {
   "login": "Login success.",
+  "blocked": "Success blocked user",
   "error": {
     "notFound": "User not found.",
     "passwordNotMatch": "Password not match",
-    "passwordAttemptMax": "Password attempt user max"
+    "passwordAttemptMax": "Password attempt user max",
+    "blocked": "User blocked"
   }
 }

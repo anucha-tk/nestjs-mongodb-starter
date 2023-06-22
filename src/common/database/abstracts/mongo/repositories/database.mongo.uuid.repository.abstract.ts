@@ -61,6 +61,31 @@ export abstract class DatabaseMongoUUIDRepositoryAbstract<
     return findOne.exec() as any;
   }
 
+  async findOneById<T = EntityDocument>(
+    _id: string,
+    options?: IDatabaseFindOneOptions<ClientSession>,
+  ): Promise<T> {
+    const findOne = this._repository.findById<EntityDocument>(_id);
+
+    if (options?.select) {
+      findOne.select(options.select);
+    }
+
+    if (options?.join) {
+      findOne.populate(
+        typeof options.join === "boolean"
+          ? this._joinOnFind
+          : (options.join as PopulateOptions | PopulateOptions[]),
+      );
+    }
+
+    if (options?.order) {
+      findOne.sort(options.order);
+    }
+
+    return findOne.exec() as any;
+  }
+
   async findAll<T = EntityDocument>(
     find?: Record<string, any>,
     options?: IDatabaseFindAllOptions<ClientSession>,

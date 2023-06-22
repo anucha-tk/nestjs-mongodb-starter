@@ -6,7 +6,7 @@ export function UserPublicLoginDoc(): MethodDecorator {
   return applyDecorators(
     Doc<UserLoginSerialization>("user.login", {
       auth: {
-        jwtAccessToken: false,
+        apiKey: true,
       },
       response: {
         serialization: UserLoginSerialization,

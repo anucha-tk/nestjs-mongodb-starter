@@ -8,6 +8,7 @@ export function RoleAdminListDoc(): MethodDecorator {
     DocPaging<RoleListSerialization>("role.list", {
       auth: {
         jwtAccessToken: true,
+        apiKey: true,
       },
       request: {
         queries: [...RoleDocQueryIsActive, ...RoleDocQueryType],

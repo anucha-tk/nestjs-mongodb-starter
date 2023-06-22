@@ -46,6 +46,10 @@ export class UserService implements IUserService {
     return this.userRepository.create<UserEntity>(create);
   }
 
+  async findOneById<T>(_id: string, options?: IDatabaseFindOneOptions): Promise<T> {
+    return this.userRepository.findOneById<T>(_id, options);
+  }
+
   async findAll(
     find?: Record<string, any>,
     options?: IDatabaseFindAllOptions,

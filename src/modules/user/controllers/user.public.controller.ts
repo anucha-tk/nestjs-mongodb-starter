@@ -28,7 +28,9 @@ import { UserPayloadSerialization } from "../serializations/user.payload.seriali
 import { UserService } from "../services/user.service";
 import { SettingService } from "src/common/setting/services/setting.service";
 import { ENUM_AUTH_LOGIN_WITH } from "src/common/auth/constants/auth.enum.constant";
+import { ApiKeyPublicProtected } from "src/common/api-key/decorators/api-key.decorator";
 
+@ApiKeyPublicProtected()
 @ApiTags("modules.public.user")
 @Controller({
   version: "1",
