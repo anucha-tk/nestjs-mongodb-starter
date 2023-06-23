@@ -15,3 +15,29 @@ export function UserAdminBlockedDoc(): MethodDecorator {
     }),
   );
 }
+
+export const UserAdminActiveDoc = (): MethodDecorator =>
+  applyDecorators(
+    Doc<void>("user.blocked", {
+      auth: {
+        jwtAccessToken: true,
+        apiKey: true,
+      },
+      request: {
+        params: UserDocParamsGet,
+      },
+    }),
+  );
+
+export const UserAdminInactiveDoc = (): MethodDecorator =>
+  applyDecorators(
+    Doc<void>("user.blocked", {
+      auth: {
+        jwtAccessToken: true,
+        apiKey: true,
+      },
+      request: {
+        params: UserDocParamsGet,
+      },
+    }),
+  );

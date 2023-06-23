@@ -17,14 +17,10 @@ describe("UserCanNotOurSelfGuard", () => {
     const _id = faker.string.uuid();
     jest.spyOn(mockContext, "switchToHttp").mockReturnValue({
       getRequest: () => {
-        return [
-          {
-            __user: { _id } as UserDoc,
-          },
-          {
-            user: { _id: faker.string.uuid() } as UserDoc,
-          },
-        ];
+        return {
+          __user: { _id } as UserDoc,
+          user: { _id: faker.string.uuid() } as UserDoc,
+        };
       },
     } as any);
 
@@ -37,14 +33,10 @@ describe("UserCanNotOurSelfGuard", () => {
     const _id = faker.string.uuid();
     jest.spyOn(mockContext, "switchToHttp").mockReturnValue({
       getRequest: () => {
-        return [
-          {
-            __user: { _id } as UserDoc,
-          },
-          {
-            user: { _id } as UserDoc,
-          },
-        ];
+        return {
+          __user: { _id } as UserDoc,
+          user: { _id } as UserDoc,
+        };
       },
     } as any);
     await expect(userCanNotOurSelfGuard.canActivate(mockContext)).rejects.toThrow(

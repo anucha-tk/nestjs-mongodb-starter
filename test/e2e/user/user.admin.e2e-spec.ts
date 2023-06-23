@@ -14,6 +14,8 @@ import { createAdmin, createUser, mockPassword } from "../helper/user";
 describe("user admin e2e", () => {
   const BASE_URL = "/admin/user";
   const USER_BLOCKED_URL = `${BASE_URL}/update/:user/blocked`;
+  const USER_ACTIVE_URL = `${BASE_URL}/update/:user/active`;
+  const USER_INACTIVE_URL = `${BASE_URL}/update/:user/inactive`;
   let app: INestApplication;
   let userService: UserService;
   let roleService: RoleService;
@@ -72,7 +74,31 @@ describe("user admin e2e", () => {
     await app.close();
   });
 
-  describe(`${USER_BLOCKED_URL}`, () => {
+  describe(`Patch ${USER_INACTIVE_URL}`, () => {
+    it("should return 200 when update inActive user successful", async () => {
+      const { body, status } = await request(app.getHttpServer())
+        .patch(`${BASE_URL}/update/${user._id}/inactive`)
+        .set("x-api-key", xApiKey)
+        .set("Authorization", `Bearer ${adminAccessToken}`);
+
+      expect(status).toBe(200);
+      expect(body.message).toMatch(/inactive/i);
+    });
+  });
+
+  describe(`Patch ${USER_ACTIVE_URL}`, () => {
+    it("should return 200 when update active user successful", async () => {
+      const { body, status } = await request(app.getHttpServer())
+        .patch(`${BASE_URL}/update/${user._id}/active`)
+        .set("x-api-key", xApiKey)
+        .set("Authorization", `Bearer ${adminAccessToken}`);
+
+      expect(status).toBe(200);
+      expect(body.message).toMatch(/active/i);
+    });
+  });
+
+  describe(`Patch ${USER_BLOCKED_URL}`, () => {
     it("should return 401 when not x-api-key", async () => {
       const userId = faker.string.uuid();
       const { body, status } = await request(app.getHttpServer()).patch(

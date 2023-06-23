@@ -13,15 +13,15 @@ import { UserDoc } from "src/modules/user/repository/entities/user.entity";
 export class UserInactivePermanentGuard implements CanActivate {
   constructor(private reflector: Reflector) {}
 
-  async canActivate({ getHandler, getClass, switchToHttp }: ExecutionContext): Promise<boolean> {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     const required: boolean[] = this.reflector.getAllAndOverride<boolean[]>(
       USER_INACTIVE_PERMANENT_META_KEY,
-      [getHandler(), getClass()],
+      [context.getHandler(), context.getClass()],
     );
 
     if (!required) return true;
 
-    const { __user } = switchToHttp().getRequest<IRequestApp & { __user: UserDoc }>();
+    const { __user } = context.switchToHttp().getRequest<IRequestApp & { __user: UserDoc }>();
 
     if (!required.includes(__user.inactivePermanent)) {
       throw new BadRequestException({

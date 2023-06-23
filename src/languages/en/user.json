@@ -1,6 +1,8 @@
 {
   "login": "Login success.",
   "blocked": "Success blocked user",
+  "active": "Active Succeed",
+  "inactive": "Inactive Succeed",
   "error": {
     "notFound": "User not found.",
     "passwordNotMatch": "Password not match",

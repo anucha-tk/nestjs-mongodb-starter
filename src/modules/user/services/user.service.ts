@@ -100,6 +100,13 @@ export class UserService implements IUserService {
     return this.userRepository.save(repository);
   }
 
+  async active(repository: UserDoc): Promise<UserDoc> {
+    repository.isActive = true;
+    repository.inactiveDate = undefined;
+
+    return this.userRepository.save(repository);
+  }
+
   async inactive(repository: UserDoc): Promise<UserDoc> {
     repository.isActive = false;
     repository.inactiveDate = this.helperDateService.create();

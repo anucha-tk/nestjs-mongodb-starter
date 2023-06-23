@@ -23,5 +23,6 @@ export interface IUserService {
   payloadSerialization(data: IUserDoc): Promise<UserPayloadSerialization>;
   blocked(repository: UserDoc): Promise<UserDoc>;
   inactive(repository: UserDoc): Promise<UserDoc>;
+  active(repository: UserDoc): Promise<UserDoc>;
   inactivePermanent(repository: UserDoc): Promise<UserDoc>;
 }

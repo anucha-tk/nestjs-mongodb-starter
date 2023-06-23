@@ -314,6 +314,17 @@ describe("user service", () => {
     });
   });
 
+  describe("active", () => {
+    it("should return userDoc true active", async () => {
+      const result = await userService.active(new userKeyEntityDoc());
+
+      expect(userRepository.save).toHaveBeenCalled();
+      expect(result._id).toBe(userKeyId);
+      expect(result.isActive).toBeTruthy();
+      expect(result.inactiveDate).toBeUndefined();
+    });
+  });
+
   describe("inactivePermanent", () => {
     it("should return userDoc true inactivePermanent", async () => {
       const result = await userService.inactivePermanent(new userKeyEntityDoc());
