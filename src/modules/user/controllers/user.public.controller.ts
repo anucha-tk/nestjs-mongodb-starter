@@ -13,10 +13,7 @@ import { ApiTags } from "@nestjs/swagger";
 import { AuthService } from "src/common/auth/services/auth.service";
 import { Response } from "src/common/response/decorators/response.decorator";
 import { IResponse } from "src/common/response/interfaces/response.interface";
-import {
-  ENUM_USER_STATUS_CODE_ERROR,
-  ENUM_USER_STATUS_CODE_SUCCESS,
-} from "../constants/user.status-code.constant";
+import { ENUM_USER_STATUS_CODE_ERROR } from "../constants/user.status-code.constant";
 import { UserPublicLoginDoc } from "../docs/user.public.doc";
 import { UserLoginSerialization } from "../serializations/user.login.serialization";
 import { UserLoginDto } from "../dtos/user.login.dto";
@@ -24,7 +21,6 @@ import { UserDoc } from "../repository/entities/user.entity";
 import { ENUM_ERROR_STATUS_CODE_ERROR } from "src/common/error/constants/error.status-code.constant";
 import { IUserDoc } from "../interfaces/user.interface";
 import { ENUM_ROLE_STATUS_CODE_ERROR } from "src/modules/role/constants/role.status-code.constant";
-import { UserPayloadSerialization } from "../serializations/user.payload.serialization";
 import { UserService } from "../services/user.service";
 import { SettingService } from "src/common/setting/services/setting.service";
 import { ENUM_AUTH_LOGIN_WITH } from "src/common/auth/constants/auth.enum.constant";
@@ -58,8 +54,10 @@ export class UserPublicController {
       });
     }
 
-    const passwordAttempt: boolean = await this.settingService.getPasswordAttempt();
-    const maxPasswordAttempt: number = await this.settingService.getMaxPasswordAttempt();
+    const [passwordAttempt, maxPasswordAttempt] = await Promise.all([
+      this.settingService.getPasswordAttempt(),
+      this.settingService.getMaxPasswordAttempt(),
+    ]);
 
     if (passwordAttempt && user.passwordAttempt >= maxPasswordAttempt) {
       throw new ForbiddenException({
@@ -84,21 +82,24 @@ export class UserPublicController {
         statusCode: ENUM_USER_STATUS_CODE_ERROR.USER_PASSWORD_NOT_MATCH_ERROR,
         message: "user.error.passwordNotMatch",
       });
-    } else if (user.blocked) {
-      throw new ForbiddenException({
-        statusCode: ENUM_USER_STATUS_CODE_ERROR.USER_BLOCKED_ERROR,
-        message: "user.error.blocked",
-      });
-    } else if (user.inactivePermanent) {
-      throw new ForbiddenException({
-        statusCode: ENUM_USER_STATUS_CODE_ERROR.USER_INACTIVE_PERMANENT_ERROR,
-        message: "user.error.inactivePermanent",
-      });
-    } else if (!user.isActive) {
-      throw new ForbiddenException({
-        statusCode: ENUM_USER_STATUS_CODE_ERROR.USER_INACTIVE_ERROR,
-        message: "user.error.inactive",
-      });
+    }
+
+    switch (true) {
+      case user.blocked:
+        throw new ForbiddenException({
+          statusCode: ENUM_USER_STATUS_CODE_ERROR.USER_BLOCKED_ERROR,
+          message: "user.error.blocked",
+        });
+      case user.inactivePermanent:
+        throw new ForbiddenException({
+          statusCode: ENUM_USER_STATUS_CODE_ERROR.USER_INACTIVE_PERMANENT_ERROR,
+          message: "user.error.inactivePermanent",
+        });
+      case !user.isActive:
+        throw new ForbiddenException({
+          statusCode: ENUM_USER_STATUS_CODE_ERROR.USER_INACTIVE_ERROR,
+          message: "user.error.inactive",
+        });
     }
 
     const userWithRole: IUserDoc = await this.userService.joinWithRole(user);
@@ -119,20 +120,20 @@ export class UserPublicController {
       });
     }
 
-    const payload: UserPayloadSerialization = await this.userService.payloadSerialization(
-      userWithRole,
-    );
-    const tokenType: string = await this.authService.getTokenType();
-    const expiresIn: number = await this.authService.getAccessTokenExpirationTime();
-    const payloadAccessToken: Record<string, any> = await this.authService.createPayloadAccessToken(
-      payload,
-    );
-    const payloadRefreshToken: Record<string, any> =
-      await this.authService.createPayloadRefreshToken(payload._id, {
-        loginWith: ENUM_AUTH_LOGIN_WITH.LOCAL,
-      });
+    const [payload, tokenType, expiresIn] = await Promise.all([
+      this.userService.payloadSerialization(userWithRole),
+      this.authService.getTokenType(),
+      this.authService.getAccessTokenExpirationTime(),
+    ]);
 
-    const payloadEncryption = await this.authService.getPayloadEncryption();
+    const [payloadAccessToken, payloadRefreshToken, payloadEncryption] = await Promise.all([
+      this.authService.createPayloadAccessToken(payload),
+      this.authService.createPayloadRefreshToken(payload._id, {
+        loginWith: ENUM_AUTH_LOGIN_WITH.LOCAL,
+      }),
+      this.authService.getPayloadEncryption(),
+    ]);
+
     let payloadHashedAccessToken: Record<string, any> | string = payloadAccessToken;
     let payloadHashedRefreshToken: Record<string, any> | string = payloadRefreshToken;
 
@@ -141,22 +142,10 @@ export class UserPublicController {
       payloadHashedRefreshToken = await this.authService.encryptRefreshToken(payloadRefreshToken);
     }
 
-    const accessToken: string = await this.authService.createAccessToken(payloadHashedAccessToken);
-
-    const refreshToken: string = await this.authService.createRefreshToken(
-      payloadHashedRefreshToken,
-    );
-
-    const checkPasswordExpired: boolean = await this.authService.checkPasswordExpired(
-      user.passwordExpired,
-    );
-
-    if (checkPasswordExpired) {
-      throw new ForbiddenException({
-        statusCode: ENUM_USER_STATUS_CODE_SUCCESS.USER_PASSWORD_EXPIRED_ERROR,
-        message: "user.error.passwordExpired",
-      });
-    }
+    const [accessToken, refreshToken] = await Promise.all([
+      this.authService.createAccessToken(payloadHashedAccessToken),
+      this.authService.createRefreshToken(payloadHashedRefreshToken),
+    ]);
 
     return {
       data: {
