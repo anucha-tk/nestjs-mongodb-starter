@@ -1,6 +1,7 @@
 {
   "list": "Role lists",
   "error": {
-    "typeForbidden": "Role type not allowed"
+    "typeForbidden": "Role type not allowed",
+    "inactive": "Role is inactive"
   }
 }

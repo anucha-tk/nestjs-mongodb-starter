@@ -7,6 +7,10 @@
     "notFound": "User not found.",
     "passwordNotMatch": "Password not match",
     "passwordAttemptMax": "Password attempt user max",
-    "blocked": "User blocked"
+    "blocked": "User blocked",
+    "isActiveInvalid": "User is active invalid",
+    "inactivePermanent": "User inactive permanent",
+    "passwordExpired": "User password expired",
+    "inactive": "User is inactive"
   }
 }

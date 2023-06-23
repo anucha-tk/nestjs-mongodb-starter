@@ -2,8 +2,12 @@ import { faker } from "@faker-js/faker";
 import { INestApplication } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 import { AppModule } from "src/app/app.module";
+import { AuthService } from "src/common/auth/services/auth.service";
+import { ENUM_ROLE_STATUS_CODE_ERROR } from "src/modules/role/constants/role.status-code.constant";
 import { RoleService } from "src/modules/role/services/role.service";
+import { ENUM_USER_STATUS_CODE_SUCCESS } from "src/modules/user/constants/user.status-code.constant";
 import { UserLoginDto } from "src/modules/user/dtos/user.login.dto";
+import { IUserDoc } from "src/modules/user/interfaces/user.interface";
 import { UserDoc } from "src/modules/user/repository/entities/user.entity";
 import { UserService } from "src/modules/user/services/user.service";
 import request from "supertest";
@@ -15,10 +19,11 @@ describe("user public e2e", () => {
   let app: INestApplication;
   let userService: UserService;
   let roleService: RoleService;
+  let authService: AuthService;
   let user: UserDoc;
   let xApiKey: string;
 
-  beforeAll(async () => {
+  beforeEach(async () => {
     const modRef: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
@@ -26,6 +31,7 @@ describe("user public e2e", () => {
     app = modRef.createNestApplication();
     userService = modRef.get<UserService>(UserService);
     roleService = modRef.get<RoleService>(RoleService);
+    authService = modRef.get<AuthService>(AuthService);
     await app.init();
 
     // create userRole
@@ -40,10 +46,13 @@ describe("user public e2e", () => {
     user = await createUser({ app, roleId: roleUser._id });
   });
 
-  afterAll(async () => {
+  afterEach(async () => {
     jest.clearAllMocks();
     await userService.deleteMany({});
     await roleService.deleteMany({});
+  });
+
+  afterAll(async () => {
     await app.close();
   });
 
@@ -127,11 +136,97 @@ describe("user public e2e", () => {
       expect(body.message).toMatch(/password not match/i);
     });
 
-    it.todo("should return 403 when user is block");
-    it.todo("should return 403 when user is inactivePermanent");
-    it.todo("should return 403 when user is isActive");
-    it.todo("should return 403 when role is inActive");
-    it.todo("should return 403 when passwordExpired");
+    it("should return 403 when user is block", async () => {
+      user.blocked = true;
+
+      jest.spyOn(userService, "findOneByEmail").mockResolvedValue(user);
+
+      const loginDto: UserLoginDto = {
+        email: user.email,
+        password: mockPassword,
+      };
+      const { body, status } = await request(app.getHttpServer())
+        .post("/public/user/login")
+        .set("x-api-key", xApiKey)
+        .set("application", "json")
+        .send(loginDto);
+
+      expect(body).toBeDefined();
+      expect(status).toBe(403);
+      expect(body.message).toMatch(/blocked/i);
+    });
+
+    it("should return 403 when user is inactivePermanent", async () => {
+      user.inactivePermanent = true;
+      jest.spyOn(userService, "findOneByEmail").mockResolvedValue(user);
+
+      const loginDto: UserLoginDto = {
+        email: user.email,
+        password: mockPassword,
+      };
+      const { body, status } = await request(app.getHttpServer())
+        .post("/public/user/login")
+        .set("x-api-key", xApiKey)
+        .set("application", "json")
+        .send(loginDto);
+
+      expect(body).toBeDefined();
+      expect(status).toBe(403);
+      expect(body.message).toMatch(/inactive permanent/i);
+    });
+    it("should return 403 when user is isActive", async () => {
+      user.isActive = false;
+      jest.spyOn(userService, "findOneByEmail").mockResolvedValue(user);
+
+      const loginDto: UserLoginDto = {
+        email: user.email,
+        password: mockPassword,
+      };
+      const { body, status } = await request(app.getHttpServer())
+        .post("/public/user/login")
+        .set("x-api-key", xApiKey)
+        .set("application", "json")
+        .send(loginDto);
+
+      expect(body).toBeDefined();
+      expect(status).toBe(403);
+      expect(body.message).toMatch(/inactive/i);
+    });
+    it("should return 403 when role is inActive", async () => {
+      jest
+        .spyOn(userService, "joinWithRole")
+        .mockResolvedValue({ ...user, role: { isActive: false } } as IUserDoc);
+
+      const loginDto: UserLoginDto = {
+        email: user.email,
+        password: mockPassword,
+      };
+      const { body, status } = await request(app.getHttpServer())
+        .post("/public/user/login")
+        .set("x-api-key", xApiKey)
+        .set("application", "json")
+        .send(loginDto);
+
+      expect(body).toBeDefined();
+      expect(status).toBe(403);
+      expect(body.statusCode).toBe(ENUM_ROLE_STATUS_CODE_ERROR.ROLE_INACTIVE_ERROR);
+    });
+    it("should return 403 when passwordExpired", async () => {
+      jest.spyOn(authService, "checkPasswordExpired").mockResolvedValue(true);
+      const loginDto: UserLoginDto = {
+        email: user.email,
+        password: mockPassword,
+      };
+      const { body, status } = await request(app.getHttpServer())
+        .post("/public/user/login")
+        .set("x-api-key", xApiKey)
+        .set("application", "json")
+        .send(loginDto);
+
+      expect(body).toBeDefined();
+      expect(status).toBe(403);
+      expect(body.statusCode).toBe(ENUM_USER_STATUS_CODE_SUCCESS.USER_PASSWORD_EXPIRED_ERROR);
+    });
     it("should return 200 when login successful", async () => {
       const loginDto: UserLoginDto = {
         email: user.email,
