@@ -13,6 +13,7 @@ import { createAdmin, createUser, mockPassword } from "../helper/user";
 
 describe("user admin e2e", () => {
   const BASE_URL = "/admin/user";
+  const USER_BLOCKED_URL = `${BASE_URL}/update/:user/blocked`;
   let app: INestApplication;
   let userService: UserService;
   let roleService: RoleService;
@@ -71,7 +72,7 @@ describe("user admin e2e", () => {
     await app.close();
   });
 
-  describe("blocked", () => {
+  describe(`${USER_BLOCKED_URL}`, () => {
     it("should return 401 when not x-api-key", async () => {
       const userId = faker.string.uuid();
       const { body, status } = await request(app.getHttpServer()).patch(

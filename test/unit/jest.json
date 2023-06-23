@@ -9,7 +9,7 @@
     "<rootDir>/test/unit/api-key/*.spec.ts",
     "<rootDir>/test/unit/role/*.spec.ts",
     "<rootDir>/test/unit/pagination/*.spec.ts",
-    "<rootDir>/test/unit/user/*.spec.ts",
+    "<rootDir>/test/unit/user/**/*.spec.ts",
     "<rootDir>/test/unit/auth/*.spec.ts"
   ],
   "collectCoverage": true,

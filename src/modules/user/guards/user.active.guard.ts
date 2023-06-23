@@ -1,34 +1,35 @@
 import { Injectable, CanActivate, ExecutionContext, BadRequestException } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { IRequestApp } from "src/common/request/interfaces/request.interface";
-import { USER_BLOCKED_META_KEY } from "src/modules/user/constants/user.constant";
+import { USER_ACTIVE_META_KEY } from "src/modules/user/constants/user.constant";
 import { ENUM_USER_STATUS_CODE_ERROR } from "src/modules/user/constants/user.status-code.constant";
 import { UserDoc } from "src/modules/user/repository/entities/user.entity";
 
 /**
- * Guard check `request.__user.blocked` includes `USER_BLOCKED_META_KEY - boolean`
- * @example
- * SetMetadata(USER_BLOCKED_META_KEY, [false]) - allow __user.blocked includes false only
- * SetMetadata(USER_BLOCKED_META_KEY, [true,false]) - allow __user.blocked includes true and false
+ * Guard allow if `__user.isActive` includes USER_ACTIVE_META_KEY boolean[]
+ * @throws BadRequestException
+ * @returns BadRequestException or true
  * */
 @Injectable()
-export class UserBlockedGuard implements CanActivate {
+export class UserActiveGuard implements CanActivate {
   constructor(private reflector: Reflector) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const required: boolean[] = this.reflector.getAllAndOverride<boolean[]>(USER_BLOCKED_META_KEY, [
+    const required: boolean[] = this.reflector.getAllAndOverride<boolean[]>(USER_ACTIVE_META_KEY, [
       context.getHandler(),
       context.getClass(),
     ]);
 
-    if (!required) return true;
+    if (!required) {
+      return true;
+    }
 
     const { __user } = context.switchToHttp().getRequest<IRequestApp & { __user: UserDoc }>();
 
-    if (!required.includes(__user.blocked)) {
+    if (!required.includes(__user.isActive)) {
       throw new BadRequestException({
-        statusCode: ENUM_USER_STATUS_CODE_ERROR.USER_BLOCKED_ERROR,
-        message: "user.error.blocked",
+        statusCode: ENUM_USER_STATUS_CODE_ERROR.USER_IS_ACTIVE_ERROR,
+        message: "user.error.isActiveInvalid",
       });
     }
     return true;
