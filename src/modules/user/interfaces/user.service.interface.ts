@@ -1,5 +1,6 @@
 import { IAuthPassword } from "src/common/auth/interfaces/auth.interface";
 import {
+  IDatabaseExistOptions,
   IDatabaseFindAllOptions,
   IDatabaseFindOneOptions,
 } from "src/common/database/interfaces/database.interface";
@@ -25,4 +26,6 @@ export interface IUserService {
   inactive(repository: UserDoc): Promise<UserDoc>;
   active(repository: UserDoc): Promise<UserDoc>;
   inactivePermanent(repository: UserDoc): Promise<UserDoc>;
+  existByEmail(email: string, options?: IDatabaseExistOptions): Promise<boolean>;
+  existByMobileNumber(mobileNumber: string, options?: IDatabaseExistOptions): Promise<boolean>;
 }

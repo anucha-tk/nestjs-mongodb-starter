@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { plainToInstance } from "class-transformer";
 import { IAuthPassword } from "src/common/auth/interfaces/auth.interface";
 import {
+  IDatabaseExistOptions,
   IDatabaseFindAllOptions,
   IDatabaseFindOneOptions,
 } from "src/common/database/interfaces/database.interface";
@@ -120,5 +121,29 @@ export class UserService implements IUserService {
     repository.inactiveDate = this.helperDateService.create();
 
     return this.userRepository.save(repository);
+  }
+
+  async existByEmail(email: string, options?: IDatabaseExistOptions): Promise<boolean> {
+    return this.userRepository.exists(
+      {
+        email: {
+          $regex: new RegExp(`\\b${email}\\b`),
+          $options: "i",
+        },
+      },
+      { ...options },
+    );
+  }
+
+  async existByMobileNumber(
+    mobileNumber: string,
+    options?: IDatabaseExistOptions,
+  ): Promise<boolean> {
+    return this.userRepository.exists(
+      {
+        mobileNumber,
+      },
+      { ...options },
+    );
   }
 }

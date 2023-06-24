@@ -5,8 +5,12 @@ import { AppModule } from "src/app/app.module";
 import { AuthService } from "src/common/auth/services/auth.service";
 import { ENUM_ROLE_STATUS_CODE_ERROR } from "src/modules/role/constants/role.status-code.constant";
 import { RoleService } from "src/modules/role/services/role.service";
-import { ENUM_USER_STATUS_CODE_SUCCESS } from "src/modules/user/constants/user.status-code.constant";
+import {
+  ENUM_USER_STATUS_CODE_ERROR,
+  ENUM_USER_STATUS_CODE_SUCCESS,
+} from "src/modules/user/constants/user.status-code.constant";
 import { UserLoginDto } from "src/modules/user/dtos/user.login.dto";
+import { UserSignUpDto } from "src/modules/user/dtos/user.signup.dto";
 import { IUserDoc } from "src/modules/user/interfaces/user.interface";
 import { UserDoc } from "src/modules/user/repository/entities/user.entity";
 import { UserService } from "src/modules/user/services/user.service";
@@ -16,6 +20,7 @@ import { createRoleUser } from "../helper/role";
 import { createUser, mockPassword } from "../helper/user";
 
 describe("user public e2e", () => {
+  const USER_SIGNUP_URL = "/public/user/sign-up";
   let app: INestApplication;
   let userService: UserService;
   let roleService: RoleService;
@@ -243,51 +248,103 @@ describe("user public e2e", () => {
       expect(body.data).toHaveProperty("accessToken");
       expect(body.data).toHaveProperty("refreshToken");
     });
-  });
 
-  describe("attempt", () => {
-    // WARN: should last because it to many request
-    beforeAll(async () => {
-      const modRef: TestingModule = await Test.createTestingModule({
-        imports: [AppModule],
-      }).compile();
+    describe("attempt", () => {
+      // WARN: should last because it to many request
+      beforeAll(async () => {
+        const modRef: TestingModule = await Test.createTestingModule({
+          imports: [AppModule],
+        }).compile();
 
-      app = modRef.createNestApplication();
-      userService = modRef.get<UserService>(UserService);
-      roleService = modRef.get<RoleService>(RoleService);
-      await app.init();
-    });
+        app = modRef.createNestApplication();
+        userService = modRef.get<UserService>(UserService);
+        roleService = modRef.get<RoleService>(RoleService);
+        await app.init();
+      });
 
-    afterAll(async () => {
-      jest.clearAllMocks();
-      await userService.deleteMany({});
-      await roleService.deleteMany({});
-    });
+      afterAll(async () => {
+        jest.clearAllMocks();
+        await userService.deleteMany({});
+        await roleService.deleteMany({});
+      });
 
-    it("should return 403 when passwordAttemptMax", async () => {
-      const loginDto: UserLoginDto = {
-        email: user.email,
-        password: "123456",
-      };
+      it("should return 403 when passwordAttemptMax", async () => {
+        const loginDto: UserLoginDto = {
+          email: user.email,
+          password: "123456",
+        };
 
-      let attempt = 0;
-      while (attempt < 6) {
-        await request(app.getHttpServer())
+        let attempt = 0;
+        while (attempt < 6) {
+          await request(app.getHttpServer())
+            .post("/public/user/login")
+            .set("application", "json")
+            .set("x-api-key", xApiKey)
+            .send(loginDto);
+          attempt++;
+        }
+
+        const { body, status } = await request(app.getHttpServer())
           .post("/public/user/login")
           .set("application", "json")
           .set("x-api-key", xApiKey)
-          .send(loginDto);
-        attempt++;
-      }
+          .send({ email: user.email, password: mockPassword });
 
+        expect(status).toBe(403);
+        expect(body.message).toMatch(/Password attempt user max/i);
+      });
+    });
+  });
+  describe(`${USER_SIGNUP_URL}`, () => {
+    it("should throw user exist", async () => {
+      const signupDto: UserSignUpDto = {
+        email: user.email,
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
+        password: faker.string.alphanumeric(8),
+      };
       const { body, status } = await request(app.getHttpServer())
-        .post("/public/user/login")
+        .post(`${USER_SIGNUP_URL}`)
         .set("application", "json")
         .set("x-api-key", xApiKey)
-        .send({ email: user.email, password: mockPassword });
+        .send(signupDto);
 
-      expect(status).toBe(403);
-      expect(body.message).toMatch(/Password attempt user max/i);
+      expect(status).toBe(409);
+      expect(body.statusCode).toBe(ENUM_USER_STATUS_CODE_ERROR.USER_EMAIL_EXIST_ERROR);
+    });
+    it("should throw phoneNumber exist", async () => {
+      const signupDto: UserSignUpDto = {
+        email: faker.internet.email(),
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
+        password: faker.string.alphanumeric(8),
+        mobileNumber: user.mobileNumber,
+      };
+      const { body, status } = await request(app.getHttpServer())
+        .post(`${USER_SIGNUP_URL}`)
+        .set("application", "json")
+        .set("x-api-key", xApiKey)
+        .send(signupDto);
+
+      expect(status).toBe(409);
+      expect(body.statusCode).toBe(ENUM_USER_STATUS_CODE_ERROR.USER_MOBILE_NUMBER_EXIST_ERROR);
+    });
+
+    it("should return void when signup successful", async () => {
+      const signupDto: UserSignUpDto = {
+        email: faker.internet.email(),
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
+        password: faker.string.alphanumeric(8),
+        mobileNumber: faker.phone.number("##########"),
+      };
+      const { status } = await request(app.getHttpServer())
+        .post(`${USER_SIGNUP_URL}`)
+        .set("application", "json")
+        .set("x-api-key", xApiKey)
+        .send(signupDto);
+
+      expect(status).toBe(201);
     });
   });
 });

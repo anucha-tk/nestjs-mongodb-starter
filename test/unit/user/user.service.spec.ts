@@ -147,6 +147,7 @@ describe("user service", () => {
               return { _id: userKeyId, ...userDocWithRole };
             }),
             deleteMany: jest.fn().mockResolvedValue(true),
+            exists: jest.fn().mockResolvedValue(true),
             save: jest
               .fn()
               .mockImplementation(
@@ -334,6 +335,34 @@ describe("user service", () => {
       expect(result.inactivePermanent).toBeTruthy();
       expect(result.isActive).toBeFalsy();
       expect(result.inactiveDate instanceof Date).toBeTruthy();
+    });
+  });
+
+  describe("existByEmail", () => {
+    it("should return true when user exist", async () => {
+      const email = faker.internet.email();
+      const result = await userService.existByEmail(email);
+      expect(result).toBeTruthy();
+    });
+    it("should return false when user not exist", async () => {
+      jest.spyOn(userRepository, "exists").mockResolvedValue(false);
+      const email = faker.internet.email();
+      const result = await userService.existByEmail(email);
+      expect(result).toBeFalsy();
+    });
+  });
+
+  describe("existByEmail", () => {
+    it("should return true when user exist", async () => {
+      const phone = faker.phone.number();
+      const result = await userService.existByMobileNumber(phone);
+      expect(result).toBeTruthy();
+    });
+    it("should return false when user not exist", async () => {
+      jest.spyOn(userRepository, "exists").mockResolvedValue(false);
+      const phone = faker.phone.number();
+      const result = await userService.existByMobileNumber(phone);
+      expect(result).toBeFalsy();
     });
   });
 });

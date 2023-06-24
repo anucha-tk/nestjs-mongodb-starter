@@ -16,3 +16,8 @@ export interface IDatabaseCreateOptions<T = any>
 export interface IDatabaseFindAllOptions<T = any>
   extends IPaginationOptions,
     Omit<IDatabaseFindOneOptions<T>, "order"> {}
+
+export interface IDatabaseExistOptions<T = any>
+  extends Pick<IDatabaseFindOneOptions<T>, "session" | "withDeleted" | "join"> {
+  excludeId?: string[];
+}

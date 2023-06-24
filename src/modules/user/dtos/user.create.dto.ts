@@ -41,6 +41,7 @@ export class UserCreateDto {
     required: false,
   })
   @IsString()
+  @IsOptional()
   @MinLength(1)
   @MaxLength(100)
   @Type(() => String)

@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Body,
+  ConflictException,
   Controller,
   ForbiddenException,
   HttpCode,
@@ -14,7 +15,7 @@ import { AuthService } from "src/common/auth/services/auth.service";
 import { Response } from "src/common/response/decorators/response.decorator";
 import { IResponse } from "src/common/response/interfaces/response.interface";
 import { ENUM_USER_STATUS_CODE_ERROR } from "../constants/user.status-code.constant";
-import { UserPublicLoginDoc } from "../docs/user.public.doc";
+import { UserPublicLoginDoc, UserPublicSignUpDoc } from "../docs/user.public.doc";
 import { UserLoginSerialization } from "../serializations/user.login.serialization";
 import { UserLoginDto } from "../dtos/user.login.dto";
 import { UserDoc } from "../repository/entities/user.entity";
@@ -25,6 +26,9 @@ import { UserService } from "../services/user.service";
 import { SettingService } from "src/common/setting/services/setting.service";
 import { ENUM_AUTH_LOGIN_WITH } from "src/common/auth/constants/auth.enum.constant";
 import { ApiKeyPublicProtected } from "src/common/api-key/decorators/api-key.decorator";
+import { UserSignUpDto } from "../dtos/user.signup.dto";
+import { RoleService } from "src/modules/role/services/role.service";
+import { ENUM_USER_SIGN_UP_FROM } from "../constants/user.enum.constant";
 
 @ApiKeyPublicProtected()
 @ApiTags("modules.public.user")
@@ -36,6 +40,7 @@ export class UserPublicController {
   constructor(
     private readonly userService: UserService,
     private readonly authService: AuthService,
+    private readonly roleService: RoleService,
     private readonly settingService: SettingService,
   ) {}
 
@@ -156,4 +161,59 @@ export class UserPublicController {
       },
     };
   }
+
+  @UserPublicSignUpDoc()
+  @Response("user.signUp")
+  @Post("/sign-up")
+  async signUp(
+    @Body()
+    { email, mobileNumber, ...body }: UserSignUpDto,
+  ): Promise<void> {
+    const promises: Promise<any>[] = [
+      this.roleService.findOneByName("user"),
+      this.userService.existByEmail(email),
+    ];
+    if (mobileNumber) {
+      promises.push(this.userService.existByMobileNumber(mobileNumber));
+    }
+
+    const [role, emailExist, mobileNumberExist] = await Promise.all(promises);
+
+    if (emailExist) {
+      throw new ConflictException({
+        statusCode: ENUM_USER_STATUS_CODE_ERROR.USER_EMAIL_EXIST_ERROR,
+        message: "user.error.emailExist",
+      });
+    } else if (mobileNumberExist) {
+      throw new ConflictException({
+        statusCode: ENUM_USER_STATUS_CODE_ERROR.USER_MOBILE_NUMBER_EXIST_ERROR,
+        message: "user.error.mobileNumberExist",
+      });
+    }
+
+    try {
+      const password = await this.authService.createPassword(body.password);
+
+      await this.userService.create(
+        {
+          email,
+          mobileNumber,
+          signUpFrom: ENUM_USER_SIGN_UP_FROM.LOCAL,
+          role: role._id,
+          ...body,
+        },
+        password,
+      );
+
+      return;
+    } catch (err: any) {
+      throw new InternalServerErrorException({
+        statusCode: ENUM_ERROR_STATUS_CODE_ERROR.ERROR_UNKNOWN,
+        message: "http.serverError.internalServerError",
+        _error: err.message,
+      });
+    }
+  }
+  // TODO: google signup
+  // TODO: google login
 }

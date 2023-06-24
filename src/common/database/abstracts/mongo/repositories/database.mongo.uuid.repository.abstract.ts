@@ -1,5 +1,6 @@
 import { ClientSession, Model, PopulateOptions, Document } from "mongoose";
 import {
+  IDatabaseExistOptions,
   IDatabaseFindAllOptions,
   IDatabaseFindOneOptions,
 } from "src/common/database/interfaces/database.interface";
@@ -133,5 +134,32 @@ export abstract class DatabaseMongoUUIDRepositoryAbstract<
 
   async save(repository: EntityDocument & Document<string>): Promise<EntityDocument> {
     return repository.save();
+  }
+
+  async exists(
+    find: Record<string, any>,
+    options?: IDatabaseExistOptions<ClientSession>,
+  ): Promise<boolean> {
+    if (options?.excludeId) {
+      find = {
+        ...find,
+        _id: {
+          $nin: options?.excludeId ?? [],
+        },
+      };
+    }
+
+    const exist = this._repository.exists(find);
+
+    if (options?.join) {
+      exist.populate(
+        typeof options.join === "boolean"
+          ? this._joinOnFind
+          : (options.join as PopulateOptions | PopulateOptions[]),
+      );
+    }
+
+    const result = await exist;
+    return result ? true : false;
   }
 }

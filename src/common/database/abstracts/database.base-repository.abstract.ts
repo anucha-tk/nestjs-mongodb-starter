@@ -1,4 +1,8 @@
-import { IDatabaseFindAllOptions, IDatabaseFindOneOptions } from "../interfaces/database.interface";
+import {
+  IDatabaseExistOptions,
+  IDatabaseFindAllOptions,
+  IDatabaseFindOneOptions,
+} from "../interfaces/database.interface";
 
 export abstract class DatabaseBaseRepositoryAbstract<Entity> {
   abstract create<Dto = any>(data: Dto): Promise<Entity>;
@@ -15,4 +19,8 @@ export abstract class DatabaseBaseRepositoryAbstract<Entity> {
   abstract deleteMany(find: Record<string, any>): Promise<boolean>;
   abstract getTotal(find?: Record<string, any>): Promise<number>;
   abstract save(repository: Entity): Promise<Entity>;
+  abstract exists(
+    find: Record<string, any>,
+    options?: IDatabaseExistOptions<any>,
+  ): Promise<boolean>;
 }
