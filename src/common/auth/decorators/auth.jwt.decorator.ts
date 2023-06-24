@@ -1,7 +1,15 @@
-import { applyDecorators, SetMetadata, UseGuards } from "@nestjs/common";
+import {
+  applyDecorators,
+  createParamDecorator,
+  ExecutionContext,
+  SetMetadata,
+  UseGuards,
+} from "@nestjs/common";
+import { IRequestApp } from "src/common/request/interfaces/request.interface";
 import { ROLE_TYPE_META_KEY } from "src/modules/role/constants/role.constant";
 import { ENUM_ROLE_TYPE } from "src/modules/role/constants/role.enum.constant";
 import { RolePayloadTypeGuard } from "src/modules/role/guards/role.payload.type.guard";
+import { UserPayloadSerialization } from "src/modules/user/serializations/user.payload.serialization";
 import { AuthJwtAccessGuard } from "../guards/jwt-access/auth.jwt-access.guard";
 
 /**
@@ -16,3 +24,12 @@ export function AuthJwtAdminAccessProtected(): MethodDecorator {
     SetMetadata(ROLE_TYPE_META_KEY, [ENUM_ROLE_TYPE.SUPER_ADMIN, ENUM_ROLE_TYPE.ADMIN]),
   );
 }
+
+export const AuthJwtPayload = createParamDecorator(
+  (data: string, ctx: ExecutionContext): Record<string, any> => {
+    const { user } = ctx
+      .switchToHttp()
+      .getRequest<IRequestApp & { user: UserPayloadSerialization }>();
+    return data ? user[data] : user;
+  },
+);

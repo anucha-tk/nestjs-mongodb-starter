@@ -4,6 +4,10 @@
   "active": "Active Succeed",
   "inactive": "Inactive Succeed",
   "signUp": "Sign up Success",
+  "loginGoogle": "Request login with google succeed",
+  "loginGoogleCallback": "Login with google succeed",
+  "signUpGoogle": "Request sign up with google succeed",
+  "signUpGoogleCallback": "Sign up with google succeed",
   "error": {
     "emailExist": "Email user used",
     "mobileNumberExist": "Mobile Number user used",

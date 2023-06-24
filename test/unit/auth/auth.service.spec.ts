@@ -223,4 +223,13 @@ describe("auth service", () => {
       expect(result).toBeTruthy();
     });
   });
+
+  describe("createPasswordRandom", () => {
+    it("should return string", async () => {
+      const result = await authService.createPasswordRandom();
+
+      expect(result).toBeDefined();
+      expect(typeof result).toBe("string");
+    });
+  });
 });

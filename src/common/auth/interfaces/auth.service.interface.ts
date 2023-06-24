@@ -20,4 +20,5 @@ export interface IAuthService {
     options?: IAuthRefreshTokenOptions,
   ): Promise<string>;
   checkPasswordExpired(passwordExpired: Date): Promise<boolean>;
+  createPasswordRandom(): Promise<string>;
 }

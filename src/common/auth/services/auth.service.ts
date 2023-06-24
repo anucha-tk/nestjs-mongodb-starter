@@ -5,6 +5,7 @@ import { HelperDateService } from "src/common/helper/services/helper.date.servic
 import { HelperEncryptionService } from "src/common/helper/services/helper.encrypt.service";
 import { HelperHashService } from "src/common/helper/services/helper.hash.service";
 import { HelperObjectService } from "src/common/helper/services/helper.object.service";
+import { HelperStringService } from "src/common/helper/services/helper.string.service";
 import {
   IAuthPassword,
   IAuthPayloadOptions,
@@ -46,6 +47,7 @@ export class AuthService implements IAuthService {
     private readonly helperDateService: HelperDateService,
     private readonly helperArrayService: HelperArrayService,
     private readonly helperObjectService: HelperObjectService,
+    private readonly helperStringService: HelperStringService,
   ) {
     this.accessTokenSecretKey = this.configService.get<string>("auth.accessToken.secretKey");
     this.accessTokenExpirationTime = this.configService.get<number>(
@@ -195,5 +197,9 @@ export class AuthService implements IAuthService {
     const passwordExpiredConvert: Date = this.helperDateService.create(passwordExpired);
 
     return today > passwordExpiredConvert;
+  }
+
+  async createPasswordRandom(): Promise<string> {
+    return this.helperStringService.random(15);
   }
 }

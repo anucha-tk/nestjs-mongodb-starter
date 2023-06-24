@@ -5,6 +5,7 @@ import {
   IDatabaseFindOneOptions,
 } from "src/common/database/interfaces/database.interface";
 import { UserCreateDto } from "../dtos/user.create.dto";
+import { UserUpdateGoogleSSODto } from "../dtos/user.update-google-sso.dto";
 import { UserDoc } from "../repository/entities/user.entity";
 import { UserPayloadSerialization } from "../serializations/user.payload.serialization";
 import { IUserDoc, IUserEntity } from "./user.interface";
@@ -28,4 +29,8 @@ export interface IUserService {
   inactivePermanent(repository: UserDoc): Promise<UserDoc>;
   existByEmail(email: string, options?: IDatabaseExistOptions): Promise<boolean>;
   existByMobileNumber(mobileNumber: string, options?: IDatabaseExistOptions): Promise<boolean>;
+  updateGoogleSSO(
+    repository: UserDoc,
+    { accessToken, refreshToken }: UserUpdateGoogleSSODto,
+  ): Promise<UserDoc>;
 }

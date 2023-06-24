@@ -9,6 +9,7 @@ import {
 import { HelperDateService } from "src/common/helper/services/helper.date.service";
 import { RoleEntity } from "src/modules/role/repository/entities/role.entity";
 import { UserCreateDto } from "../dtos/user.create.dto";
+import { UserUpdateGoogleSSODto } from "../dtos/user.update-google-sso.dto";
 import { IUserDoc, IUserEntity } from "../interfaces/user.interface";
 import { IUserService } from "../interfaces/user.service.interface";
 import { UserDoc, UserEntity } from "../repository/entities/user.entity";
@@ -145,5 +146,17 @@ export class UserService implements IUserService {
       },
       { ...options },
     );
+  }
+
+  async updateGoogleSSO(
+    repository: UserDoc,
+    { accessToken, refreshToken }: UserUpdateGoogleSSODto,
+  ): Promise<UserDoc> {
+    repository.google = {
+      accessToken,
+      refreshToken,
+    };
+
+    return this.userRepository.save(repository);
   }
 }
