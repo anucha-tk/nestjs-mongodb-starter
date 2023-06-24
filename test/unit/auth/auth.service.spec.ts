@@ -197,6 +197,17 @@ describe("auth service", () => {
     });
   });
 
+  describe("decryptRefreshToken", () => {
+    it("should return object when decryptRefreshToken", async () => {
+      const payload = { name: "abc" };
+      const encrypted = await authService.encryptRefreshToken(payload);
+      const result = await authService.decryptRefreshToken({ data: encrypted });
+
+      expect(result).toBeDefined();
+      expect(result).toEqual({ name: "abc" });
+    });
+  });
+
   describe("createRefreshToken", () => {
     it("should return string when createRefreshToken", async () => {
       const payload = { name: "xyz" };

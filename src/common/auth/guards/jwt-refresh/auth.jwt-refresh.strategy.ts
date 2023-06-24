@@ -4,12 +4,8 @@ import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { AuthService } from "src/common/auth/services/auth.service";
 
-/**
- * JWT accessToken Strategy validate accessToken
- * @returns payload `request.user`
- * */
 @Injectable()
-export class AuthJwtAccessStrategy extends PassportStrategy(Strategy, "jwt") {
+export class AuthJwtRefreshStrategy extends PassportStrategy(Strategy, "jwtRefresh") {
   constructor(
     private readonly configService: ConfigService,
     private readonly authService: AuthService,
@@ -20,18 +16,19 @@ export class AuthJwtAccessStrategy extends PassportStrategy(Strategy, "jwt") {
       ),
       ignoreExpiration: false,
       jsonWebTokenOptions: {
-        ignoreNotBefore: false,
+        ignoreNotBefore: true,
         audience: configService.get<string>("auth.audience"),
         issuer: configService.get<string>("auth.issuer"),
         subject: configService.get<string>("auth.subject"),
       },
-      secretOrKey: configService.get<string>("auth.accessToken.secretKey"),
+      secretOrKey: configService.get<string>("auth.refreshToken.secretKey"),
     });
   }
 
   async validate({ data }: Record<string, any>): Promise<Record<string, any>> {
     const payloadEncryption: boolean = await this.authService.getPayloadEncryption();
+    console.log(this.authService.decryptRefreshToken({ data }));
 
-    return payloadEncryption ? this.authService.decryptAccessToken({ data }) : data;
+    return payloadEncryption ? this.authService.decryptRefreshToken({ data }) : data;
   }
 }

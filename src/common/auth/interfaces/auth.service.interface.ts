@@ -21,4 +21,5 @@ export interface IAuthService {
   ): Promise<string>;
   checkPasswordExpired(passwordExpired: Date): Promise<boolean>;
   createPasswordRandom(): Promise<string>;
+  decryptRefreshToken({ data }: Record<string, any>): Promise<Record<string, any>>;
 }

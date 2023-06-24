@@ -202,4 +202,12 @@ export class AuthService implements IAuthService {
   async createPasswordRandom(): Promise<string> {
     return this.helperStringService.random(15);
   }
+
+  async decryptRefreshToken({ data }: Record<string, any>): Promise<Record<string, any>> {
+    return this.helperEncryptionService.aes256Decrypt(
+      data,
+      this.refreshTokenEncryptKey,
+      this.refreshTokenEncryptIv,
+    ) as Record<string, any>;
+  }
 }

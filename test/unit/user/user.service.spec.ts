@@ -42,7 +42,7 @@ describe("user service", () => {
     passwordExpired: faker.date.future(),
     passwordCreated: faker.date.recent(),
     passwordAttempt: 0,
-    mobileNumber: faker.phone.number(),
+    mobileNumber: faker.phone.number("##########"),
     role: ENUM_ROLE_TYPE.USER,
     signUpFrom: ENUM_USER_SIGN_UP_FROM.LOCAL,
     signUpDate: faker.date.recent(),
@@ -340,7 +340,7 @@ describe("user service", () => {
 
   describe("existByEmail", () => {
     it("should return true when user exist", async () => {
-      const email = faker.internet.email();
+      const email = userDoc.email;
       const result = await userService.existByEmail(email);
       expect(result).toBeTruthy();
     });
@@ -352,13 +352,14 @@ describe("user service", () => {
     });
   });
 
-  describe("existByEmail", () => {
-    it("should return true when user exist", async () => {
-      const phone = faker.phone.number();
+  describe("existByMobileNumber", () => {
+    it("should return true when user mobileNumber exist", async () => {
+      jest.spyOn(userRepository, "exists").mockResolvedValue(true);
+      const phone = userDoc.mobileNumber;
       const result = await userService.existByMobileNumber(phone);
       expect(result).toBeTruthy();
     });
-    it("should return false when user not exist", async () => {
+    it("should return false when user mobileNumber not exist", async () => {
       jest.spyOn(userRepository, "exists").mockResolvedValue(false);
       const phone = faker.phone.number();
       const result = await userService.existByMobileNumber(phone);
