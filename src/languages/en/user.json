@@ -8,6 +8,7 @@
   "loginGoogleCallback": "Login with google succeed",
   "signUpGoogle": "Request sign up with google succeed",
   "signUpGoogleCallback": "Sign up with google succeed",
+  "refresh": "Refresh token success",
   "error": {
     "emailExist": "Email user used",
     "mobileNumberExist": "Mobile Number user used",

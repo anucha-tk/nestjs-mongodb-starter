@@ -47,13 +47,16 @@ export class UserAuthController {
         message: "role.error.inactive",
       });
     }
-    const payload = await this.userService.payloadSerialization(userWithRole);
-    const tokenType: string = await this.authService.getTokenType();
-    const expiresIn: number = await this.authService.getAccessTokenExpirationTime();
+    const [payload, tokenType, expiresIn, payloadEncryption] = await Promise.all([
+      this.userService.payloadSerialization(userWithRole),
+      this.authService.getTokenType(),
+      this.authService.getAccessTokenExpirationTime(),
+      this.authService.getPayloadEncryption(),
+    ]);
+
     const payloadAccessToken: Record<string, any> = await this.authService.createPayloadAccessToken(
       payload,
     );
-    const payloadEncryption = await this.authService.getPayloadEncryption();
     let payloadHashedAccessToken: Record<string, any> | string = payloadAccessToken;
     if (payloadEncryption) {
       payloadHashedAccessToken = await this.authService.encryptAccessToken(payloadAccessToken);

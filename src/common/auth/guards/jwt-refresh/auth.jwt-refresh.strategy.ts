@@ -27,8 +27,6 @@ export class AuthJwtRefreshStrategy extends PassportStrategy(Strategy, "jwtRefre
 
   async validate({ data }: Record<string, any>): Promise<Record<string, any>> {
     const payloadEncryption: boolean = await this.authService.getPayloadEncryption();
-    console.log(this.authService.decryptRefreshToken({ data }));
-
     return payloadEncryption ? this.authService.decryptRefreshToken({ data }) : data;
   }
 }

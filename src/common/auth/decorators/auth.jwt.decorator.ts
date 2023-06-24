@@ -43,7 +43,7 @@ export const AuthJwtPayload = createParamDecorator(
 
 /**
  * Guard refreshToken with AuthGuard("jwtRefresh")
- * @throws `ENUM_AUTH_STATUS_CODE_ERROR.AUTH_JWT_REFRESH_TOKEN_ERROR`
+ * @throws 401 `ENUM_AUTH_STATUS_CODE_ERROR.AUTH_JWT_REFRESH_TOKEN_ERROR`
  * */
 export function AuthJwtRefreshProtected(): MethodDecorator {
   return applyDecorators(UseGuards(AuthJwtRefreshGuard));
