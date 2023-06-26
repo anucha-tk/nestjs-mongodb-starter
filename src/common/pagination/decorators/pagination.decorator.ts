@@ -24,8 +24,9 @@ export function PaginationQueryFilterInBoolean(
   field: string,
   defaultValue: boolean[],
   queryField?: string,
+  raw = false,
 ): ParameterDecorator {
-  return Query(queryField ?? field, PaginationFilterInBooleanPipe(field, defaultValue));
+  return Query(queryField ?? field, PaginationFilterInBooleanPipe(field, defaultValue, raw));
 }
 
 export function PaginationQueryFilterInEnum<T>(
@@ -33,9 +34,10 @@ export function PaginationQueryFilterInEnum<T>(
   defaultValue: T,
   defaultEnum: Record<string, any>,
   queryField?: string,
+  raw = false,
 ): ParameterDecorator {
   return Query(
     queryField ?? field,
-    PaginationFilterInEnumPipe<T>(field, defaultValue, defaultEnum),
+    PaginationFilterInEnumPipe<T>(field, defaultValue, defaultEnum, raw),
   );
 }

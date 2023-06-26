@@ -19,6 +19,7 @@ describe("MinDateTodayConstraint", () => {
     // Mock the helperDateService to return the current date
     const todayDate = new Date();
     jest.spyOn(helperDateService, "startOfDay").mockReturnValue(todayDate);
+    jest.spyOn(helperDateService, "endOfDay").mockReturnValue(todayDate);
 
     // Create a test value equal to today's date
     const value = todayDate.toISOString();
@@ -31,7 +32,7 @@ describe("MinDateTodayConstraint", () => {
   it("should return true when value is greater than today", () => {
     // Mock the helperDateService to return a past date
     const todayDate = new Date();
-    jest.spyOn(helperDateService, "startOfDay").mockReturnValue(todayDate);
+    jest.spyOn(helperDateService, "endOfDay").mockReturnValue(todayDate);
 
     // Create a test value greater than today's date
     const value = new Date(
@@ -48,7 +49,7 @@ describe("MinDateTodayConstraint", () => {
   it("should return false when value is less than today", () => {
     // Mock the helperDateService to return a future date
     const todayDate = new Date();
-    jest.spyOn(helperDateService, "startOfDay").mockReturnValue(todayDate);
+    jest.spyOn(helperDateService, "endOfDay").mockReturnValue(todayDate);
 
     // Create a test value less than today's date
     const value = new Date(

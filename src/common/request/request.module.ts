@@ -11,7 +11,8 @@ import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
 import { ENUM_REQUEST_STATUS_CODE_ERROR } from "./constants/request.status-code.constant";
 import { RequestTimeoutInterceptor } from "./interceptors/request.timeout.interceptor";
 import { RequestMiddlewareModule } from "./middlewares/request.middleware.module";
-import { SkipConstraint } from "./validations/request.skip.validation";
+import { MinDateTodayConstraint } from "./validations/request.min-date-today.validation";
+import { MinGreaterThanEqualConstraint } from "./validations/request.min-greater-than-equal.validation";
 
 @Module({
   controllers: [],
@@ -42,7 +43,8 @@ import { SkipConstraint } from "./validations/request.skip.validation";
       provide: APP_GUARD,
       useClass: ThrottlerGuard,
     },
-    SkipConstraint,
+    MinDateTodayConstraint,
+    MinGreaterThanEqualConstraint,
   ],
   imports: [
     RequestMiddlewareModule,

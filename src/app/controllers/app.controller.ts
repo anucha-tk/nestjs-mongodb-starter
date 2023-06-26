@@ -1,6 +1,8 @@
 import { Controller, Get, VERSION_NEUTRAL } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { ApiExcludeEndpoint } from "@nestjs/swagger";
+import { ApiExcludeEndpoint, ApiTags } from "@nestjs/swagger";
+import { AppHelloApiKeyDoc, AppHelloDoc } from "src/app/docs/app.doc";
+import { AppHelloSerialization } from "src/app/serializations/app.hello.serialization";
 import { ApiKeyPublicProtected } from "src/common/api-key/decorators/api-key.decorator";
 import { HelperDateService } from "src/common/helper/services/helper.date.service";
 import { ENUM_LOGGER_ACTION } from "src/common/logger/constants/logger.enum.constant";
@@ -9,9 +11,8 @@ import { RequestTimeout, RequestUserAgent } from "src/common/request/decorators/
 import { Response } from "src/common/response/decorators/response.decorator";
 import { IResponse } from "src/common/response/interfaces/response.interface";
 import { IResult } from "ua-parser-js";
-import { AppHelloApiKeyDoc, AppHelloDoc } from "../docs/app.doc";
-import { AppHelloSerialization } from "../serializations/app.hello.serialization";
 
+@ApiTags("hello")
 @Controller({
   version: VERSION_NEUTRAL,
   path: "/",

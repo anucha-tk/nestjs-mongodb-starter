@@ -27,7 +27,9 @@ export interface IResponseOptions<T> {
   messageProperties?: IMessageOptionsProperties;
 }
 
-export type IResponsePagingOptions<T> = IResponseOptions<T>;
+export interface IResponsePagingOptions<T> extends Omit<IResponseOptions<T>, "serialization"> {
+  serialization: ClassConstructor<T>;
+}
 
 export interface IResponsePagingPagination {
   totalPage: number;

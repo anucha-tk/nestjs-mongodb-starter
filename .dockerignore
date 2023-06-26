@@ -10,6 +10,7 @@ dist/
 .husky/
 .github/
 prod/
+data/*
 
 # Logs
 logs/

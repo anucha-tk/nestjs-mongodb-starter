@@ -4,13 +4,32 @@
     "/api/hello": {
       "get": {
         "operationId": "AppController_hello",
+        "summary": "hello",
         "parameters": [
+          {
+            "name": "user-agent",
+            "in": "header",
+            "description": "User agent header",
+            "required": false,
+            "schema": {
+              "default": "Mozilla/5.0 (Windows; U; Windows NT 6.3) AppleWebKit/532.1.1 (KHTML, like Gecko) Chrome/30.0.866.0 Safari/532.1.1",
+              "example": "Mozilla/5.0 (Windows; U; Windows NT 6.3) AppleWebKit/532.1.1 (KHTML, like Gecko) Chrome/30.0.866.0 Safari/532.1.1",
+              "type": "string"
+            }
+          },
           {
             "name": "x-custom-lang",
             "in": "header",
             "description": "Custom language header",
             "required": false,
             "schema": { "default": "en", "example": "en", "type": "string" }
+          },
+          {
+            "name": "x-timestamp",
+            "in": "header",
+            "description": "Timestamp header, in microseconds",
+            "required": false,
+            "schema": { "default": 1687773942505, "example": 1687773942505, "type": "string" }
           }
         ],
         "responses": {
@@ -71,19 +90,39 @@
               }
             }
           }
-        }
+        },
+        "tags": ["hello"]
       }
     },
     "/api/hello/api-key": {
       "get": {
         "operationId": "AppController_helloApiKey",
+        "summary": "hello",
         "parameters": [
+          {
+            "name": "user-agent",
+            "in": "header",
+            "description": "User agent header",
+            "required": false,
+            "schema": {
+              "default": "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.0; Trident/3.1; .NET CLR 4.7.12114.0)",
+              "example": "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.0; Trident/3.1; .NET CLR 4.7.12114.0)",
+              "type": "string"
+            }
+          },
           {
             "name": "x-custom-lang",
             "in": "header",
             "description": "Custom language header",
             "required": false,
             "schema": { "default": "en", "example": "en", "type": "string" }
+          },
+          {
+            "name": "x-timestamp",
+            "in": "header",
+            "description": "Timestamp header, in microseconds",
+            "required": false,
+            "schema": { "default": 1687773942507, "example": 1687773942507, "type": "string" }
           }
         ],
         "responses": {
@@ -125,8 +164,61 @@
                     {
                       "allOf": [{ "$ref": "#/components/schemas/ResponseDefaultSerialization" }],
                       "properties": {
+                        "message": { "example": "apiKey.error.notActiveYet" },
+                        "statusCode": { "type": "number", "example": 5023 }
+                      }
+                    },
+                    {
+                      "allOf": [{ "$ref": "#/components/schemas/ResponseDefaultSerialization" }],
+                      "properties": {
+                        "message": { "example": "apiKey.error.expired" },
+                        "statusCode": { "type": "number", "example": 5024 }
+                      }
+                    },
+                    {
+                      "allOf": [{ "$ref": "#/components/schemas/ResponseDefaultSerialization" }],
+                      "properties": {
                         "message": { "example": "apiKey.error.invalid" },
                         "statusCode": { "type": "number", "example": 5025 }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "allOf": [{ "$ref": "#/components/schemas/ResponseDefaultSerialization" }],
+                      "properties": {
+                        "message": { "example": "request.error.userAgentInvalid" },
+                        "statusCode": { "type": "number", "example": 5073 }
+                      }
+                    },
+                    {
+                      "allOf": [{ "$ref": "#/components/schemas/ResponseDefaultSerialization" }],
+                      "properties": {
+                        "message": { "example": "request.error.userAgentBrowserInvalid" },
+                        "statusCode": { "type": "number", "example": 5074 }
+                      }
+                    },
+                    {
+                      "allOf": [{ "$ref": "#/components/schemas/ResponseDefaultSerialization" }],
+                      "properties": {
+                        "message": { "example": "request.error.userAgentOsInvalid" },
+                        "statusCode": { "type": "number", "example": 5073 }
+                      }
+                    },
+                    {
+                      "allOf": [{ "$ref": "#/components/schemas/ResponseDefaultSerialization" }],
+                      "properties": {
+                        "message": { "example": "request.error.timestampInvalid" },
+                        "statusCode": { "type": "number", "example": 5071 }
                       }
                     }
                   ]
@@ -177,19 +269,39 @@
             }
           }
         },
+        "tags": ["hello"],
         "security": [{ "apiKey": [] }]
       }
     },
     "/api/public/message/languages": {
       "get": {
         "operationId": "MessagePublicController_languages",
+        "summary": "common.public.message",
         "parameters": [
+          {
+            "name": "user-agent",
+            "in": "header",
+            "description": "User agent header",
+            "required": false,
+            "schema": {
+              "default": "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_8_3 rv:2.0; IT) AppleWebKit/536.1.2 (KHTML, like Gecko) Version/4.0.1 Safari/536.1.2",
+              "example": "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_8_3 rv:2.0; IT) AppleWebKit/536.1.2 (KHTML, like Gecko) Version/4.0.1 Safari/536.1.2",
+              "type": "string"
+            }
+          },
           {
             "name": "x-custom-lang",
             "in": "header",
             "description": "Custom language header",
             "required": false,
             "schema": { "default": "en", "example": "en", "type": "string" }
+          },
+          {
+            "name": "x-timestamp",
+            "in": "header",
+            "description": "Timestamp header, in microseconds",
+            "required": false,
+            "schema": { "default": 1687773942570, "example": 1687773942570, "type": "string" }
           }
         ],
         "responses": {
@@ -200,7 +312,7 @@
                 "schema": {
                   "allOf": [{ "$ref": "#/components/schemas/ResponseDefaultSerialization" }],
                   "properties": {
-                    "message": { "example": "message.languages" },
+                    "message": { "example": "apiKey.languages" },
                     "statusCode": { "type": "number", "example": 200 },
                     "data": { "$ref": "#/components/schemas/MessageLanguageSerialization" }
                   }
@@ -257,13 +369,32 @@
     "/api/v1/public/user/login": {
       "post": {
         "operationId": "UserPublicController_login",
+        "summary": "modules.public.user",
         "parameters": [
+          {
+            "name": "user-agent",
+            "in": "header",
+            "description": "User agent header",
+            "required": false,
+            "schema": {
+              "default": "Mozilla/5.0 (Windows; U; Windows NT 6.3) AppleWebKit/532.0.2 (KHTML, like Gecko) Chrome/27.0.827.0 Safari/532.0.2",
+              "example": "Mozilla/5.0 (Windows; U; Windows NT 6.3) AppleWebKit/532.0.2 (KHTML, like Gecko) Chrome/27.0.827.0 Safari/532.0.2",
+              "type": "string"
+            }
+          },
           {
             "name": "x-custom-lang",
             "in": "header",
             "description": "Custom language header",
             "required": false,
             "schema": { "default": "en", "example": "en", "type": "string" }
+          },
+          {
+            "name": "x-timestamp",
+            "in": "header",
+            "description": "Timestamp header, in microseconds",
+            "required": false,
+            "schema": { "default": 1687773942578, "example": 1687773942578, "type": "string" }
           }
         ],
         "requestBody": {
@@ -297,6 +428,20 @@
                   "properties": {
                     "message": { "example": "http.serverError.requestTimeout" },
                     "statusCode": { "type": "number", "example": 5052 }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [{ "$ref": "#/components/schemas/ResponseDefaultSerialization" }],
+                  "properties": {
+                    "message": { "example": "request.validation" },
+                    "statusCode": { "type": "number", "example": 5070 }
                   }
                 }
               }
@@ -337,13 +482,32 @@
     "/api/v1/public/user/sign-up": {
       "post": {
         "operationId": "UserPublicController_signUp",
+        "summary": "modules.public.user",
         "parameters": [
+          {
+            "name": "user-agent",
+            "in": "header",
+            "description": "User agent header",
+            "required": false,
+            "schema": {
+              "default": "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 5.3; Trident/3.0; .NET CLR 4.4.51077.4)",
+              "example": "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 5.3; Trident/3.0; .NET CLR 4.4.51077.4)",
+              "type": "string"
+            }
+          },
           {
             "name": "x-custom-lang",
             "in": "header",
             "description": "Custom language header",
             "required": false,
             "schema": { "default": "en", "example": "en", "type": "string" }
+          },
+          {
+            "name": "x-timestamp",
+            "in": "header",
+            "description": "Timestamp header, in microseconds",
+            "required": false,
+            "schema": { "default": 1687773942579, "example": 1687773942579, "type": "string" }
           }
         ],
         "requestBody": {
@@ -360,7 +524,7 @@
                 "schema": {
                   "allOf": [{ "$ref": "#/components/schemas/ResponseDefaultSerialization" }],
                   "properties": {
-                    "message": { "example": "user.signup" },
+                    "message": { "example": "user.signUp" },
                     "statusCode": { "type": "number", "example": 201 }
                   }
                 }
@@ -376,6 +540,20 @@
                   "properties": {
                     "message": { "example": "http.serverError.requestTimeout" },
                     "statusCode": { "type": "number", "example": 5052 }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [{ "$ref": "#/components/schemas/ResponseDefaultSerialization" }],
+                  "properties": {
+                    "message": { "example": "request.validation" },
+                    "statusCode": { "type": "number", "example": 5070 }
                   }
                 }
               }
@@ -416,50 +594,18 @@
     "/api/v1/admin/role/list": {
       "get": {
         "operationId": "RoleAdminController_list",
+        "summary": "modules.admin.role",
         "parameters": [
           {
-            "name": "search",
+            "name": "user-agent",
+            "in": "header",
+            "description": "User agent header",
             "required": false,
-            "in": "query",
-            "allowEmptyValue": true,
-            "description": "Search will base on _availableSearch with rule contains, and case insensitive",
-            "schema": { "type": "string" }
-          },
-          {
-            "name": "perPage",
-            "required": false,
-            "in": "query",
-            "allowEmptyValue": true,
-            "example": 20,
-            "description": "Data per page",
-            "schema": { "type": "number" }
-          },
-          {
-            "name": "page",
-            "required": false,
-            "in": "query",
-            "allowEmptyValue": true,
-            "example": 1,
-            "description": "page number",
-            "schema": { "type": "number" }
-          },
-          {
-            "name": "orderBy",
-            "required": false,
-            "in": "query",
-            "allowEmptyValue": true,
-            "example": "createdAt",
-            "description": "Order by base on _availableOrderBy",
-            "schema": { "type": "string" }
-          },
-          {
-            "name": "orderDirection",
-            "required": false,
-            "in": "query",
-            "allowEmptyValue": true,
-            "example": "asc",
-            "description": "Order direction base on _availableOrderDirection",
-            "schema": { "enum": ["asc", "desc"], "type": "string" }
+            "schema": {
+              "default": "Mozilla/5.0 (Windows; U; Windows NT 6.0) AppleWebKit/538.0.2 (KHTML, like Gecko) Chrome/23.0.843.0 Safari/538.0.2",
+              "example": "Mozilla/5.0 (Windows; U; Windows NT 6.0) AppleWebKit/538.0.2 (KHTML, like Gecko) Chrome/23.0.843.0 Safari/538.0.2",
+              "type": "string"
+            }
           },
           {
             "name": "x-custom-lang",
@@ -467,6 +613,13 @@
             "description": "Custom language header",
             "required": false,
             "schema": { "default": "en", "example": "en", "type": "string" }
+          },
+          {
+            "name": "x-timestamp",
+            "in": "header",
+            "description": "Timestamp header, in microseconds",
+            "required": false,
+            "schema": { "default": 1687773942532, "example": 1687773942532, "type": "string" }
           },
           {
             "name": "isActive",
@@ -485,6 +638,50 @@
             "example": "SUPER_ADMIN,USER,ADMIN",
             "description": "enum value with ',' delimiter",
             "schema": { "type": "string" }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "allowEmptyValue": true,
+            "description": "Search will base on _metadata.pagination._availableSearch with rule contains, and case insensitive",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "perPage",
+            "required": false,
+            "in": "query",
+            "allowEmptyValue": true,
+            "example": 20,
+            "description": "Data per page, max 100",
+            "schema": { "type": "number" }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "allowEmptyValue": true,
+            "example": 1,
+            "description": "page number, max 20",
+            "schema": { "type": "number" }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "allowEmptyValue": true,
+            "example": "createdAt",
+            "description": "Order by base on _metadata.pagination.availableOrderBy",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "orderDirection",
+            "required": false,
+            "in": "query",
+            "allowEmptyValue": true,
+            "example": "asc",
+            "description": "Order direction base on _metadata.pagination.availableOrderDirection",
+            "schema": { "enum": ["asc", "desc"], "type": "string" }
           }
         ],
         "responses": {
@@ -518,27 +715,6 @@
                         "message": { "example": "auth.error.accessTokenUnauthorized" },
                         "statusCode": { "type": "number", "example": 5000 }
                       }
-                    },
-                    {
-                      "allOf": [{ "$ref": "#/components/schemas/ResponseDefaultSerialization" }],
-                      "properties": {
-                        "message": { "example": "apiKey.error.keyNeeded" },
-                        "statusCode": { "type": "number", "example": 5020 }
-                      }
-                    },
-                    {
-                      "allOf": [{ "$ref": "#/components/schemas/ResponseDefaultSerialization" }],
-                      "properties": {
-                        "message": { "example": "apiKey.error.notFound" },
-                        "statusCode": { "type": "number", "example": 5021 }
-                      }
-                    },
-                    {
-                      "allOf": [{ "$ref": "#/components/schemas/ResponseDefaultSerialization" }],
-                      "properties": {
-                        "message": { "example": "apiKey.error.invalid" },
-                        "statusCode": { "type": "number", "example": 5025 }
-                      }
                     }
                   ]
                 }
@@ -556,6 +732,13 @@
                       "properties": {
                         "message": { "example": "role.error.typeForbidden" },
                         "statusCode": { "type": "number", "example": 5101 }
+                      }
+                    },
+                    {
+                      "allOf": [{ "$ref": "#/components/schemas/ResponseDefaultSerialization" }],
+                      "properties": {
+                        "message": { "example": "policy.error.abilityForbidden" },
+                        "statusCode": { "type": "number", "example": 50010 }
                       }
                     }
                   ]
@@ -606,14 +789,26 @@
             }
           }
         },
-        "tags": ["common.admin.role"],
-        "security": [{ "accessToken": [] }, { "apiKey": [] }]
+        "tags": ["modules.admin.role"],
+        "security": [{ "accessToken": [] }]
       }
     },
     "/api/v1/admin/user/update/{user}/blocked": {
       "patch": {
         "operationId": "UserAdminController_blocked",
+        "summary": "modules.admin.user",
         "parameters": [
+          {
+            "name": "user-agent",
+            "in": "header",
+            "description": "User agent header",
+            "required": false,
+            "schema": {
+              "default": "Mozilla/5.0 (X11; Linux x86_64; rv:11.9) Gecko/20100101 Firefox/11.9.6",
+              "example": "Mozilla/5.0 (X11; Linux x86_64; rv:11.9) Gecko/20100101 Firefox/11.9.6",
+              "type": "string"
+            }
+          },
           {
             "name": "x-custom-lang",
             "in": "header",
@@ -622,11 +817,18 @@
             "schema": { "default": "en", "example": "en", "type": "string" }
           },
           {
+            "name": "x-timestamp",
+            "in": "header",
+            "description": "Timestamp header, in microseconds",
+            "required": false,
+            "schema": { "default": 1687773942558, "example": 1687773942558, "type": "string" }
+          },
+          {
             "name": "user",
             "required": true,
             "in": "path",
             "allowEmptyValue": false,
-            "example": "1f851b3a-b972-4e60-829e-a66a1244af5a",
+            "example": "de1a1d09-98c5-4f8d-98b9-2f76558c337e",
             "schema": { "type": "string" }
           }
         ],
@@ -675,6 +877,20 @@
                     {
                       "allOf": [{ "$ref": "#/components/schemas/ResponseDefaultSerialization" }],
                       "properties": {
+                        "message": { "example": "apiKey.error.notActiveYet" },
+                        "statusCode": { "type": "number", "example": 5023 }
+                      }
+                    },
+                    {
+                      "allOf": [{ "$ref": "#/components/schemas/ResponseDefaultSerialization" }],
+                      "properties": {
+                        "message": { "example": "apiKey.error.expired" },
+                        "statusCode": { "type": "number", "example": 5024 }
+                      }
+                    },
+                    {
+                      "allOf": [{ "$ref": "#/components/schemas/ResponseDefaultSerialization" }],
+                      "properties": {
                         "message": { "example": "apiKey.error.invalid" },
                         "statusCode": { "type": "number", "example": 5025 }
                       }
@@ -695,6 +911,13 @@
                       "properties": {
                         "message": { "example": "role.error.typeForbidden" },
                         "statusCode": { "type": "number", "example": 5101 }
+                      }
+                    },
+                    {
+                      "allOf": [{ "$ref": "#/components/schemas/ResponseDefaultSerialization" }],
+                      "properties": {
+                        "message": { "example": "policy.error.abilityForbidden" },
+                        "statusCode": { "type": "number", "example": 50010 }
                       }
                     }
                   ]
@@ -752,7 +975,19 @@
     "/api/v1/admin/user/update/{user}/active": {
       "patch": {
         "operationId": "UserAdminController_active",
+        "summary": "modules.admin.user",
         "parameters": [
+          {
+            "name": "user-agent",
+            "in": "header",
+            "description": "User agent header",
+            "required": false,
+            "schema": {
+              "default": "Opera/14.34 (X11; Linux i686; U; SR Presto/2.9.181 Version/12.00)",
+              "example": "Opera/14.34 (X11; Linux i686; U; SR Presto/2.9.181 Version/12.00)",
+              "type": "string"
+            }
+          },
           {
             "name": "x-custom-lang",
             "in": "header",
@@ -761,11 +996,18 @@
             "schema": { "default": "en", "example": "en", "type": "string" }
           },
           {
+            "name": "x-timestamp",
+            "in": "header",
+            "description": "Timestamp header, in microseconds",
+            "required": false,
+            "schema": { "default": 1687773942559, "example": 1687773942559, "type": "string" }
+          },
+          {
             "name": "user",
             "required": true,
             "in": "path",
             "allowEmptyValue": false,
-            "example": "1f851b3a-b972-4e60-829e-a66a1244af5a",
+            "example": "de1a1d09-98c5-4f8d-98b9-2f76558c337e",
             "schema": { "type": "string" }
           }
         ],
@@ -777,7 +1019,7 @@
                 "schema": {
                   "allOf": [{ "$ref": "#/components/schemas/ResponseDefaultSerialization" }],
                   "properties": {
-                    "message": { "example": "user.blocked" },
+                    "message": { "example": "user.active" },
                     "statusCode": { "type": "number", "example": 200 }
                   }
                 }
@@ -814,6 +1056,20 @@
                     {
                       "allOf": [{ "$ref": "#/components/schemas/ResponseDefaultSerialization" }],
                       "properties": {
+                        "message": { "example": "apiKey.error.notActiveYet" },
+                        "statusCode": { "type": "number", "example": 5023 }
+                      }
+                    },
+                    {
+                      "allOf": [{ "$ref": "#/components/schemas/ResponseDefaultSerialization" }],
+                      "properties": {
+                        "message": { "example": "apiKey.error.expired" },
+                        "statusCode": { "type": "number", "example": 5024 }
+                      }
+                    },
+                    {
+                      "allOf": [{ "$ref": "#/components/schemas/ResponseDefaultSerialization" }],
+                      "properties": {
                         "message": { "example": "apiKey.error.invalid" },
                         "statusCode": { "type": "number", "example": 5025 }
                       }
@@ -834,6 +1090,13 @@
                       "properties": {
                         "message": { "example": "role.error.typeForbidden" },
                         "statusCode": { "type": "number", "example": 5101 }
+                      }
+                    },
+                    {
+                      "allOf": [{ "$ref": "#/components/schemas/ResponseDefaultSerialization" }],
+                      "properties": {
+                        "message": { "example": "policy.error.abilityForbidden" },
+                        "statusCode": { "type": "number", "example": 50010 }
                       }
                     }
                   ]
@@ -891,7 +1154,19 @@
     "/api/v1/admin/user/update/{user}/inactive": {
       "patch": {
         "operationId": "UserAdminController_inactive",
+        "summary": "modules.admin.user",
         "parameters": [
+          {
+            "name": "user-agent",
+            "in": "header",
+            "description": "User agent header",
+            "required": false,
+            "schema": {
+              "default": "Mozilla/5.0 (Windows; U; Windows NT 5.2) AppleWebKit/533.0.2 (KHTML, like Gecko) Chrome/32.0.821.0 Safari/533.0.2",
+              "example": "Mozilla/5.0 (Windows; U; Windows NT 5.2) AppleWebKit/533.0.2 (KHTML, like Gecko) Chrome/32.0.821.0 Safari/533.0.2",
+              "type": "string"
+            }
+          },
           {
             "name": "x-custom-lang",
             "in": "header",
@@ -900,11 +1175,18 @@
             "schema": { "default": "en", "example": "en", "type": "string" }
           },
           {
+            "name": "x-timestamp",
+            "in": "header",
+            "description": "Timestamp header, in microseconds",
+            "required": false,
+            "schema": { "default": 1687773942560, "example": 1687773942560, "type": "string" }
+          },
+          {
             "name": "user",
             "required": true,
             "in": "path",
             "allowEmptyValue": false,
-            "example": "1f851b3a-b972-4e60-829e-a66a1244af5a",
+            "example": "de1a1d09-98c5-4f8d-98b9-2f76558c337e",
             "schema": { "type": "string" }
           }
         ],
@@ -916,7 +1198,7 @@
                 "schema": {
                   "allOf": [{ "$ref": "#/components/schemas/ResponseDefaultSerialization" }],
                   "properties": {
-                    "message": { "example": "user.blocked" },
+                    "message": { "example": "user.inactive" },
                     "statusCode": { "type": "number", "example": 200 }
                   }
                 }
@@ -953,6 +1235,20 @@
                     {
                       "allOf": [{ "$ref": "#/components/schemas/ResponseDefaultSerialization" }],
                       "properties": {
+                        "message": { "example": "apiKey.error.notActiveYet" },
+                        "statusCode": { "type": "number", "example": 5023 }
+                      }
+                    },
+                    {
+                      "allOf": [{ "$ref": "#/components/schemas/ResponseDefaultSerialization" }],
+                      "properties": {
+                        "message": { "example": "apiKey.error.expired" },
+                        "statusCode": { "type": "number", "example": 5024 }
+                      }
+                    },
+                    {
+                      "allOf": [{ "$ref": "#/components/schemas/ResponseDefaultSerialization" }],
+                      "properties": {
                         "message": { "example": "apiKey.error.invalid" },
                         "statusCode": { "type": "number", "example": 5025 }
                       }
@@ -973,6 +1269,13 @@
                       "properties": {
                         "message": { "example": "role.error.typeForbidden" },
                         "statusCode": { "type": "number", "example": 5101 }
+                      }
+                    },
+                    {
+                      "allOf": [{ "$ref": "#/components/schemas/ResponseDefaultSerialization" }],
+                      "properties": {
+                        "message": { "example": "policy.error.abilityForbidden" },
+                        "statusCode": { "type": "number", "example": 50010 }
                       }
                     }
                   ]
@@ -1030,13 +1333,32 @@
     "/api/v1/auth/user/refresh": {
       "post": {
         "operationId": "UserAuthController_refresh",
+        "summary": "modules.auth.user",
         "parameters": [
+          {
+            "name": "user-agent",
+            "in": "header",
+            "description": "User agent header",
+            "required": false,
+            "schema": {
+              "default": "Opera/14.48 (Windows NT 5.0; U; AS Presto/2.9.163 Version/11.00)",
+              "example": "Opera/14.48 (Windows NT 5.0; U; AS Presto/2.9.163 Version/11.00)",
+              "type": "string"
+            }
+          },
           {
             "name": "x-custom-lang",
             "in": "header",
             "description": "Custom language header",
             "required": false,
             "schema": { "default": "en", "example": "en", "type": "string" }
+          },
+          {
+            "name": "x-timestamp",
+            "in": "header",
+            "description": "Timestamp header, in microseconds",
+            "required": false,
+            "schema": { "default": 1687773942567, "example": 1687773942567, "type": "string" }
           }
         ],
         "responses": {
@@ -1049,7 +1371,7 @@
                   "properties": {
                     "message": { "example": "user.refresh" },
                     "statusCode": { "type": "number", "example": 200 },
-                    "data": { "$ref": "#/components/schemas/UserLoginSerialization" }
+                    "data": { "$ref": "#/components/schemas/UserRefreshSerialization" }
                   }
                 }
               }
@@ -1066,27 +1388,6 @@
                       "properties": {
                         "message": { "example": "auth.error.refreshTokenUnauthorized" },
                         "statusCode": { "type": "number", "example": 5001 }
-                      }
-                    },
-                    {
-                      "allOf": [{ "$ref": "#/components/schemas/ResponseDefaultSerialization" }],
-                      "properties": {
-                        "message": { "example": "apiKey.error.keyNeeded" },
-                        "statusCode": { "type": "number", "example": 5020 }
-                      }
-                    },
-                    {
-                      "allOf": [{ "$ref": "#/components/schemas/ResponseDefaultSerialization" }],
-                      "properties": {
-                        "message": { "example": "apiKey.error.notFound" },
-                        "statusCode": { "type": "number", "example": 5021 }
-                      }
-                    },
-                    {
-                      "allOf": [{ "$ref": "#/components/schemas/ResponseDefaultSerialization" }],
-                      "properties": {
-                        "message": { "example": "apiKey.error.invalid" },
-                        "statusCode": { "type": "number", "example": 5025 }
                       }
                     }
                   ]
@@ -1138,7 +1439,7 @@
           }
         },
         "tags": ["modules.auth.user"],
-        "security": [{ "refreshToken": [] }, { "apiKey": [] }]
+        "security": [{ "refreshToken": [] }]
       }
     }
   },
@@ -1171,12 +1472,15 @@
             "description": "Message base on language",
             "oneOf": [
               { "type": "string", "example": "message endpoint" },
-              { "type": "object", "example": { "en": "This is test endpoint." } }
+              {
+                "type": "object",
+                "example": { "en": "This is test endpoint.", "id": "Ini adalah endpoint test" }
+              }
             ]
           },
           "_metadata": {
             "type": "object",
-            "nullable": true,
+            "nullable": false,
             "description": "Contain metadata about API",
             "example": {
               "languages": ["en"],
@@ -1208,9 +1512,9 @@
           "date": {
             "format": "date-time",
             "type": "string",
-            "example": "2023-06-25T09:17:17.579Z"
+            "example": "2023-06-26T05:39:56.099Z"
           },
-          "format": { "type": "string", "example": "2023-06-25T18:26:01.375Z" },
+          "format": { "type": "string", "example": "2023-06-25T15:19:16.106Z" },
           "timestamp": { "type": "number", "example": 1660190937231 }
         },
         "required": ["userAgent", "date", "format", "timestamp"]
@@ -1218,28 +1522,35 @@
       "MessageLanguageSerialization": {
         "type": "object",
         "properties": {
-          "language": { "type": "array", "items": { "type": "string", "enum": ["en", "th"] } }
+          "language": {
+            "type": "array",
+            "nullable": false,
+            "items": { "type": "string", "enum": ["en", "th"] }
+          }
         },
         "required": ["language"]
       },
       "UserLoginSerialization": {
         "type": "object",
         "properties": {
-          "tokenType": { "type": "string", "example": "Bearer" },
+          "tokenType": { "type": "string", "example": "Bearer", "nullable": false },
           "expiresIn": {
             "type": "string",
             "example": 1660190937231,
-            "description": "Expire in timestamp"
+            "description": "Expire in timestamp",
+            "nullable": false
           },
           "accessToken": {
             "type": "string",
-            "example": "upr0tOFSJTJtjpVfVRjiV4rYbOT4PK",
-            "description": "Will be valid JWT Encode string"
+            "example": "IuJQsD63Xtvydu9uhKoOjiUh0Jcvp4",
+            "description": "Will be valid JWT Encode string",
+            "nullable": false
           },
           "refreshToken": {
             "type": "string",
-            "example": "sUNxrnXl9RUhYsjXklll7sFAsEKRpA",
-            "description": "Will be valid JWT Encode string"
+            "example": "QEbqibRz2BSedeTOq6leH6LR66BsiN",
+            "description": "Will be valid JWT Encode string",
+            "nullable": false
           }
         },
         "required": ["tokenType", "expiresIn", "accessToken", "refreshToken"]
@@ -1247,11 +1558,11 @@
       "UserLoginDto": {
         "type": "object",
         "properties": {
-          "email": { "type": "string", "example": "Ines_Reilly67@gmail.com" },
+          "email": { "type": "string", "example": "Gladyce57@yahoo.com" },
           "password": {
             "type": "string",
             "description": "string password",
-            "example": "qgz2lVAHXT@@!123"
+            "example": "zeeviGTDNX@@!123"
           }
         },
         "required": ["email", "password"]
@@ -1259,15 +1570,15 @@
       "UserSignUpDto": {
         "type": "object",
         "properties": {
-          "email": { "type": "string", "example": "Ines_Reilly67@gmail.com" },
-          "firstName": { "type": "string", "example": "Henry" },
+          "email": { "type": "string", "example": "Gladyce57@yahoo.com" },
+          "firstName": { "type": "string", "example": "Andres" },
           "userName": { "type": "string", "example": "Leslie" },
-          "lastName": { "type": "string", "example": "Carter" },
-          "mobileNumber": { "type": "string", "example": "62812813434004" },
+          "lastName": { "type": "string", "example": "Lebsack" },
+          "mobileNumber": { "type": "string", "example": "62812405619755" },
           "password": {
             "type": "string",
             "description": "string password",
-            "example": "qgz2lVAHXT@@!123"
+            "example": "zeeviGTDNX@@!123"
           }
         },
         "required": ["email", "firstName", "lastName", "mobileNumber", "password"]
@@ -1286,7 +1597,10 @@
             "description": "Message base on language",
             "oneOf": [
               { "type": "string", "example": "message endpoint" },
-              { "type": "object", "example": { "en": "This is test endpoint." } }
+              {
+                "type": "object",
+                "example": { "en": "This is test endpoint.", "id": "Ini adalah endpoint test" }
+              }
             ]
           },
           "_metadata": {
@@ -1302,7 +1616,7 @@
               "version": "1",
               "repoVersion": "1.0.0",
               "pagination": {
-                "search": "Vladimir",
+                "search": "Percy",
                 "page": 1,
                 "perPage": 20,
                 "orderBy": "createdAt",
@@ -1330,40 +1644,75 @@
           "_id": {
             "type": "string",
             "description": "Id that representative with your target data",
-            "example": "631d9f32a65cf07250b8938c"
+            "example": "631d9f32a65cf07250b8938c",
+            "nullable": false
           },
           "name": {
             "type": "string",
             "description": "Name of role",
-            "example": "Senior Solutions Associate"
+            "example": "Direct Identity Designer",
+            "nullable": false
           },
           "description": {
             "type": "string",
             "description": "Description of role",
-            "example": "Numquam dolore vero quidem sint in consequatur porro.",
+            "example": "Optio itaque quisquam in amet perspiciatis occaecati quisquam fuga.",
             "nullable": true
           },
-          "isActive": { "type": "boolean", "description": "Active flag of role", "example": true },
+          "isActive": {
+            "type": "boolean",
+            "description": "Active flag of role",
+            "example": true,
+            "nullable": false
+          },
           "type": {
             "type": "string",
             "description": "Representative for role type",
-            "example": "ADMIN"
+            "example": "ADMIN",
+            "nullable": false
           },
           "createdAt": {
             "format": "date-time",
             "type": "string",
             "description": "Date created at",
-            "example": "2023-06-26T07:34:34.330Z"
+            "example": "2023-06-26T01:58:42.072Z",
+            "nullable": false
           },
           "updatedAt": {
             "format": "date-time",
             "type": "string",
             "description": "Date updated at",
-            "example": "2023-06-25T21:39:42.857Z"
+            "example": "2023-06-25T18:11:46.184Z",
+            "nullable": false
           },
           "permissions": { "type": "number", "description": "count of permissions" }
         },
-        "required": ["_id", "name", "isActive", "type", "createdAt", "permissions"]
+        "required": ["_id", "name", "isActive", "type", "createdAt", "updatedAt", "permissions"]
+      },
+      "UserRefreshSerialization": {
+        "type": "object",
+        "properties": {
+          "tokenType": { "type": "string", "example": "Bearer", "nullable": false },
+          "expiresIn": {
+            "type": "string",
+            "example": 1660190937231,
+            "description": "Expire in timestamp",
+            "nullable": false
+          },
+          "accessToken": {
+            "type": "string",
+            "example": "IuJQsD63Xtvydu9uhKoOjiUh0Jcvp4",
+            "description": "Will be valid JWT Encode string",
+            "nullable": false
+          },
+          "refreshToken": {
+            "type": "string",
+            "example": "QEbqibRz2BSedeTOq6leH6LR66BsiN",
+            "description": "Will be valid JWT Encode string",
+            "nullable": false
+          }
+        },
+        "required": ["tokenType", "expiresIn", "accessToken", "refreshToken"]
       }
     }
   }

@@ -32,7 +32,7 @@ import { RoleListSerialization } from "../serializations/role.list.serialization
 import { RoleService } from "../services/role.service";
 
 @ApiKeyPublicProtected()
-@ApiTags("common.admin.role")
+@ApiTags("modules.admin.role")
 @Controller({
   version: "1",
   path: "/role",

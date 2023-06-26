@@ -12,25 +12,19 @@ export function Response<T>(messagePath: string, options?: IResponseOptions<T>):
   return applyDecorators(
     UseInterceptors(ResponseDefaultInterceptor<T>),
     SetMetadata(RESPONSE_MESSAGE_PATH_META_KEY, messagePath),
-    SetMetadata(RESPONSE_SERIALIZATION_META_KEY, options ? options.serialization : undefined),
-    SetMetadata(
-      RESPONSE_MESSAGE_PROPERTIES_META_KEY,
-      options ? options.messageProperties : undefined,
-    ),
+    SetMetadata(RESPONSE_SERIALIZATION_META_KEY, options?.serialization),
+    SetMetadata(RESPONSE_MESSAGE_PROPERTIES_META_KEY, options?.messageProperties),
   );
 }
 
 export function ResponsePaging<T>(
   messagePath: string,
-  options?: IResponsePagingOptions<T>,
+  options: IResponsePagingOptions<T>,
 ): MethodDecorator {
   return applyDecorators(
     UseInterceptors(ResponsePagingInterceptor<T>),
     SetMetadata(RESPONSE_MESSAGE_PATH_META_KEY, messagePath),
-    SetMetadata(RESPONSE_SERIALIZATION_META_KEY, options ? options.serialization : undefined),
-    SetMetadata(
-      RESPONSE_MESSAGE_PROPERTIES_META_KEY,
-      options ? options.messageProperties : undefined,
-    ),
+    SetMetadata(RESPONSE_SERIALIZATION_META_KEY, options?.serialization),
+    SetMetadata(RESPONSE_MESSAGE_PROPERTIES_META_KEY, options?.messageProperties),
   );
 }

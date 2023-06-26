@@ -31,10 +31,10 @@ export class ResponsePagingSerialization<T = Record<string, any>> extends PickTy
 ) {
   @ApiProperty({
     name: "_metadata",
+    required: true,
     nullable: false,
     description: "Contain metadata about API",
     type: "object",
-    required: true,
     example: {
       languages: ["en"],
       timestamp: 1660190937231,

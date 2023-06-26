@@ -1,17 +1,17 @@
 import { applyDecorators } from "@nestjs/common";
-import { Doc } from "src/common/doc/decorators/doc.decorator";
-import { UserLoginSerialization } from "../serializations/user.login.serialization";
+import { Doc, DocAuth, DocResponse } from "src/common/doc/decorators/doc.decorator";
+import { UserRefreshSerialization } from "../serializations/user.refresh.serialization";
 
 export function UserAuthRefreshDoc(): MethodDecorator {
   return applyDecorators(
-    Doc<UserLoginSerialization>("user.refresh", {
-      auth: {
-        apiKey: true,
-        jwtRefreshToken: true,
-      },
-      response: {
-        serialization: UserLoginSerialization,
-      },
+    Doc({
+      operation: "modules.auth.user",
+    }),
+    DocAuth({
+      jwtRefreshToken: true,
+    }),
+    DocResponse<UserRefreshSerialization>("user.refresh", {
+      serialization: UserRefreshSerialization,
     }),
   );
 }

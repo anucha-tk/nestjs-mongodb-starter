@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
 
-export const UserDocParamsGet = [
+export const UserDocParamsId = [
   {
     name: "user",
     allowEmptyValue: false,
