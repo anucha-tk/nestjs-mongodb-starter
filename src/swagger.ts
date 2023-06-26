@@ -3,8 +3,10 @@ import { ConfigService } from "@nestjs/config";
 import { NestApplication } from "@nestjs/core";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { ENUM_APP_ENVIRONMENT } from "src/app/constants/app.enum.constant";
-import { ResponseDefaultSerialization } from "./common/response/serializations/response.default.serialization";
-import { ResponsePagingSerialization } from "./common/response/serializations/response.paging.serialization";
+import { ResponseDefaultSerialization } from "src/common/response/serializations/response.default.serialization";
+import { ResponsePagingSerialization } from "src/common/response/serializations/response.paging.serialization";
+import { SwaggerTheme } from "swagger-themes";
+import { writeFileSync } from "fs";
 
 export default async function (app: NestApplication) {
   const configService = app.get(ConfigService);
@@ -22,7 +24,9 @@ export default async function (app: NestApplication) {
       .setDescription(docDesc)
       .setVersion(docVersion)
       .addTag("API's")
-      .addServer(`/`)
+      .addServer("/")
+      .addServer("/staging")
+      .addServer("/prod")
       .addBearerAuth({ type: "http", scheme: "bearer", bearerFormat: "JWT" }, "accessToken")
       .addBearerAuth({ type: "http", scheme: "bearer", bearerFormat: "JWT" }, "refreshToken")
       .addApiKey({ type: "apiKey", in: "header", name: "x-api-key" }, "apiKey")
@@ -33,9 +37,28 @@ export default async function (app: NestApplication) {
       extraModels: [ResponseDefaultSerialization, ResponsePagingSerialization],
     });
 
+    writeFileSync("./data/swagger.json", JSON.stringify(document));
+    const theme = new SwaggerTheme("v3");
     SwaggerModule.setup(docPrefix, app, document, {
-      explorer: true,
+      jsonDocumentUrl: `${docPrefix}/json`,
+      yamlDocumentUrl: `${docPrefix}/yaml`,
+      explorer: false,
       customSiteTitle: docName,
+      customCss: theme.getBuffer("dark"),
+      swaggerOptions: {
+        docExpansion: "none",
+        persistAuthorization: true,
+        displayOperationId: true,
+        operationsSorter: "alpha",
+        tagsSorter: "alpha",
+        tryItOutEnabled: true,
+        filter: true,
+        deepLinking: true,
+        syntaxHighlight: {
+          activate: true,
+          theme: "tomorrow-night",
+        },
+      },
     });
 
     logger.log(`==========================================================`);
