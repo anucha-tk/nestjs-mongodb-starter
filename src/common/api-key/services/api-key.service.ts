@@ -1,6 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { IDatabaseFindOneOptions } from "src/common/database/interfaces/database.interface";
+import {
+  IDatabaseFindAllOptions,
+  IDatabaseFindOneOptions,
+} from "src/common/database/interfaces/database.interface";
 import { HelperDateService } from "src/common/helper/services/helper.date.service";
 import { HelperHashService } from "src/common/helper/services/helper.hash.service";
 import { HelperStringService } from "src/common/helper/services/helper.string.service";
@@ -22,6 +25,13 @@ export class ApiKeyService implements IApiKeyService {
     private readonly configService: ConfigService,
   ) {
     this.env = this.configService.get<string>("app.env");
+  }
+
+  async findAll(
+    find?: Record<string, any>,
+    options?: IDatabaseFindAllOptions,
+  ): Promise<ApiKeyEntity[]> {
+    return this.apiKeyRepository.findAll<ApiKeyEntity>(find, options);
   }
 
   async findOneByActiveKey(key: string, options?: IDatabaseFindOneOptions): Promise<ApiKeyDoc> {
@@ -108,5 +118,9 @@ export class ApiKeyService implements IApiKeyService {
 
   async deleteMany(find: Record<string, any>): Promise<boolean> {
     return this.apiKeyRepository.deleteMany(find);
+  }
+
+  async getTotal(find?: Record<string, any>): Promise<number> {
+    return this.apiKeyRepository.getTotal(find);
   }
 }
