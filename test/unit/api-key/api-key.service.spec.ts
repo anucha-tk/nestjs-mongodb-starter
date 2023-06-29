@@ -2,6 +2,7 @@ import { faker } from "@faker-js/faker";
 import { ConfigModule } from "@nestjs/config";
 import { Test, TestingModule } from "@nestjs/testing";
 import { ENUM_API_KEY_TYPE } from "src/common/api-key/constants/api-key.enum.constant";
+import { ApiKeyEntity } from "src/common/api-key/repository/entities/api-key.entity";
 import { ApiKeyRepository } from "src/common/api-key/repository/repositories/api-key.repository";
 import { ApiKeyService } from "src/common/api-key/services/api-key.service";
 import { HelperModule } from "src/common/helper/helper.module";
@@ -9,6 +10,9 @@ import configs from "src/configs";
 
 describe("api-key service", () => {
   let apiKeyService: ApiKeyService;
+  let apiKeyRepository: ApiKeyRepository;
+  // const apiKeyId = faker.string.uuid();
+  // const apiKeyEntityDoc = new mongoose.Mongoose().model(ApiKeyDatabaseName, ApiKeySchema);
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -29,12 +33,15 @@ describe("api-key service", () => {
           useValue: {
             create: jest.fn().mockResolvedValue({ id: 1 }),
             findOne: jest.fn().mockResolvedValue({ id: 1, name: faker.word.words() }),
+            findAll: jest.fn().mockResolvedValue([new ApiKeyEntity(), new ApiKeyEntity()]),
+            getTotal: jest.fn().mockResolvedValue(1),
           },
         },
       ],
     }).compile();
 
     apiKeyService = module.get<ApiKeyService>(ApiKeyService);
+    apiKeyRepository = module.get<ApiKeyRepository>(ApiKeyRepository);
   });
 
   afterEach(() => {
@@ -90,6 +97,22 @@ describe("api-key service", () => {
 
       expect(apiKey.doc).toBeDefined();
       expect(apiKey.secret).toBeDefined();
+    });
+  });
+
+  describe("findAll", () => {
+    it("should return apiKeys", async () => {
+      const result = await apiKeyService.findAll();
+      expect(apiKeyRepository.findAll).toBeCalled();
+      expect(result).toHaveLength(2);
+    });
+  });
+
+  describe("getTotal", () => {
+    it("should getTotal equal 1", async () => {
+      const result = await apiKeyService.getTotal();
+      expect(result).toBe(1);
+      expect(apiKeyRepository.getTotal).toBeCalled();
     });
   });
 });
