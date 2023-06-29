@@ -9,6 +9,7 @@ export function UserAuthRefreshDoc(): MethodDecorator {
     }),
     DocAuth({
       jwtRefreshToken: true,
+      apiKey: true,
     }),
     DocResponse<UserRefreshSerialization>("user.refresh", {
       serialization: UserRefreshSerialization,

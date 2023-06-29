@@ -20,6 +20,7 @@ import { PolicyModule } from "./policy/policy.module";
 import { RequestModule } from "./request/request.module";
 import { ResponseModule } from "./response/response.module";
 import { SettingModule } from "./setting/setting.module";
+import { DebuggerModule } from "./debugger/debugger.module";
 
 @Module({
   controllers: [],
@@ -84,6 +85,10 @@ import { SettingModule } from "./setting/setting.module";
           .min(16)
           .max(50)
           .optional(),
+        DEBUGGER_HTTP_WRITE_INTO_FILE: Joi.boolean().default(false).required(),
+        DEBUGGER_HTTP_WRITE_INTO_CONSOLE: Joi.boolean().default(false).required(),
+        DEBUGGER_SYSTEM_WRITE_INTO_FILE: Joi.boolean().default(false).required(),
+        DEBUGGER_SYSTEM_WRITE_INTO_CONSOLE: Joi.boolean().default(false).required(),
       }),
       validationOptions: {
         allowUnknown: true,
@@ -108,6 +113,7 @@ import { SettingModule } from "./setting/setting.module";
     AuthModule.forRoot(),
     SettingModule,
     PolicyModule,
+    DebuggerModule.forRoot(),
   ],
 })
 export class CommonModule {}

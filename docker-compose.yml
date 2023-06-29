@@ -1,19 +1,19 @@
 services:
-  # server:
-  #   container_name: nestjs
-  #   build: .
-  #   hostname: nestjs
-  #   ports:
-  #     - ${HTTP_PORT}:${HTTP_PORT}
-  #   networks:
-  #     - nestjs-network
-  #   volumes:
-  #     - ./:/app
-  #     - .env/:/app
-  #   restart: unless-stopped
-  #   depends_on:
-  #     - mongodb
-  #     - mongodb-test
+  server:
+    container_name: nestjs
+    build: .
+    hostname: nestjs
+    ports:
+      - ${HTTP_PORT}:${HTTP_PORT}
+    networks:
+      - nestjs-network
+    volumes:
+      - ./:/app
+      - .env/:/app
+    restart: unless-stopped
+    depends_on:
+      - mongodb
+      - mongodb-test
   mongodb:
     container_name: mongodb
     image: mongo:5

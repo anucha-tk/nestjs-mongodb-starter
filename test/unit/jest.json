@@ -10,7 +10,8 @@
     "<rootDir>/test/unit/role/*.spec.ts",
     "<rootDir>/test/unit/pagination/*.spec.ts",
     "<rootDir>/test/unit/user/**/*.spec.ts",
-    "<rootDir>/test/unit/auth/*.spec.ts"
+    "<rootDir>/test/unit/auth/*.spec.ts",
+    "<rootDir>/test/unit/debugger/*.spec.ts"
   ],
   "collectCoverage": true,
   "coverageDirectory": "coverage",
@@ -21,7 +22,8 @@
     "./src/modules/role/**",
     "./src/modules/user/**",
     "./src/common/pagination/**",
-    "./src/common/auth/**"
+    "./src/common/auth/**",
+    "./src/common/debugger/**"
   ],
   "coverageThreshold": {
     "global": {

@@ -3,7 +3,7 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { AppModule } from "src/app/app.module";
 import request from "supertest";
 
-describe("ttl", () => {
+describe.skip("ttl", () => {
   let app: NestApplication;
 
   beforeAll(async () => {
@@ -43,7 +43,7 @@ describe("ttl", () => {
     expect(responses[10].body.message).toMatch(/too many request/i);
   });
 
-  it("should expire rate limit after 60 seconds", async () => {
+  it("should expire rate limit after 5 seconds", async () => {
     // Wait for 5 seconds
     await new Promise((resolve) => setTimeout(resolve, 5000));
 

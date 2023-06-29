@@ -1,9 +1,17 @@
-import { ExceptionFilter, Catch, ArgumentsHost, HttpException, HttpStatus } from "@nestjs/common";
+import {
+  ExceptionFilter,
+  Catch,
+  ArgumentsHost,
+  HttpException,
+  HttpStatus,
+  Optional,
+} from "@nestjs/common";
 import { HttpArgumentsHost } from "@nestjs/common/interfaces";
 import { ConfigService } from "@nestjs/config";
 import { ValidationError } from "class-validator";
 import { Response } from "express";
 import { DatabaseDefaultUUID } from "src/common/database/constants/database.function.constant";
+import { DebuggerService } from "src/common/debugger/services/debugger.service";
 import { ERROR_TYPE } from "src/common/error/constants/error.enum.constant";
 import {
   IErrorException,
@@ -25,7 +33,7 @@ import { IRequestApp } from "src/common/request/interfaces/request.interface";
 @Catch()
 export class ErrorHttpFilter implements ExceptionFilter {
   constructor(
-    // @Optional() private readonly debuggerService: DebuggerService,
+    @Optional() private readonly debuggerService: DebuggerService,
     private readonly configService: ConfigService,
     private readonly messageService: MessageService,
     private readonly helperDateService: HelperDateService,
@@ -37,6 +45,8 @@ export class ErrorHttpFilter implements ExceptionFilter {
     const request: IRequestApp = ctx.getRequest<IRequestApp>();
 
     // get request headers
+    const __class = request.__class ?? ErrorHttpFilter.name;
+    const __function = request.__function ?? this.catch.name;
     const __customLang: string[] = request.__customLang ?? [this.messageService.getLanguage()];
     const __requestId = request.__id ?? DatabaseDefaultUUID();
     const __path = request.path;
@@ -48,19 +58,18 @@ export class ErrorHttpFilter implements ExceptionFilter {
       request.__repoVersion ?? this.configService.get<string>("app.repoVersion");
 
     // Debugger
-    // TODO: future feature
-    // try {
-    //   this.debuggerService.error(
-    //     request?.__id ? request.__id : ErrorHttpFilter.name,
-    //     {
-    //       description: exception instanceof Error ? exception.message : exception.toString(),
-    //       class: __class ?? ErrorHttpFilter.name,
-    //       function: __function ?? this.catch.name,
-    //       path: __path,
-    //     },
-    //     exception,
-    //   );
-    // } catch (err: unknown) {}
+    try {
+      this.debuggerService.error(
+        request?.__id ? request.__id : ErrorHttpFilter.name,
+        {
+          description: exception instanceof Error ? exception.message : exception.toString(),
+          class: __class ?? ErrorHttpFilter.name,
+          function: __function ?? this.catch.name,
+          path: __path,
+        },
+        exception,
+      );
+    } catch (err: unknown) {}
 
     // set default
     let statusHttp: HttpStatus = HttpStatus.INTERNAL_SERVER_ERROR;

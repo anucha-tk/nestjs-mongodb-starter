@@ -5,6 +5,7 @@ import RequestConfig from "./request.config";
 import MessageConfig from "./message.config";
 import AuthConfig from "./auth.config";
 import HelperConfig from "./helper.config";
+import DebuggerConfig from "./debugger.config";
 
 export default [
   AppConfig,
@@ -14,4 +15,5 @@ export default [
   MessageConfig,
   AuthConfig,
   HelperConfig,
+  DebuggerConfig,
 ];
