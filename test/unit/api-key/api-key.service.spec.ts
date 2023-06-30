@@ -1,8 +1,13 @@
 import { faker } from "@faker-js/faker";
 import { ConfigModule } from "@nestjs/config";
 import { Test, TestingModule } from "@nestjs/testing";
+import mongoose from "mongoose";
 import { ENUM_API_KEY_TYPE } from "src/common/api-key/constants/api-key.enum.constant";
-import { ApiKeyEntity } from "src/common/api-key/repository/entities/api-key.entity";
+import {
+  ApiKeyDatabaseName,
+  ApiKeyEntity,
+  ApiKeySchema,
+} from "src/common/api-key/repository/entities/api-key.entity";
 import { ApiKeyRepository } from "src/common/api-key/repository/repositories/api-key.repository";
 import { ApiKeyService } from "src/common/api-key/services/api-key.service";
 import { HelperModule } from "src/common/helper/helper.module";
@@ -11,8 +16,8 @@ import configs from "src/configs";
 describe("api-key service", () => {
   let apiKeyService: ApiKeyService;
   let apiKeyRepository: ApiKeyRepository;
-  // const apiKeyId = faker.string.uuid();
-  // const apiKeyEntityDoc = new mongoose.Mongoose().model(ApiKeyDatabaseName, ApiKeySchema);
+  const apiKeyId = faker.string.uuid();
+  const apiKeyEntityDoc = new mongoose.Mongoose().model(ApiKeyDatabaseName, ApiKeySchema);
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -32,7 +37,22 @@ describe("api-key service", () => {
           provide: ApiKeyRepository,
           useValue: {
             create: jest.fn().mockResolvedValue({ id: 1 }),
-            findOne: jest.fn().mockResolvedValue({ id: 1, name: faker.word.words() }),
+            findOne: jest.fn().mockImplementation(({ key }) => {
+              const find = new apiKeyEntityDoc();
+              find._id = apiKeyId;
+
+              if (key) {
+                find.key = key;
+              }
+
+              return find;
+            }),
+            findOneById: jest.fn().mockImplementation((id) => {
+              const find = new apiKeyEntityDoc();
+              find._id = id;
+
+              return find;
+            }),
             findAll: jest.fn().mockResolvedValue([new ApiKeyEntity(), new ApiKeyEntity()]),
             getTotal: jest.fn().mockResolvedValue(1),
           },
@@ -103,6 +123,7 @@ describe("api-key service", () => {
   describe("findAll", () => {
     it("should return apiKeys", async () => {
       const result = await apiKeyService.findAll();
+
       expect(apiKeyRepository.findAll).toBeCalled();
       expect(result).toHaveLength(2);
     });
@@ -111,8 +132,20 @@ describe("api-key service", () => {
   describe("getTotal", () => {
     it("should getTotal equal 1", async () => {
       const result = await apiKeyService.getTotal();
+
       expect(result).toBe(1);
       expect(apiKeyRepository.getTotal).toBeCalled();
+    });
+  });
+
+  describe("findOneById", () => {
+    it("should return apiKey", async () => {
+      const id = faker.string.uuid();
+      const result = await apiKeyService.findOneById(id);
+
+      expect(result).toBeDefined();
+      expect(result._id).toBe(id);
+      expect(apiKeyRepository.findOneById).toBeCalled();
     });
   });
 });

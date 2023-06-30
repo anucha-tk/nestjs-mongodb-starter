@@ -9,6 +9,7 @@ import { IApiKeyCreated } from "./api-key.interface";
 export interface IApiKeyService {
   findAll(find?: Record<string, any>, options?: IDatabaseFindAllOptions): Promise<ApiKeyEntity[]>;
   findOneByActiveKey(key: string, options?: IDatabaseFindOneOptions): Promise<ApiKeyDoc>;
+  findOneById(_id: string, options?: IDatabaseFindOneOptions): Promise<ApiKeyDoc>;
   validateHashApiKey(hashFromRequest: string, hash: string): Promise<boolean>;
   createKey(): Promise<string>;
   createSecret(): Promise<string>;

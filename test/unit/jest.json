@@ -6,7 +6,7 @@
   "testMatch": [
     "<rootDir>/test/unit/helpers/*.spec.ts",
     "<rootDir>/test/unit/request/validations/*.spec.ts",
-    "<rootDir>/test/unit/api-key/*.spec.ts",
+    "<rootDir>/test/unit/api-key/**/*.spec.ts",
     "<rootDir>/test/unit/role/*.spec.ts",
     "<rootDir>/test/unit/pagination/*.spec.ts",
     "<rootDir>/test/unit/user/**/*.spec.ts",

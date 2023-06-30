@@ -35,13 +35,11 @@ export class ApiKeyService implements IApiKeyService {
   }
 
   async findOneByActiveKey(key: string, options?: IDatabaseFindOneOptions): Promise<ApiKeyDoc> {
-    return this.apiKeyRepository.findOne<ApiKeyDoc>(
-      {
-        key,
-        isActive: true,
-      },
-      options,
-    );
+    return this.apiKeyRepository.findOne<ApiKeyDoc>({ key, isActive: true }, options);
+  }
+
+  async findOneById(_id: string, options?: IDatabaseFindOneOptions): Promise<ApiKeyDoc> {
+    return this.apiKeyRepository.findOneById<ApiKeyDoc>(_id, options);
   }
 
   async createKey(): Promise<string> {
