@@ -17,4 +17,5 @@ export interface IApiKeyService {
   create({ name, type, startDate, endDate }: ApiKeyCreateDto): Promise<IApiKeyCreated>;
   createRaw({ name, key, secret, startDate, endDate }: ApiKeyCreateRawDto): Promise<IApiKeyCreated>;
   getTotal(find?: Record<string, any>): Promise<number>;
+  reset(repository: ApiKeyDoc, secret: string): Promise<ApiKeyDoc>;
 }

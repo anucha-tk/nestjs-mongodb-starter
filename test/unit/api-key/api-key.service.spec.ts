@@ -55,6 +55,17 @@ describe("api-key service", () => {
             }),
             findAll: jest.fn().mockResolvedValue([new ApiKeyEntity(), new ApiKeyEntity()]),
             getTotal: jest.fn().mockResolvedValue(1),
+            save: jest.fn().mockImplementation(({ name, key, startDate, endDate, isActive }) => {
+              const find = new apiKeyEntityDoc();
+              find._id = apiKeyId;
+              find.name = name;
+              find.key = key;
+              find.isActive = isActive;
+              find.startDate = startDate ? new Date(startDate) : undefined;
+              find.endDate = endDate ? new Date(endDate) : undefined;
+
+              return find;
+            }),
           },
         },
       ],
@@ -146,6 +157,16 @@ describe("api-key service", () => {
       expect(result).toBeDefined();
       expect(result._id).toBe(id);
       expect(apiKeyRepository.findOneById).toBeCalled();
+    });
+  });
+
+  describe("reset", () => {
+    it("should reset api0key hash", async () => {
+      const secret = faker.string.alphanumeric(5);
+      const result = await apiKeyService.reset(new apiKeyEntityDoc(), secret);
+
+      expect(result).toBeDefined();
+      expect(apiKeyRepository.save).toBeCalled();
     });
   });
 });

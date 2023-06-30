@@ -121,4 +121,17 @@ export class ApiKeyService implements IApiKeyService {
   async getTotal(find?: Record<string, any>): Promise<number> {
     return this.apiKeyRepository.getTotal(find);
   }
+
+  /**
+   * reset hash api-key.
+   *
+   * @param {ApiKeyDoc}repository api-key repository
+   * @param {string}secret secret string
+   */
+  async reset(repository: ApiKeyDoc, secret: string): Promise<ApiKeyDoc> {
+    const hash: string = await this.createHashApiKey(repository.key, secret);
+    repository.hash = hash;
+
+    return this.apiKeyRepository.save(repository);
+  }
 }
