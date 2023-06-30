@@ -1,5 +1,6 @@
 {
   "list": "Get list of api keys succeed",
+  "get": "Get Detail of api key succeed",
   "error": {
     "keyNeeded": "Api Key is missing",
     "invalid": "Invalid API Key",

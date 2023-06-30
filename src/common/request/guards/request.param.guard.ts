@@ -7,7 +7,8 @@ import { ENUM_REQUEST_STATUS_CODE_ERROR } from "src/common/request/constants/req
 
 /**
  * Guard params from request
- * @returns boolean or BadRequest 404
+ * @throws 400 BadRequestException
+ * @returns boolean
  * */
 @Injectable()
 export class RequestParamRawGuard implements CanActivate {

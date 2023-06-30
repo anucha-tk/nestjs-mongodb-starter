@@ -13,8 +13,9 @@ import {
   ENUM_POLICY_SUBJECT,
 } from "src/common/policy/constants/policy.enum.constant";
 import { PolicyAbilityProtected } from "src/common/policy/decorators/policy.decorator";
-import { ResponsePaging } from "src/common/response/decorators/response.decorator";
-import { IResponsePaging } from "src/common/response/interfaces/response.interface";
+import { RequestParamGuard } from "src/common/request/decorators/request.decorator";
+import { Response, ResponsePaging } from "src/common/response/decorators/response.decorator";
+import { IResponse, IResponsePaging } from "src/common/response/interfaces/response.interface";
 import { ENUM_API_KEY_TYPE } from "../constants/api-key.enum.constant";
 import {
   API_KEY_DEFAULT_AVAILABLE_ORDER_BY,
@@ -25,9 +26,12 @@ import {
   API_KEY_DEFAULT_PER_PAGE,
   API_KEY_DEFAULT_TYPE,
 } from "../constants/api-key.list.constant";
-import { ApiKeyPublicProtected } from "../decorators/api-key.decorator";
-import { ApiKeyAdminListDoc } from "../docs/api-key.admin.doc";
+import { ApiKeyAdminGetGuard } from "../decorators/api-key.admin.decorator";
+import { ApiKeyPublicProtected, GetApiKey } from "../decorators/api-key.decorator";
+import { ApiKeyAdminGetDoc, ApiKeyAdminListDoc } from "../docs/api-key.admin.doc";
+import { ApiKeyRequestDto } from "../dtos/api-key.request.dto";
 import { ApiKeyEntity } from "../repository/entities/api-key.entity";
+import { ApiKeyGetSerialization } from "../serializations/api-key.get.serialization";
 import { ApiKeyListSerialization } from "../serializations/api-key.list.serialization";
 import { ApiKeyService } from "../services/api-key.service";
 
@@ -87,5 +91,21 @@ export class ApiKeyAdminController {
       _pagination: { totalPage, total },
       data: apiKeys,
     };
+  }
+
+  @ApiKeyAdminGetDoc()
+  @Response("apiKey.get", {
+    serialization: ApiKeyGetSerialization,
+  })
+  @ApiKeyAdminGetGuard()
+  @PolicyAbilityProtected({
+    subject: ENUM_POLICY_SUBJECT.API_KEY,
+    action: [ENUM_POLICY_ACTION.READ],
+  })
+  @AuthJwtAdminAccessProtected()
+  @RequestParamGuard(ApiKeyRequestDto)
+  @Get("/get/:apiKey")
+  async get(@GetApiKey(true) apiKey: ApiKeyEntity): Promise<IResponse> {
+    return { data: apiKey };
   }
 }
