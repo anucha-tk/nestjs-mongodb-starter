@@ -33,6 +33,7 @@ export const RequestUserAgent: () => ParameterDecorator = createParamDecorator(
  * Guard params from request with classValidation
  * @example
  * `@RequestParamGuard(UserRequestDto)` - check param is uuid
+ * @throws `ENUM_REQUEST_STATUS_CODE_ERROR.REQUEST_VALIDATION_ERROR`
  * @returns MethodDecorator
  * */
 export function RequestParamGuard(...classValidation: ClassConstructor<any>[]): MethodDecorator {

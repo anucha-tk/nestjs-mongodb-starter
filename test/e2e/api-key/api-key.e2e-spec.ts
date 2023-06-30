@@ -18,6 +18,7 @@ describe("api-key e2e", () => {
   const BASE_URL = "/admin/api-key";
   const APIKEY_LIST_URL = `${BASE_URL}/list`;
   const APIKEY_GET_URL = `${BASE_URL}/get`;
+  const APIKEY_RESET_URL = `${BASE_URL}/update`;
   let app: INestApplication;
   let userService: UserService;
   let roleService: RoleService;
@@ -80,7 +81,7 @@ describe("api-key e2e", () => {
       expect(body._metadata.pagination).toBeDefined();
     });
   });
-  describe.only(`Get ${APIKEY_GET_URL}`, () => {
+  describe(`Get ${APIKEY_GET_URL}`, () => {
     it("should throw 400 when apiKey is not uuid", async () => {
       const { status, body } = await request(app.getHttpServer())
         .get(`${APIKEY_GET_URL}/123`)
@@ -107,6 +108,71 @@ describe("api-key e2e", () => {
 
       expect(status).toBe(200);
       expect(body.data).toBeDefined();
+    });
+  });
+
+  describe(`Patch ${APIKEY_RESET_URL}/:apiKey/reset`, () => {
+    it("should throw 400 when apiKey not uuid", async () => {
+      const apiKeyId = "123";
+      const { body, status } = await request(app.getHttpServer())
+        .patch(`${APIKEY_RESET_URL}/${apiKeyId}/reset`)
+        .set("x-api-key", xApiKey)
+        .set("Authorization", `Bearer ${adminAccessToken}`);
+
+      expect(status).toBe(400);
+      expect(body.statusCode).toBe(ENUM_REQUEST_STATUS_CODE_ERROR.REQUEST_VALIDATION_ERROR);
+    });
+
+    it("should throw 404 when not found apiKey", async () => {
+      const apiKeyId = faker.string.uuid();
+      const { body, status } = await request(app.getHttpServer())
+        .patch(`${APIKEY_RESET_URL}/${apiKeyId}/reset`)
+        .set("x-api-key", xApiKey)
+        .set("Authorization", `Bearer ${adminAccessToken}`);
+
+      expect(status).toBe(404);
+      expect(body.statusCode).toBe(ENUM_API_KEY_STATUS_CODE_ERROR.API_KEY_NOT_FOUND_ERROR);
+    });
+    it("should throw 400 when apiKey not active", async () => {
+      jest.spyOn(apiKeyService, "findOneById").mockResolvedValue({
+        _id: apiKeyDoc._id,
+        isActive: false,
+      } as ApiKeyDoc);
+      const apiKeyId = apiKeyDoc._id;
+      const { body, status } = await request(app.getHttpServer())
+        .patch(`${APIKEY_RESET_URL}/${apiKeyId}/reset`)
+        .set("x-api-key", xApiKey)
+        .set("Authorization", `Bearer ${adminAccessToken}`);
+
+      expect(status).toBe(400);
+      expect(body.statusCode).toBe(ENUM_API_KEY_STATUS_CODE_ERROR.API_KEY_IS_ACTIVE_ERROR);
+    });
+    it("should throw 400 when apiKey is expired", async () => {
+      jest.spyOn(apiKeyService, "findOneById").mockResolvedValue({
+        _id: apiKeyDoc._id,
+        isActive: true,
+        startDate: faker.date.recent(),
+        endDate: faker.date.past(),
+      } as ApiKeyDoc);
+      const apiKeyId = apiKeyDoc._id;
+      const { body, status } = await request(app.getHttpServer())
+        .patch(`${APIKEY_RESET_URL}/${apiKeyId}/reset`)
+        .set("x-api-key", xApiKey)
+        .set("Authorization", `Bearer ${adminAccessToken}`);
+
+      expect(status).toBe(400);
+      expect(body.statusCode).toBe(ENUM_API_KEY_STATUS_CODE_ERROR.API_KEY_EXPIRED_ERROR);
+    });
+    it("should return 200 when reset successful", async () => {
+      jest.restoreAllMocks();
+      const apiKeyId = apiKeyDoc._id;
+      const { body, status } = await request(app.getHttpServer())
+        .patch(`${APIKEY_RESET_URL}/${apiKeyId}/reset`)
+        .set("x-api-key", xApiKey)
+        .set("Authorization", `Bearer ${adminAccessToken}`);
+
+      expect(status).toBe(200);
+      expect(body).toBeDefined();
     });
   });
 });

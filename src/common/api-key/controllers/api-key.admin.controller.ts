@@ -1,4 +1,4 @@
-import { Controller, Get } from "@nestjs/common";
+import { Controller, Get, Patch } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { AuthJwtAdminAccessProtected } from "src/common/auth/decorators/auth.jwt.decorator";
 import {
@@ -26,13 +26,21 @@ import {
   API_KEY_DEFAULT_PER_PAGE,
   API_KEY_DEFAULT_TYPE,
 } from "../constants/api-key.list.constant";
-import { ApiKeyAdminGetGuard } from "../decorators/api-key.admin.decorator";
+import {
+  ApiKeyAdminGetGuard,
+  ApiKeyAdminUpdateResetGuard,
+} from "../decorators/api-key.admin.decorator";
 import { ApiKeyPublicProtected, GetApiKey } from "../decorators/api-key.decorator";
-import { ApiKeyAdminGetDoc, ApiKeyAdminListDoc } from "../docs/api-key.admin.doc";
+import {
+  ApiKeyAdminGetDoc,
+  ApiKeyAdminListDoc,
+  ApiKeyAdminResetDoc,
+} from "../docs/api-key.admin.doc";
 import { ApiKeyRequestDto } from "../dtos/api-key.request.dto";
-import { ApiKeyEntity } from "../repository/entities/api-key.entity";
+import { ApiKeyDoc, ApiKeyEntity } from "../repository/entities/api-key.entity";
 import { ApiKeyGetSerialization } from "../serializations/api-key.get.serialization";
 import { ApiKeyListSerialization } from "../serializations/api-key.list.serialization";
+import { ApiKeyResetSerialization } from "../serializations/api-key.reset.serialization";
 import { ApiKeyService } from "../services/api-key.service";
 
 @ApiKeyPublicProtected()
@@ -108,4 +116,34 @@ export class ApiKeyAdminController {
   async get(@GetApiKey(true) apiKey: ApiKeyEntity): Promise<IResponse> {
     return { data: apiKey };
   }
+
+  @ApiKeyAdminResetDoc()
+  @Response("apiKey.reset", { serialization: ApiKeyResetSerialization })
+  @ApiKeyAdminUpdateResetGuard()
+  @PolicyAbilityProtected({
+    subject: ENUM_POLICY_SUBJECT.API_KEY,
+    action: [ENUM_POLICY_ACTION.READ, ENUM_POLICY_ACTION.UPDATE],
+  })
+  @AuthJwtAdminAccessProtected()
+  @ApiKeyPublicProtected()
+  @RequestParamGuard(ApiKeyRequestDto)
+  @Patch("/update/:apiKey/reset")
+  async reset(@GetApiKey() apiKey: ApiKeyDoc): Promise<IResponse> {
+    const secret: string = await this.apiKeyService.createSecret();
+    const updated: ApiKeyDoc = await this.apiKeyService.reset(apiKey, secret);
+
+    return {
+      data: {
+        _id: updated._id,
+        secret,
+      },
+    };
+  }
+
+  //TODO: active
+  //TODO: create
+  //TODO: delete
+  //TODO: inactive
+  //TODO: updateDate
+  //TODO: updateName
 }

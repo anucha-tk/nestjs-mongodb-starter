@@ -5,6 +5,7 @@ import {
   DocDefault,
   DocErrorGroup,
   DocGuard,
+  DocOneOf,
   DocRequest,
   DocResponse,
   DocResponsePaging,
@@ -13,6 +14,7 @@ import { ApiKeyDocParamsId, ApiKeyDocQueryIsActive } from "../constants/api-key.
 import { ENUM_API_KEY_STATUS_CODE_ERROR } from "../constants/api-key.status-code.constant";
 import { ApiKeyGetSerialization } from "../serializations/api-key.get.serialization";
 import { ApiKeyListSerialization } from "../serializations/api-key.list.serialization";
+import { ApiKeyResetSerialization } from "../serializations/api-key.reset.serialization";
 
 export function ApiKeyAdminListDoc(): MethodDecorator {
   return applyDecorators(
@@ -51,6 +53,41 @@ export function ApiKeyAdminGetDoc(): MethodDecorator {
         statusCode: ENUM_API_KEY_STATUS_CODE_ERROR.API_KEY_NOT_FOUND_ERROR,
         messagePath: "apiKey.error.notFound",
       }),
+    ]),
+  );
+}
+
+export function ApiKeyAdminResetDoc(): MethodDecorator {
+  return applyDecorators(
+    Doc({ operation: "common.admin.apiKey" }),
+    DocRequest({
+      params: ApiKeyDocParamsId,
+    }),
+    DocAuth({
+      jwtAccessToken: true,
+      apiKey: true,
+    }),
+    DocGuard({ role: true, policy: true }),
+    DocResponse<ApiKeyResetSerialization>("apiKey.reset", {
+      serialization: ApiKeyResetSerialization,
+    }),
+    DocErrorGroup([
+      DocDefault({
+        httpStatus: HttpStatus.NOT_FOUND,
+        statusCode: ENUM_API_KEY_STATUS_CODE_ERROR.API_KEY_NOT_FOUND_ERROR,
+        messagePath: "apiKey.error.notFound",
+      }),
+      DocOneOf(
+        HttpStatus.BAD_REQUEST,
+        {
+          statusCode: ENUM_API_KEY_STATUS_CODE_ERROR.API_KEY_EXPIRED_ERROR,
+          messagePath: "apiKey.error.expired",
+        },
+        {
+          statusCode: ENUM_API_KEY_STATUS_CODE_ERROR.API_KEY_IS_ACTIVE_ERROR,
+          messagePath: "apiKey.error.isActiveInvalid",
+        },
+      ),
     ]),
   );
 }
