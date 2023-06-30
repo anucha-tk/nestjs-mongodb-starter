@@ -9,10 +9,15 @@ import { createApiKey } from "../helper/apiKey";
 import { createRoleAdmin } from "../helper/role";
 import { createAdmin, mockPassword } from "../helper/user";
 import request from "supertest";
+import { ApiKeyDoc } from "src/common/api-key/repository/entities/api-key.entity";
+import { faker } from "@faker-js/faker";
+import { ENUM_REQUEST_STATUS_CODE_ERROR } from "src/common/request/constants/request.status-code.constant";
+import { ENUM_API_KEY_STATUS_CODE_ERROR } from "src/common/api-key/constants/api-key.status-code.constant";
 
 describe("api-key e2e", () => {
   const BASE_URL = "/admin/api-key";
   const APIKEY_LIST_URL = `${BASE_URL}/list`;
+  const APIKEY_GET_URL = `${BASE_URL}/get`;
   let app: INestApplication;
   let userService: UserService;
   let roleService: RoleService;
@@ -20,6 +25,7 @@ describe("api-key e2e", () => {
   let admin: UserDoc;
   let xApiKey: string;
   let adminAccessToken: string;
+  let apiKeyDoc: ApiKeyDoc;
 
   beforeAll(async () => {
     const modRef: TestingModule = await Test.createTestingModule({
@@ -37,6 +43,7 @@ describe("api-key e2e", () => {
       createApiKey(app),
       createRoleAdmin(app, "admin"),
     ]);
+    apiKeyDoc = apiKeyRes.doc;
     xApiKey = `${apiKeyRes.doc.key}:${apiKeyRes.secret}`;
 
     // create user
@@ -65,6 +72,36 @@ describe("api-key e2e", () => {
     it("should return apikeys", async () => {
       const { body, status } = await request(app.getHttpServer())
         .get(`${APIKEY_LIST_URL}`)
+        .set("x-api-key", xApiKey)
+        .set("Authorization", `Bearer ${adminAccessToken}`);
+
+      expect(status).toBe(200);
+      expect(body.data).toBeDefined();
+      expect(body._metadata.pagination).toBeDefined();
+    });
+  });
+  describe.only(`Get ${APIKEY_GET_URL}`, () => {
+    it("should throw 400 when apiKey is not uuid", async () => {
+      const { status, body } = await request(app.getHttpServer())
+        .get(`${APIKEY_GET_URL}/123`)
+        .set("x-api-key", xApiKey)
+        .set("Authorization", `Bearer ${adminAccessToken}`);
+
+      expect(status).toBe(400);
+      expect(body.statusCode).toBe(ENUM_REQUEST_STATUS_CODE_ERROR.REQUEST_VALIDATION_ERROR);
+    });
+    it("should throw 404 when apiKey is not found", async () => {
+      const { status, body } = await request(app.getHttpServer())
+        .get(`${APIKEY_GET_URL}/${faker.string.uuid()}`)
+        .set("x-api-key", xApiKey)
+        .set("Authorization", `Bearer ${adminAccessToken}`);
+
+      expect(status).toBe(404);
+      expect(body.statusCode).toBe(ENUM_API_KEY_STATUS_CODE_ERROR.API_KEY_NOT_FOUND_ERROR);
+    });
+    it("should return apikey", async () => {
+      const { body, status } = await request(app.getHttpServer())
+        .get(`${APIKEY_GET_URL}/${apiKeyDoc._id}`)
         .set("x-api-key", xApiKey)
         .set("Authorization", `Bearer ${adminAccessToken}`);
 
