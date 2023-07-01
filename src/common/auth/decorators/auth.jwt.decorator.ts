@@ -14,8 +14,12 @@ import { AuthJwtAccessGuard } from "../guards/jwt-access/auth.jwt-access.guard";
 import { AuthJwtRefreshGuard } from "../guards/jwt-refresh/auth.jwt-refresh.guard";
 
 /**
- * Guard JWT Authentication and Guard allow if user hasFor type `SUPER_ADMIN` and `ADMIN`
- * add user to app request
+ * Guard JWT Authentication and Guard allow if add user to app request
+ *
+ * user hasFor type
+ * - SUPER_ADMIN
+ * - ADMIN
+ *
  * @example req.user
  * @returns MethodDecorator
  * */

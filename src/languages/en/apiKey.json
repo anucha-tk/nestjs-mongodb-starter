@@ -2,6 +2,8 @@
   "list": "Get list of api keys succeed",
   "get": "Get Detail of api key succeed",
   "reset": "Reset api key succeed",
+  "inactive": "Inactive api key succeed",
+  "active": "Active api key succeed",
   "error": {
     "isActiveInvalid": "API Key is active invalid",
     "keyNeeded": "Api Key is missing",

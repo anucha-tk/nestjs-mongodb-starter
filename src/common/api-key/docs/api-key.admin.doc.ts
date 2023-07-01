@@ -91,3 +91,69 @@ export function ApiKeyAdminResetDoc(): MethodDecorator {
     ]),
   );
 }
+
+export function ApiKeyAdminActiveDoc(): MethodDecorator {
+  return applyDecorators(
+    Doc({ operation: "common.admin.apiKey" }),
+    DocRequest({
+      params: ApiKeyDocParamsId,
+    }),
+    DocAuth({
+      jwtAccessToken: true,
+      apiKey: true,
+    }),
+    DocGuard({ role: true, policy: true }),
+    DocResponse<ApiKeyResetSerialization>("apiKey.active"),
+    DocErrorGroup([
+      DocDefault({
+        httpStatus: HttpStatus.NOT_FOUND,
+        statusCode: ENUM_API_KEY_STATUS_CODE_ERROR.API_KEY_NOT_FOUND_ERROR,
+        messagePath: "apiKey.error.notFound",
+      }),
+      DocOneOf(
+        HttpStatus.BAD_REQUEST,
+        {
+          statusCode: ENUM_API_KEY_STATUS_CODE_ERROR.API_KEY_EXPIRED_ERROR,
+          messagePath: "apiKey.error.expired",
+        },
+        {
+          statusCode: ENUM_API_KEY_STATUS_CODE_ERROR.API_KEY_IS_ACTIVE_ERROR,
+          messagePath: "apiKey.error.isActiveInvalid",
+        },
+      ),
+    ]),
+  );
+}
+
+export function ApiKeyAdminInActiveDoc(): MethodDecorator {
+  return applyDecorators(
+    Doc({ operation: "common.admin.apiKey" }),
+    DocRequest({
+      params: ApiKeyDocParamsId,
+    }),
+    DocAuth({
+      jwtAccessToken: true,
+      apiKey: true,
+    }),
+    DocGuard({ role: true, policy: true }),
+    DocResponse<ApiKeyResetSerialization>("apiKey.inactive"),
+    DocErrorGroup([
+      DocDefault({
+        httpStatus: HttpStatus.NOT_FOUND,
+        statusCode: ENUM_API_KEY_STATUS_CODE_ERROR.API_KEY_NOT_FOUND_ERROR,
+        messagePath: "apiKey.error.notFound",
+      }),
+      DocOneOf(
+        HttpStatus.BAD_REQUEST,
+        {
+          statusCode: ENUM_API_KEY_STATUS_CODE_ERROR.API_KEY_EXPIRED_ERROR,
+          messagePath: "apiKey.error.expired",
+        },
+        {
+          statusCode: ENUM_API_KEY_STATUS_CODE_ERROR.API_KEY_IS_ACTIVE_ERROR,
+          messagePath: "apiKey.error.isActiveInvalid",
+        },
+      ),
+    ]),
+  );
+}

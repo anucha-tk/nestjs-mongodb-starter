@@ -28,11 +28,15 @@ import {
 } from "../constants/api-key.list.constant";
 import {
   ApiKeyAdminGetGuard,
+  ApiKeyAdminUpdateActiveGuard,
+  ApiKeyAdminUpdateInActiveGuard,
   ApiKeyAdminUpdateResetGuard,
 } from "../decorators/api-key.admin.decorator";
 import { ApiKeyPublicProtected, GetApiKey } from "../decorators/api-key.decorator";
 import {
+  ApiKeyAdminActiveDoc,
   ApiKeyAdminGetDoc,
+  ApiKeyAdminInActiveDoc,
   ApiKeyAdminListDoc,
   ApiKeyAdminResetDoc,
 } from "../docs/api-key.admin.doc";
@@ -125,7 +129,6 @@ export class ApiKeyAdminController {
     action: [ENUM_POLICY_ACTION.READ, ENUM_POLICY_ACTION.UPDATE],
   })
   @AuthJwtAdminAccessProtected()
-  @ApiKeyPublicProtected()
   @RequestParamGuard(ApiKeyRequestDto)
   @Patch("/update/:apiKey/reset")
   async reset(@GetApiKey() apiKey: ApiKeyDoc): Promise<IResponse> {
@@ -140,7 +143,36 @@ export class ApiKeyAdminController {
     };
   }
 
-  //TODO: active
+  @ApiKeyAdminActiveDoc()
+  @Response("apiKey.active")
+  @ApiKeyAdminUpdateActiveGuard()
+  @PolicyAbilityProtected({
+    subject: ENUM_POLICY_SUBJECT.API_KEY,
+    action: [ENUM_POLICY_ACTION.READ, ENUM_POLICY_ACTION.UPDATE],
+  })
+  @AuthJwtAdminAccessProtected()
+  @RequestParamGuard(ApiKeyRequestDto)
+  @Patch("/update/:apiKey/active")
+  async active(@GetApiKey() apiKey: ApiKeyDoc): Promise<void> {
+    await this.apiKeyService.active(apiKey);
+    return;
+  }
+
+  @ApiKeyAdminInActiveDoc()
+  @Response("apiKey.inactive")
+  @ApiKeyAdminUpdateInActiveGuard()
+  @PolicyAbilityProtected({
+    subject: ENUM_POLICY_SUBJECT.API_KEY,
+    action: [ENUM_POLICY_ACTION.READ, ENUM_POLICY_ACTION.UPDATE],
+  })
+  @AuthJwtAdminAccessProtected()
+  @RequestParamGuard(ApiKeyRequestDto)
+  @Patch("/update/:apiKey/inactive")
+  async inActive(@GetApiKey() apiKey: ApiKeyDoc): Promise<void> {
+    await this.apiKeyService.inActive(apiKey);
+    return;
+  }
+
   //TODO: create
   //TODO: delete
   //TODO: inactive
