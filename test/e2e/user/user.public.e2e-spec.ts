@@ -217,6 +217,7 @@ describe("user public e2e", () => {
       expect(body.statusCode).toBe(ENUM_ROLE_STATUS_CODE_ERROR.ROLE_INACTIVE_ERROR);
     });
     it.skip("should return 403 when passwordExpired", async () => {
+      // NOTE: we remove check passwordExpired on login api, so skip test
       jest.spyOn(authService, "checkPasswordExpired").mockResolvedValue(true);
       const loginDto: UserLoginDto = {
         email: user.email,

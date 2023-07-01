@@ -134,4 +134,28 @@ export class ApiKeyService implements IApiKeyService {
 
     return this.apiKeyRepository.save(repository);
   }
+
+  /**
+   * Make isActive to true
+   *
+   * @param {ApiKeyDoc} repository api-key repository
+   * @returns {Promise<ApiKeyDoc>} Promise<ApiKeyDoc>
+   */
+  async active(repository: ApiKeyDoc): Promise<ApiKeyDoc> {
+    repository.isActive = true;
+
+    return this.apiKeyRepository.save(repository);
+  }
+
+  /**
+   * Make isActive to false
+   *
+   * @param {ApiKeyDoc} repository api-key repository
+   * @returns {Promise<ApiKeyDoc>} Promise<ApiKeyDoc>
+   */
+  async inActive(repository: ApiKeyDoc): Promise<ApiKeyDoc> {
+    repository.isActive = false;
+
+    return this.apiKeyRepository.save(repository);
+  }
 }

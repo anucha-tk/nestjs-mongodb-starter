@@ -169,4 +169,22 @@ describe("api-key service", () => {
       expect(apiKeyRepository.save).toBeCalled();
     });
   });
+
+  describe("active", () => {
+    it("should return isActive true", async () => {
+      const result = await apiKeyService.active(new apiKeyEntityDoc());
+      expect(result).toBeDefined();
+      expect(result.isActive).toBeTruthy();
+      expect(apiKeyRepository.save).toBeCalled();
+    });
+  });
+
+  describe("inActive", () => {
+    it("should return isActive false", async () => {
+      const result = await apiKeyService.inActive(new apiKeyEntityDoc());
+      expect(result).toBeDefined();
+      expect(result.isActive).toBeFalsy();
+      expect(apiKeyRepository.save).toBeCalled();
+    });
+  });
 });
