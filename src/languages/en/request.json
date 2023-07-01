@@ -4,5 +4,7 @@
   "isNotEmpty": "{property} cannot be empty.",
   "isNumber": "{property} should be a number {value}.",
   "isUuid": "{property} should be a uuid.",
-  "isEmail": "{property} should be a type of email."
+  "isEmail": "{property} should be a type of email.",
+  "isEnum": "{property} don't match with enum",
+  "isString": "{property} should be a type of string."
 }

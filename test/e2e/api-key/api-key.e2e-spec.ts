@@ -13,12 +13,15 @@ import { ApiKeyDoc } from "src/common/api-key/repository/entities/api-key.entity
 import { faker } from "@faker-js/faker";
 import { ENUM_REQUEST_STATUS_CODE_ERROR } from "src/common/request/constants/request.status-code.constant";
 import { ENUM_API_KEY_STATUS_CODE_ERROR } from "src/common/api-key/constants/api-key.status-code.constant";
+import { ApiKeyCreateDto } from "src/common/api-key/dtos/api-key.create.dto";
+import { ENUM_API_KEY_TYPE } from "src/common/api-key/constants/api-key.enum.constant";
 
 describe("api-key e2e", () => {
   const BASE_URL = "/admin/api-key";
   const APIKEY_LIST_URL = `${BASE_URL}/list`;
   const APIKEY_GET_URL = `${BASE_URL}/get`;
   const APIKEY_UPDATE_URL = `${BASE_URL}/update`;
+  const APIKEY_CREATE_URL = `${BASE_URL}/create`;
   let app: INestApplication;
   let userService: UserService;
   let roleService: RoleService;
@@ -252,6 +255,32 @@ describe("api-key e2e", () => {
 
       expect(status).toBe(200);
       expect(body).toBeDefined();
+    });
+  });
+
+  describe(`POST ${APIKEY_CREATE_URL}`, () => {
+    it("should return 422 when empty body", async () => {
+      const { status } = await request(app.getHttpServer())
+        .post(APIKEY_CREATE_URL)
+        .set("x-api-key", xApiKey)
+        .set("Authorization", `Bearer ${adminAccessToken}`);
+
+      expect(status).toBe(422);
+    });
+    it("should return apiKey doc and secret when create successful", async () => {
+      const apiKeyCreateDto: ApiKeyCreateDto = {
+        name: faker.word.words(),
+        type: ENUM_API_KEY_TYPE.PUBLIC,
+      };
+      const { body, status } = await request(app.getHttpServer())
+        .post(APIKEY_CREATE_URL)
+        .set("x-api-key", xApiKey)
+        .set("Authorization", `Bearer ${adminAccessToken}`)
+        .send(apiKeyCreateDto);
+
+      expect(status).toBe(201);
+      expect(body.data._id).toBeDefined();
+      expect(body.data.secret).toBeDefined();
     });
   });
 

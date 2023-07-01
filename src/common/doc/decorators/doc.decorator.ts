@@ -276,6 +276,13 @@ export function Doc(options?: IDocOptions): MethodDecorator {
   );
 }
 
+/**
+ * Decorates a request handler with API documentation options.
+ *
+ * @param {IDocRequestOptions} options.param
+ * @param {IDocRequestOptions} options.queries
+ * @param {IDocRequestOptions} options.bodyType
+ */
 export function DocRequest(options?: IDocRequestOptions) {
   const docs: Array<ClassDecorator | MethodDecorator> = [];
 

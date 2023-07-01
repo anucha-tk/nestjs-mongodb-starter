@@ -1,4 +1,4 @@
-import { Controller, Get, Patch } from "@nestjs/common";
+import { Body, Controller, Get, Patch, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { AuthJwtAdminAccessProtected } from "src/common/auth/decorators/auth.jwt.decorator";
 import {
@@ -35,11 +35,13 @@ import {
 import { ApiKeyPublicProtected, GetApiKey } from "../decorators/api-key.decorator";
 import {
   ApiKeyAdminActiveDoc,
+  ApiKeyAdminCreateDoc,
   ApiKeyAdminGetDoc,
   ApiKeyAdminInActiveDoc,
   ApiKeyAdminListDoc,
   ApiKeyAdminResetDoc,
 } from "../docs/api-key.admin.doc";
+import { ApiKeyCreateDto } from "../dtos/api-key.create.dto";
 import { ApiKeyRequestDto } from "../dtos/api-key.request.dto";
 import { ApiKeyDoc, ApiKeyEntity } from "../repository/entities/api-key.entity";
 import { ApiKeyGetSerialization } from "../serializations/api-key.get.serialization";
@@ -173,9 +175,22 @@ export class ApiKeyAdminController {
     return;
   }
 
-  //TODO: create
+  @ApiKeyAdminCreateDoc()
+  @Response("apiKey.create")
+  @PolicyAbilityProtected({
+    subject: ENUM_POLICY_SUBJECT.API_KEY,
+    action: [ENUM_POLICY_ACTION.READ, ENUM_POLICY_ACTION.UPDATE],
+  })
+  @AuthJwtAdminAccessProtected()
+  @Post("/create")
+  async create(@Body() body: ApiKeyCreateDto): Promise<IResponse> {
+    const { doc, secret } = await this.apiKeyService.create(body);
+    return {
+      data: { _id: doc._id, secret },
+    };
+  }
+
   //TODO: delete
-  //TODO: inactive
   //TODO: updateDate
   //TODO: updateName
 }

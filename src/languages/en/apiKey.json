@@ -1,6 +1,7 @@
 {
   "list": "Get list of api keys succeed",
   "get": "Get Detail of api key succeed",
+  "create": "Create api key succeed",
   "reset": "Reset api key succeed",
   "inactive": "Inactive api key succeed",
   "active": "Active api key succeed",

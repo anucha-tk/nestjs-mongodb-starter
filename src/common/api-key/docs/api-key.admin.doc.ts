@@ -1,4 +1,5 @@
 import { applyDecorators, HttpStatus } from "@nestjs/common";
+import { ENUM_DOC_REQUEST_BODY_TYPE } from "src/common/doc/constants/doc.enum.constant";
 import {
   Doc,
   DocAuth,
@@ -12,6 +13,8 @@ import {
 } from "src/common/doc/decorators/doc.decorator";
 import { ApiKeyDocParamsId, ApiKeyDocQueryIsActive } from "../constants/api-key.doc.constant";
 import { ENUM_API_KEY_STATUS_CODE_ERROR } from "../constants/api-key.status-code.constant";
+import { ApiKeyCreateDto } from "../dtos/api-key.create.dto";
+import { ApiKeyCreateSerialization } from "../serializations/api-key.create.serialization";
 import { ApiKeyGetSerialization } from "../serializations/api-key.get.serialization";
 import { ApiKeyListSerialization } from "../serializations/api-key.list.serialization";
 import { ApiKeyResetSerialization } from "../serializations/api-key.reset.serialization";
@@ -103,7 +106,7 @@ export function ApiKeyAdminActiveDoc(): MethodDecorator {
       apiKey: true,
     }),
     DocGuard({ role: true, policy: true }),
-    DocResponse<ApiKeyResetSerialization>("apiKey.active"),
+    DocResponse("apiKey.active"),
     DocErrorGroup([
       DocDefault({
         httpStatus: HttpStatus.NOT_FOUND,
@@ -136,7 +139,7 @@ export function ApiKeyAdminInActiveDoc(): MethodDecorator {
       apiKey: true,
     }),
     DocGuard({ role: true, policy: true }),
-    DocResponse<ApiKeyResetSerialization>("apiKey.inactive"),
+    DocResponse("apiKey.inactive"),
     DocErrorGroup([
       DocDefault({
         httpStatus: HttpStatus.NOT_FOUND,
@@ -155,5 +158,20 @@ export function ApiKeyAdminInActiveDoc(): MethodDecorator {
         },
       ),
     ]),
+  );
+}
+
+export function ApiKeyAdminCreateDoc(): MethodDecorator {
+  return applyDecorators(
+    Doc({ operation: "common.admin.apiKey" }),
+    DocRequest({
+      bodyType: ENUM_DOC_REQUEST_BODY_TYPE.JSON,
+    }),
+    DocAuth({
+      jwtAccessToken: true,
+      apiKey: true,
+    }),
+    DocGuard({ role: true, policy: true }),
+    DocResponse<ApiKeyCreateSerialization>("apiKey.create"),
   );
 }
