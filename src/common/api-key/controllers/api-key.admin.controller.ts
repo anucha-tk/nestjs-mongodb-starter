@@ -186,7 +186,7 @@ export class ApiKeyAdminController {
   async create(@Body() body: ApiKeyCreateDto): Promise<IResponse> {
     const { doc, secret } = await this.apiKeyService.create(body);
     return {
-      data: { _id: doc._id, secret },
+      data: { _id: doc._id, key: doc.key, secret },
     };
   }
 

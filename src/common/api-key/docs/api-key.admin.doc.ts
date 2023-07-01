@@ -13,7 +13,6 @@ import {
 } from "src/common/doc/decorators/doc.decorator";
 import { ApiKeyDocParamsId, ApiKeyDocQueryIsActive } from "../constants/api-key.doc.constant";
 import { ENUM_API_KEY_STATUS_CODE_ERROR } from "../constants/api-key.status-code.constant";
-import { ApiKeyCreateDto } from "../dtos/api-key.create.dto";
 import { ApiKeyCreateSerialization } from "../serializations/api-key.create.serialization";
 import { ApiKeyGetSerialization } from "../serializations/api-key.get.serialization";
 import { ApiKeyListSerialization } from "../serializations/api-key.list.serialization";
@@ -172,6 +171,8 @@ export function ApiKeyAdminCreateDoc(): MethodDecorator {
       apiKey: true,
     }),
     DocGuard({ role: true, policy: true }),
-    DocResponse<ApiKeyCreateSerialization>("apiKey.create"),
+    DocResponse<ApiKeyCreateSerialization>("apiKey.create", {
+      serialization: ApiKeyCreateSerialization,
+    }),
   );
 }

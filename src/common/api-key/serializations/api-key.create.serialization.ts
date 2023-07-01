@@ -1,3 +1,4 @@
+import { faker } from "@faker-js/faker";
 import { ApiProperty, PickType } from "@nestjs/swagger";
 import { ApiKeyGetSerialization } from "src/common/api-key/serializations/api-key.get.serialization";
 
@@ -7,7 +8,7 @@ export class ApiKeyCreateSerialization extends PickType(ApiKeyGetSerialization, 
 ] as const) {
   @ApiProperty({
     description: "Secret key of ApiKey, only show at once",
-    example: true,
+    example: faker.string.alphanumeric(20),
     required: true,
   })
   secret: string;

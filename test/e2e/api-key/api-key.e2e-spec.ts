@@ -280,6 +280,7 @@ describe("api-key e2e", () => {
 
       expect(status).toBe(201);
       expect(body.data._id).toBeDefined();
+      expect(body.data.key).toBeDefined();
       expect(body.data.secret).toBeDefined();
     });
   });
