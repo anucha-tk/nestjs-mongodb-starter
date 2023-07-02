@@ -158,4 +158,14 @@ export class ApiKeyService implements IApiKeyService {
 
     return this.apiKeyRepository.save(repository);
   }
+
+  /**
+   * softDelete make repository.deletedAt = new Date().
+   *
+   * @param {ApiKeyDoc} repository ApiKeyDoc
+   * @returns {Promise<ApiKeyDoc>} Promise ApiKeyDoc
+   */
+  async delete(repository: ApiKeyDoc): Promise<ApiKeyDoc> {
+    return this.apiKeyRepository.softDelete(repository);
+  }
 }

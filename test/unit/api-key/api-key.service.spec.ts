@@ -55,6 +55,13 @@ describe("api-key service", () => {
             }),
             findAll: jest.fn().mockResolvedValue([new ApiKeyEntity(), new ApiKeyEntity()]),
             getTotal: jest.fn().mockResolvedValue(1),
+            softDelete: jest.fn().mockImplementation(() => {
+              const find = new apiKeyEntityDoc();
+              find._id = apiKeyId;
+              find.deletedAt = new Date();
+
+              return find;
+            }),
             save: jest.fn().mockImplementation(({ name, key, startDate, endDate, isActive }) => {
               const find = new apiKeyEntityDoc();
               find._id = apiKeyId;
@@ -173,6 +180,7 @@ describe("api-key service", () => {
   describe("active", () => {
     it("should return isActive true", async () => {
       const result = await apiKeyService.active(new apiKeyEntityDoc());
+
       expect(result).toBeDefined();
       expect(result.isActive).toBeTruthy();
       expect(apiKeyRepository.save).toBeCalled();
@@ -182,9 +190,20 @@ describe("api-key service", () => {
   describe("inActive", () => {
     it("should return isActive false", async () => {
       const result = await apiKeyService.inActive(new apiKeyEntityDoc());
+
       expect(result).toBeDefined();
       expect(result.isActive).toBeFalsy();
       expect(apiKeyRepository.save).toBeCalled();
+    });
+  });
+
+  describe("delete", () => {
+    it("should add deleteAt on apiKeyDoc", async () => {
+      const result = await apiKeyService.delete(new apiKeyEntityDoc());
+
+      expect(result._id).toBe(apiKeyId);
+      expect(result.deletedAt instanceof Date).toBeTruthy();
+      expect(apiKeyRepository.softDelete).toBeCalled();
     });
   });
 });

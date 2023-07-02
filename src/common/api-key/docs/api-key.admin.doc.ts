@@ -176,3 +176,25 @@ export function ApiKeyAdminCreateDoc(): MethodDecorator {
     }),
   );
 }
+
+export function ApiKeyAdminDeleteDoc(): MethodDecorator {
+  return applyDecorators(
+    Doc({ operation: "common.admin.apiKey" }),
+    DocRequest({
+      params: ApiKeyDocParamsId,
+    }),
+    DocAuth({
+      jwtAccessToken: true,
+      apiKey: true,
+    }),
+    DocGuard({ role: true, policy: true }),
+    DocResponse("apiKey.delete"),
+    DocErrorGroup([
+      DocDefault({
+        httpStatus: HttpStatus.NOT_FOUND,
+        statusCode: ENUM_API_KEY_STATUS_CODE_ERROR.API_KEY_NOT_FOUND_ERROR,
+        messagePath: "apiKey.error.notFound",
+      }),
+    ]),
+  );
+}

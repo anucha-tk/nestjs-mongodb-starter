@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Patch, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Patch, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { AuthJwtAdminAccessProtected } from "src/common/auth/decorators/auth.jwt.decorator";
 import {
@@ -27,6 +27,7 @@ import {
   API_KEY_DEFAULT_TYPE,
 } from "../constants/api-key.list.constant";
 import {
+  ApiKeyAdminDeleteGuard,
   ApiKeyAdminGetGuard,
   ApiKeyAdminUpdateActiveGuard,
   ApiKeyAdminUpdateInActiveGuard,
@@ -190,7 +191,21 @@ export class ApiKeyAdminController {
     };
   }
 
-  //TODO: delete
+  @ApiKeyAdminDeleteGuard()
+  @Response("apiKey.delete")
+  @ApiKeyAdminDeleteGuard()
+  @PolicyAbilityProtected({
+    subject: ENUM_POLICY_SUBJECT.API_KEY,
+    action: [ENUM_POLICY_ACTION.READ, ENUM_POLICY_ACTION.DELETE],
+  })
+  @AuthJwtAdminAccessProtected()
+  @RequestParamGuard(ApiKeyRequestDto)
+  @Delete("/delete/:apiKey")
+  async delete(@GetApiKey() apiKey: ApiKeyDoc): Promise<void> {
+    await this.apiKeyService.delete(apiKey);
+    return;
+  }
+
   //TODO: updateDate
   //TODO: updateName
 }

@@ -27,14 +27,20 @@ export const createRoleUser = (
   return roleService.create(roles);
 };
 
-export const createRoleAdmin = (app: INestApplication, name: string) => {
+export const createRoleAdmin = (
+  app: INestApplication,
+  name: string,
+  permissions?: CreateUserIPolicyRule[],
+) => {
   const role: RoleCreateDto = {
     name,
     type: ENUM_ROLE_TYPE.ADMIN,
-    permissions: Object.values(ENUM_POLICY_SUBJECT).map((val) => ({
-      subject: val,
-      action: [ENUM_POLICY_ACTION.MANAGE],
-    })),
+    permissions: permissions
+      ? permissions
+      : Object.values(ENUM_POLICY_SUBJECT).map((val) => ({
+          subject: val,
+          action: [ENUM_POLICY_ACTION.MANAGE],
+        })),
   };
 
   const roleService = app.get(RoleService);

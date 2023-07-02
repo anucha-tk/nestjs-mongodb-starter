@@ -63,3 +63,17 @@ export function ApiKeyAdminUpdateInActiveGuard(): MethodDecorator {
     SetMetadata(API_KEY_ACTIVE_META_KEY, [true]),
   );
 }
+
+/**
+ * ApiKeyAdminDeleteGuard Decorator.
+ *
+ * Guards
+ * - ApiKeyPutToRequestGuard - find apikey from params then put to `request.__apiKey`.
+ * - ApiKeyNotFoundGuard - check `__apiKey` is exists.
+ */
+export function ApiKeyAdminDeleteGuard(): MethodDecorator {
+  return applyDecorators(
+    UseGuards(ApiKeyPutToRequestGuard, ApiKeyNotFoundGuard),
+    SetMetadata(API_KEY_ACTIVE_META_KEY, [true]),
+  );
+}
