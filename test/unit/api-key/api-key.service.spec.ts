@@ -5,7 +5,6 @@ import mongoose from "mongoose";
 import { ENUM_API_KEY_TYPE } from "src/common/api-key/constants/api-key.enum.constant";
 import {
   ApiKeyDatabaseName,
-  ApiKeyEntity,
   ApiKeySchema,
 } from "src/common/api-key/repository/entities/api-key.entity";
 import { ApiKeyRepository } from "src/common/api-key/repository/repositories/api-key.repository";
@@ -53,7 +52,15 @@ describe("api-key service", () => {
 
               return find;
             }),
-            findAll: jest.fn().mockResolvedValue([new ApiKeyEntity(), new ApiKeyEntity()]),
+            findAll: jest.fn().mockImplementation((withDeleted) => {
+              const apiKeyOne = new apiKeyEntityDoc();
+              const apiKeyTwo = new apiKeyEntityDoc();
+              apiKeyTwo.deletedAt = new Date();
+              if (withDeleted) {
+                return [apiKeyOne, apiKeyTwo];
+              }
+              return [apiKeyOne];
+            }),
             getTotal: jest.fn().mockResolvedValue(1),
             softDelete: jest.fn().mockImplementation(() => {
               const find = new apiKeyEntityDoc();
@@ -140,10 +147,16 @@ describe("api-key service", () => {
 
   describe("findAll", () => {
     it("should return apiKeys", async () => {
-      const result = await apiKeyService.findAll();
+      const result = await apiKeyService.findAll({}, { withDeleted: true });
 
       expect(apiKeyRepository.findAll).toBeCalled();
       expect(result).toHaveLength(2);
+    });
+    it("should return apiKey without withDeleted", async () => {
+      const result = await apiKeyService.findAll();
+
+      expect(apiKeyRepository.findAll).toBeCalled();
+      expect(result).toHaveLength(1);
     });
   });
 

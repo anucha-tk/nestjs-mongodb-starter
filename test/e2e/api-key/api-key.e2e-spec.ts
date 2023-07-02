@@ -350,6 +350,20 @@ describe("api-key e2e", () => {
       expect(body.statusCode).toBe(ENUM_API_KEY_STATUS_CODE_ERROR.API_KEY_NOT_FOUND_ERROR);
     });
 
+    it("should throw 403 when use apiKey deleted", async () => {
+      await request(app.getHttpServer())
+        .delete(`${APIKEY_DELETE_URL}/${apiKeyTwoDoc._id}`)
+        .set("x-api-key", xApiKeyTwo)
+        .set("Authorization", `Bearer ${adminAccessToken}`);
+
+      const { status, body } = await request(app.getHttpServer())
+        .delete(`${APIKEY_DELETE_URL}/${apiKeyDoc._id}`)
+        .set("x-api-key", xApiKeyTwo)
+        .set("Authorization", `Bearer ${adminAccessToken}`);
+
+      expect(status).toBe(403);
+      expect(body.statusCode).toBe(ENUM_API_KEY_STATUS_CODE_ERROR.API_KEY_NOT_FOUND_ERROR);
+    });
     it("should return 200 when admin delete apikey successful", async () => {
       const { status } = await request(app.getHttpServer())
         .delete(`${APIKEY_DELETE_URL}/${apiKeyTwoDoc._id}`)
