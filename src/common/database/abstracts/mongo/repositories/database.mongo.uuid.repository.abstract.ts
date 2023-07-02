@@ -47,7 +47,7 @@ export abstract class DatabaseMongoUUIDRepositoryAbstract<
 
   async findOne<T = EntityDocument>(
     find: Record<string, any>,
-    options: IDatabaseFindOneOptions = { withDeleted: false },
+    options?: IDatabaseFindOneOptions,
   ): Promise<T> {
     const findOne = this._repository.findOne<EntityDocument>(find);
     if (options?.withDeleted) {
@@ -84,7 +84,7 @@ export abstract class DatabaseMongoUUIDRepositoryAbstract<
 
   async findOneById<T = EntityDocument>(
     _id: string,
-    options: IDatabaseFindOneOptions = { withDeleted: false },
+    options?: IDatabaseFindOneOptions,
   ): Promise<T> {
     const findOne = this._repository.findById<EntityDocument>(_id);
 
@@ -122,7 +122,7 @@ export abstract class DatabaseMongoUUIDRepositoryAbstract<
 
   async findAll<T = EntityDocument>(
     find?: Record<string, any>,
-    options: IDatabaseFindAllOptions = { withDeleted: false },
+    options?: IDatabaseFindAllOptions,
   ): Promise<T[]> {
     const findAll = this._repository.find<EntityDocument>(find);
 
