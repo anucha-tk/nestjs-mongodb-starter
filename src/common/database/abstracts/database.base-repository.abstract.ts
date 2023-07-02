@@ -9,18 +9,16 @@ export abstract class DatabaseBaseRepositoryAbstract<Entity> {
   abstract createMany<Dto>(data: Dto[]): Promise<boolean>;
   abstract findOne<T = Entity>(
     find: Record<string, any>,
-    options?: IDatabaseFindOneOptions<any>,
+    options?: IDatabaseFindOneOptions,
   ): Promise<T>;
-  abstract findOneById<T = Entity>(_id: string, options?: IDatabaseFindOneOptions<any>): Promise<T>;
+  abstract findOneById<T = Entity>(_id: string, options?: IDatabaseFindOneOptions): Promise<T>;
   abstract findAll<T = Entity>(
     find?: Record<string, any>,
-    options?: IDatabaseFindAllOptions<any>,
+    options?: IDatabaseFindAllOptions,
   ): Promise<T[]>;
-  abstract deleteMany(find: Record<string, any>): Promise<boolean>;
   abstract getTotal(find?: Record<string, any>): Promise<number>;
+  abstract exists(find: Record<string, any>, options?: IDatabaseExistOptions): Promise<boolean>;
   abstract save(repository: Entity): Promise<Entity>;
-  abstract exists(
-    find: Record<string, any>,
-    options?: IDatabaseExistOptions<any>,
-  ): Promise<boolean>;
+  abstract softDelete(repository: Entity): Promise<Entity>;
+  abstract deleteMany(find: Record<string, any>): Promise<boolean>;
 }

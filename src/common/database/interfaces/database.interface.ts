@@ -1,23 +1,25 @@
 import { PopulateOptions } from "mongoose";
 import { IPaginationOptions } from "src/common/pagination/interfaces/pagination.interface";
 
-export interface IDatabaseFindOneOptions<T = any> extends Pick<IPaginationOptions, "order"> {
+export interface IDatabaseFindOneOptions extends Pick<IPaginationOptions, "order"> {
   select?: Record<string, boolean | number>;
   join?: boolean | PopulateOptions | PopulateOptions[];
-  session?: T;
   withDeleted?: boolean;
 }
 
-export interface IDatabaseCreateOptions<T = any>
-  extends Pick<IDatabaseFindOneOptions<T>, "session"> {
+export interface IDatabaseCreateOptions {
   _id?: string;
 }
 
-export interface IDatabaseFindAllOptions<T = any>
+export interface IDatabaseFindAllOptions
   extends IPaginationOptions,
-    Omit<IDatabaseFindOneOptions<T>, "order"> {}
+    Omit<IDatabaseFindOneOptions, "order"> {}
 
-export interface IDatabaseExistOptions<T = any>
-  extends Pick<IDatabaseFindOneOptions<T>, "session" | "withDeleted" | "join"> {
+export interface IDatabaseExistOptions
+  extends Pick<IDatabaseFindOneOptions, "withDeleted" | "join"> {
   excludeId?: string[];
 }
+
+export type IDatabaseManyOptions = Pick<IDatabaseFindOneOptions, "join">;
+
+export type IDatabaseGetTotalOptions = Pick<IDatabaseFindOneOptions, "withDeleted" | "join">;
