@@ -31,7 +31,6 @@ describe("api-key update-date e2e", () => {
   let admin: UserDoc;
   let user: UserDoc;
   let xApiKey: string;
-  let xApiKeyTwo: string;
   let adminAccessToken: string;
   let userAccessToken: string;
   let apiKeyTwoDoc: ApiKeyDoc;
