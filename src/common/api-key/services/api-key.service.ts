@@ -8,6 +8,7 @@ import { HelperDateService } from "src/common/helper/services/helper.date.servic
 import { HelperHashService } from "src/common/helper/services/helper.hash.service";
 import { HelperStringService } from "src/common/helper/services/helper.string.service";
 import { ApiKeyCreateDto, ApiKeyCreateRawDto } from "../dtos/api-key.create.dto";
+import { ApiKeyUpdateDateDto } from "../dtos/api-key.update-date.dto";
 import { IApiKeyCreated } from "../interfaces/api-key.interface";
 import { IApiKeyService } from "../interfaces/api-key.service.interface";
 import { ApiKeyDoc, ApiKeyEntity } from "../repository/entities/api-key.entity";
@@ -167,5 +168,26 @@ export class ApiKeyService implements IApiKeyService {
    */
   async delete(repository: ApiKeyDoc): Promise<ApiKeyDoc> {
     return this.apiKeyRepository.softDelete(repository);
+  }
+
+  /**
+   * Update Apikey startDate and endDate
+   *
+   * @param repository apiKeyDoc
+   * @param dto ApiKeyUpdateDateDto
+   * @param dto.startDate start date apiKey
+   * @param dto.endDate start date apiKey
+   * @example
+   *    await apiKeyService.updateDate(apiKey,{startDate: new Date(), endDate: new Date()})
+   * @returns Promise ApiKeyDoc
+   */
+  async updateDate(
+    repository: ApiKeyDoc,
+    { startDate, endDate }: ApiKeyUpdateDateDto,
+  ): Promise<ApiKeyDoc> {
+    repository.startDate = this.helperDateService.startOfDay(startDate);
+    repository.endDate = this.helperDateService.endOfDay(endDate);
+
+    return this.apiKeyRepository.save(repository);
   }
 }

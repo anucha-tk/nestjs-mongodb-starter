@@ -17,7 +17,7 @@ export function ApiKeyAdminGetGuard(): MethodDecorator {
 }
 
 /**
- * ApiKeyAdminUpdateResetGuard Decorator.
+ * ApiKeyAdminUpdateGuard Decorator.
  *
  * Guards
  * - ApiKeyPutToRequestGuard - find apikey from params then put to `request.__apiKey`.
@@ -25,7 +25,7 @@ export function ApiKeyAdminGetGuard(): MethodDecorator {
  * - ApiKeyActiveGuard - check `__apiKey.isActive` is includes `API_KEY_ACTIVE_META_KEY`.
  * - ApiKeyExpiredGuard - check `__apiKey.endDate` is greater today.
  */
-export function ApiKeyAdminUpdateResetGuard(): MethodDecorator {
+export function ApiKeyAdminUpdateGuard(): MethodDecorator {
   return applyDecorators(
     UseGuards(ApiKeyPutToRequestGuard, ApiKeyNotFoundGuard, ApiKeyActiveGuard, ApiKeyExpiredGuard),
     SetMetadata(API_KEY_ACTIVE_META_KEY, [true]),
@@ -72,8 +72,5 @@ export function ApiKeyAdminUpdateInActiveGuard(): MethodDecorator {
  * - ApiKeyNotFoundGuard - check `__apiKey` is exists.
  */
 export function ApiKeyAdminDeleteGuard(): MethodDecorator {
-  return applyDecorators(
-    UseGuards(ApiKeyPutToRequestGuard, ApiKeyNotFoundGuard),
-    SetMetadata(API_KEY_ACTIVE_META_KEY, [true]),
-  );
+  return applyDecorators(UseGuards(ApiKeyPutToRequestGuard, ApiKeyNotFoundGuard));
 }

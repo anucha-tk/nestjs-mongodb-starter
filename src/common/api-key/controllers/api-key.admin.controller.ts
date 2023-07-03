@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Patch, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Patch, Post, Put } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { AuthJwtAdminAccessProtected } from "src/common/auth/decorators/auth.jwt.decorator";
 import {
@@ -30,8 +30,8 @@ import {
   ApiKeyAdminDeleteGuard,
   ApiKeyAdminGetGuard,
   ApiKeyAdminUpdateActiveGuard,
+  ApiKeyAdminUpdateGuard,
   ApiKeyAdminUpdateInActiveGuard,
-  ApiKeyAdminUpdateResetGuard,
 } from "../decorators/api-key.admin.decorator";
 import { ApiKeyPublicProtected, GetApiKey } from "../decorators/api-key.decorator";
 import {
@@ -41,9 +41,11 @@ import {
   ApiKeyAdminInActiveDoc,
   ApiKeyAdminListDoc,
   ApiKeyAdminResetDoc,
+  ApiKeyAdminUpdateDoc,
 } from "../docs/api-key.admin.doc";
 import { ApiKeyCreateDto } from "../dtos/api-key.create.dto";
 import { ApiKeyRequestDto } from "../dtos/api-key.request.dto";
+import { ApiKeyUpdateDateDto } from "../dtos/api-key.update-date.dto";
 import { ApiKeyDoc, ApiKeyEntity } from "../repository/entities/api-key.entity";
 import { ApiKeyGetSerialization } from "../serializations/api-key.get.serialization";
 import { ApiKeyListSerialization } from "../serializations/api-key.list.serialization";
@@ -126,7 +128,7 @@ export class ApiKeyAdminController {
 
   @ApiKeyAdminResetDoc()
   @Response("apiKey.reset", { serialization: ApiKeyResetSerialization })
-  @ApiKeyAdminUpdateResetGuard()
+  @ApiKeyAdminUpdateGuard()
   @PolicyAbilityProtected({
     subject: ENUM_POLICY_SUBJECT.API_KEY,
     action: [ENUM_POLICY_ACTION.READ, ENUM_POLICY_ACTION.UPDATE],
@@ -206,6 +208,23 @@ export class ApiKeyAdminController {
     return;
   }
 
-  //TODO: updateDate
+  @ApiKeyAdminUpdateDoc()
+  @Response("apiKey.updateDate")
+  @PolicyAbilityProtected({
+    subject: ENUM_POLICY_SUBJECT.API_KEY,
+    action: [ENUM_POLICY_ACTION.READ, ENUM_POLICY_ACTION.UPDATE],
+  })
+  @ApiKeyAdminUpdateGuard()
+  @AuthJwtAdminAccessProtected()
+  @RequestParamGuard(ApiKeyRequestDto)
+  @Put("/update/:apiKey/date")
+  async updateDate(
+    @GetApiKey() apiKey: ApiKeyDoc,
+    @Body() body: ApiKeyUpdateDateDto,
+  ): Promise<IResponse> {
+    await this.apiKeyService.updateDate(apiKey, body);
+    return { data: { _id: apiKey._id } };
+  }
+
   //TODO: updateName
 }

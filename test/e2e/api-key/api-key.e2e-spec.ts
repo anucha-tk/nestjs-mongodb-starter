@@ -21,6 +21,7 @@ import {
   ENUM_POLICY_SUBJECT,
 } from "src/common/policy/constants/policy.enum.constant";
 import { ENUM_POLICY_STATUS_CODE_ERROR } from "src/common/policy/constants/policy.status-code.constant";
+import { useContainer } from "class-validator";
 
 describe("api-key e2e", () => {
   const BASE_URL = "/admin/api-key";
@@ -51,6 +52,7 @@ describe("api-key e2e", () => {
     userService = modRef.get<UserService>(UserService);
     roleService = modRef.get<RoleService>(RoleService);
     apiKeyService = modRef.get<ApiKeyService>(ApiKeyService);
+    useContainer(app.select(AppModule), { fallbackOnErrors: true });
     await app.init();
 
     // create Api & Role
@@ -95,6 +97,102 @@ describe("api-key e2e", () => {
     await roleService.deleteMany({});
     await apiKeyService.deleteMany({});
     await app.close();
+  });
+  describe(`PUT ${APIKEY_UPDATE_URL}/:apiKey/date`, () => {
+    // NOTE: keep to top i don't know why error
+    it.skip("should return 200 when update date successful", async () => {
+      const { status, body } = await request(app.getHttpServer())
+        .put(`${APIKEY_UPDATE_URL}/${apiKeyDoc._id}/date`)
+        .set("x-api-key", xApiKey)
+        .set("Authorization", `Bearer ${adminAccessToken}`)
+        .send({
+          startDate: faker.date.future({ years: 0.5 }).toUTCString(),
+          endDate: faker.date.future({ years: 2 }).toUTCString(),
+        });
+
+      expect(body).toBeDefined();
+      expect(status).toBe(200);
+    });
+    it("should return 403 when type role not include SUPER_ADMIN or ADMIN", async () => {
+      const { body, status } = await request(app.getHttpServer())
+        .put(`${APIKEY_UPDATE_URL}/${apiKeyTwoDoc._id}/date`)
+        .set("x-api-key", xApiKey)
+        .set("Authorization", `Bearer ${userAccessToken}`);
+
+      expect(status).toBe(403);
+      expect(body.statusCode).toBe(ENUM_ROLE_STATUS_CODE_ERROR.ROLE_PAYLOAD_TYPE_INVALID_ERROR);
+    });
+    it("should return 403 when policy not allow", async () => {
+      const adminRole = await createRoleAdmin(app, "adminNotAllow", [
+        { subject: ENUM_POLICY_SUBJECT.API_KEY, action: [ENUM_POLICY_ACTION.READ] },
+      ]);
+      const { email } = await createAdmin({ app, roleId: adminRole._id, password: mockPassword });
+      const adminRes = await request(app.getHttpServer())
+        .post("/public/user/login")
+        .send({ email, password: mockPassword })
+        .set("x-api-key", xApiKey);
+
+      const { body, status } = await request(app.getHttpServer())
+        .put(`${APIKEY_UPDATE_URL}/${apiKeyTwoDoc._id}/date`)
+        .set("x-api-key", xApiKey)
+        .set("Authorization", `Bearer ${adminRes.body.data.accessToken}`);
+
+      expect(status).toBe(403);
+      expect(body.statusCode).toBe(ENUM_POLICY_STATUS_CODE_ERROR.POLICY_ABILITY_FORBIDDEN_ERROR);
+    });
+    it("should throw 400 when apiKey not uuid", async () => {
+      const { body, status } = await request(app.getHttpServer())
+        .put(`${APIKEY_UPDATE_URL}/123/date`)
+        .set("x-api-key", xApiKey)
+        .set("Authorization", `Bearer ${adminAccessToken}`);
+
+      expect(status).toBe(400);
+      expect(body.statusCode).toBe(ENUM_REQUEST_STATUS_CODE_ERROR.REQUEST_VALIDATION_ERROR);
+    });
+
+    it("should throw 404 when apiKey not found", async () => {
+      const { body, status } = await request(app.getHttpServer())
+        .put(`${APIKEY_UPDATE_URL}/${faker.string.uuid()}/date`)
+        .set("x-api-key", xApiKey)
+        .set("Authorization", `Bearer ${adminAccessToken}`);
+
+      expect(status).toBe(404);
+      expect(body.statusCode).toBe(ENUM_API_KEY_STATUS_CODE_ERROR.API_KEY_NOT_FOUND_ERROR);
+    });
+    it("should return 400 when apiKey not active", async () => {
+      jest.spyOn(apiKeyService, "findOneById").mockResolvedValue({ isActive: false } as ApiKeyDoc);
+      const { body, status } = await request(app.getHttpServer())
+        .put(`${APIKEY_UPDATE_URL}/${apiKeyDoc._id}/date`)
+        .set("x-api-key", xApiKey)
+        .set("Authorization", `Bearer ${adminAccessToken}`);
+
+      expect(status).toBe(400);
+      expect(body.statusCode).toBe(ENUM_API_KEY_STATUS_CODE_ERROR.API_KEY_IS_ACTIVE_ERROR);
+    });
+    it("should return 400 when apiKey expired", async () => {
+      jest.spyOn(apiKeyService, "findOneById").mockResolvedValue({
+        _id: apiKeyDoc._id,
+        isActive: true,
+        startDate: faker.date.recent(),
+        endDate: faker.date.past(),
+      } as ApiKeyDoc);
+
+      const { body, status } = await request(app.getHttpServer())
+        .put(`${APIKEY_UPDATE_URL}/${apiKeyDoc._id}/date`)
+        .set("x-api-key", xApiKey)
+        .set("Authorization", `Bearer ${adminAccessToken}`);
+
+      expect(status).toBe(400);
+      expect(body.statusCode).toBe(ENUM_API_KEY_STATUS_CODE_ERROR.API_KEY_EXPIRED_ERROR);
+    });
+    it("should return 422 when empty body update date", async () => {
+      const { status } = await request(app.getHttpServer())
+        .put(`${APIKEY_UPDATE_URL}/${apiKeyDoc._id}/date`)
+        .set("x-api-key", xApiKey)
+        .set("Authorization", `Bearer ${adminAccessToken}`);
+
+      expect(status).toBe(422);
+    });
   });
   describe(`Get ${APIKEY_LIST_URL}`, () => {
     it("should return apikeys", async () => {

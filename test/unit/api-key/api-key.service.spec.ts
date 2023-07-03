@@ -219,4 +219,17 @@ describe("api-key service", () => {
       expect(apiKeyRepository.softDelete).toBeCalled();
     });
   });
+
+  describe("updateDate", () => {
+    it("should return apiKeyDoc when new startDate and endDate", async () => {
+      const startDate = faker.date.recent();
+      const endDate = faker.date.future({ years: 1 });
+
+      const result = await apiKeyService.updateDate(new apiKeyEntityDoc(), { startDate, endDate });
+      expect(result).toBeDefined();
+      expect(result.startDate instanceof Date).toBeTruthy();
+      expect(result.endDate instanceof Date).toBeTruthy();
+      expect(apiKeyRepository.save).toBeCalled();
+    });
+  });
 });
