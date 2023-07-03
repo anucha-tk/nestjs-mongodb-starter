@@ -98,25 +98,10 @@ describe("api-key e2e", () => {
     await apiKeyService.deleteMany({});
     await app.close();
   });
-  describe(`PUT ${APIKEY_UPDATE_URL}/:apiKey/date`, () => {
-    it("should return 200 when update date successful", async () => {
-      const startDate = faker.date.future({ years: 0.5 }).toISOString();
-      const endDate = faker.date.future({ years: 1 }).toISOString();
-      const { status, body } = await request(app.getHttpServer())
-        .put(`${APIKEY_UPDATE_URL}/${apiKeyDoc._id}/date`)
-        .set("x-api-key", xApiKey)
-        .set("Authorization", `Bearer ${adminAccessToken}`)
-        .send({
-          startDate,
-          endDate,
-        });
-
-      expect(body).toBeDefined();
-      expect(status).toBe(200);
-    });
+  describe(`PUT ${APIKEY_UPDATE_URL}/:apiKey`, () => {
     it("should return 403 when type role not include SUPER_ADMIN or ADMIN", async () => {
       const { body, status } = await request(app.getHttpServer())
-        .put(`${APIKEY_UPDATE_URL}/${apiKeyTwoDoc._id}/date`)
+        .put(`${APIKEY_UPDATE_URL}/${apiKeyTwoDoc._id}`)
         .set("x-api-key", xApiKey)
         .set("Authorization", `Bearer ${userAccessToken}`);
 
@@ -134,7 +119,7 @@ describe("api-key e2e", () => {
         .set("x-api-key", xApiKey);
 
       const { body, status } = await request(app.getHttpServer())
-        .put(`${APIKEY_UPDATE_URL}/${apiKeyTwoDoc._id}/date`)
+        .put(`${APIKEY_UPDATE_URL}/${apiKeyTwoDoc._id}`)
         .set("x-api-key", xApiKey)
         .set("Authorization", `Bearer ${adminRes.body.data.accessToken}`);
 
@@ -143,7 +128,7 @@ describe("api-key e2e", () => {
     });
     it("should throw 400 when apiKey not uuid", async () => {
       const { body, status } = await request(app.getHttpServer())
-        .put(`${APIKEY_UPDATE_URL}/123/date`)
+        .put(`${APIKEY_UPDATE_URL}/123`)
         .set("x-api-key", xApiKey)
         .set("Authorization", `Bearer ${adminAccessToken}`);
 
@@ -153,17 +138,18 @@ describe("api-key e2e", () => {
 
     it("should throw 404 when apiKey not found", async () => {
       const { body, status } = await request(app.getHttpServer())
-        .put(`${APIKEY_UPDATE_URL}/${faker.string.uuid()}/date`)
+        .put(`${APIKEY_UPDATE_URL}/${faker.string.uuid()}`)
         .set("x-api-key", xApiKey)
         .set("Authorization", `Bearer ${adminAccessToken}`);
 
       expect(status).toBe(404);
       expect(body.statusCode).toBe(ENUM_API_KEY_STATUS_CODE_ERROR.API_KEY_NOT_FOUND_ERROR);
     });
+
     it("should return 400 when apiKey not active", async () => {
       jest.spyOn(apiKeyService, "findOneById").mockResolvedValue({ isActive: false } as ApiKeyDoc);
       const { body, status } = await request(app.getHttpServer())
-        .put(`${APIKEY_UPDATE_URL}/${apiKeyDoc._id}/date`)
+        .put(`${APIKEY_UPDATE_URL}/${apiKeyDoc._id}`)
         .set("x-api-key", xApiKey)
         .set("Authorization", `Bearer ${adminAccessToken}`);
 
@@ -179,22 +165,34 @@ describe("api-key e2e", () => {
       } as ApiKeyDoc);
 
       const { body, status } = await request(app.getHttpServer())
-        .put(`${APIKEY_UPDATE_URL}/${apiKeyDoc._id}/date`)
+        .put(`${APIKEY_UPDATE_URL}/${apiKeyDoc._id}`)
         .set("x-api-key", xApiKey)
         .set("Authorization", `Bearer ${adminAccessToken}`);
 
       expect(status).toBe(400);
       expect(body.statusCode).toBe(ENUM_API_KEY_STATUS_CODE_ERROR.API_KEY_EXPIRED_ERROR);
     });
-    it("should return 422 when empty body update date", async () => {
-      const { status } = await request(app.getHttpServer())
-        .put(`${APIKEY_UPDATE_URL}/${apiKeyDoc._id}/date`)
+    it("should return 422 when empty body", async () => {
+      const { body, status } = await request(app.getHttpServer())
+        .put(`${APIKEY_UPDATE_URL}/${apiKeyDoc._id}`)
         .set("x-api-key", xApiKey)
         .set("Authorization", `Bearer ${adminAccessToken}`);
 
       expect(status).toBe(422);
+      expect(body.statusCode).toBe(ENUM_REQUEST_STATUS_CODE_ERROR.REQUEST_VALIDATION_ERROR);
+    });
+    it("should return 200 and id when update Name successful", async () => {
+      const { body, status } = await request(app.getHttpServer())
+        .put(`${APIKEY_UPDATE_URL}/${apiKeyDoc._id}`)
+        .set("x-api-key", xApiKey)
+        .set("Authorization", `Bearer ${adminAccessToken}`)
+        .send({ name: "simple name" });
+
+      expect(status).toBe(200);
+      expect(body.data._id).toBeDefined();
     });
   });
+
   describe(`Get ${APIKEY_LIST_URL}`, () => {
     it("should return apikeys", async () => {
       const { body, status } = await request(app.getHttpServer())

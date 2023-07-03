@@ -232,3 +232,37 @@ export function ApiKeyAdminUpdateDoc(): MethodDecorator {
     ),
   );
 }
+
+export function ApiKeyAdminUpdateNameDoc(): MethodDecorator {
+  return applyDecorators(
+    Doc({ operation: "common.admin.apiKey" }),
+    DocRequest({
+      params: ApiKeyDocParamsId,
+      bodyType: ENUM_DOC_REQUEST_BODY_TYPE.JSON,
+    }),
+    DocAuth({
+      jwtAccessToken: true,
+      apiKey: true,
+    }),
+    DocGuard({ role: true, policy: true }),
+    DocResponse("apiKey.updateName", { serialization: ResponseIdSerialization }),
+    DocErrorGroup([
+      DocDefault({
+        httpStatus: HttpStatus.NOT_FOUND,
+        statusCode: ENUM_API_KEY_STATUS_CODE_ERROR.API_KEY_NOT_FOUND_ERROR,
+        messagePath: "apiKey.error.notFound",
+      }),
+    ]),
+    DocOneOf(
+      HttpStatus.BAD_REQUEST,
+      {
+        statusCode: ENUM_API_KEY_STATUS_CODE_ERROR.API_KEY_EXPIRED_ERROR,
+        messagePath: "apiKey.error.expired",
+      },
+      {
+        statusCode: ENUM_API_KEY_STATUS_CODE_ERROR.API_KEY_IS_ACTIVE_ERROR,
+        messagePath: "apiKey.error.isActiveInvalid",
+      },
+    ),
+  );
+}

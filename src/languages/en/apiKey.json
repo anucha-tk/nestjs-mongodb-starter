@@ -3,6 +3,7 @@
   "get": "Get Detail of api key succeed",
   "create": "Create api key succeed",
   "reset": "Reset api key succeed",
+  "updateName": "Update name api key succeed",
   "inactive": "Inactive api key succeed",
   "updateDate": "Update date api key succeed",
   "active": "Active api key succeed",

@@ -16,7 +16,7 @@ export const createApiKey = async (app: INestApplication, type = ENUM_API_KEY_TY
       key: faker.string.alphanumeric(20),
       secret: faker.string.alphanumeric(20),
       startDate: faker.date.recent({ days: 7 }),
-      endDate: faker.date.future({ years: 0.5 }),
+      endDate: faker.date.soon({ days: 30 }),
     });
     return apikey;
   } catch (error) {

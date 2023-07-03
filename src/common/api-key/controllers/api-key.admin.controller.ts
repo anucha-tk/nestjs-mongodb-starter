@@ -16,6 +16,7 @@ import { PolicyAbilityProtected } from "src/common/policy/decorators/policy.deco
 import { RequestParamGuard } from "src/common/request/decorators/request.decorator";
 import { Response, ResponsePaging } from "src/common/response/decorators/response.decorator";
 import { IResponse, IResponsePaging } from "src/common/response/interfaces/response.interface";
+import { ResponseIdSerialization } from "src/common/response/serializations/response.id.serialization";
 import { ENUM_API_KEY_TYPE } from "../constants/api-key.enum.constant";
 import {
   API_KEY_DEFAULT_AVAILABLE_ORDER_BY,
@@ -37,15 +38,18 @@ import { ApiKeyPublicProtected, GetApiKey } from "../decorators/api-key.decorato
 import {
   ApiKeyAdminActiveDoc,
   ApiKeyAdminCreateDoc,
+  ApiKeyAdminDeleteDoc,
   ApiKeyAdminGetDoc,
   ApiKeyAdminInActiveDoc,
   ApiKeyAdminListDoc,
   ApiKeyAdminResetDoc,
   ApiKeyAdminUpdateDoc,
+  ApiKeyAdminUpdateNameDoc,
 } from "../docs/api-key.admin.doc";
 import { ApiKeyCreateDto } from "../dtos/api-key.create.dto";
 import { ApiKeyRequestDto } from "../dtos/api-key.request.dto";
 import { ApiKeyUpdateDateDto } from "../dtos/api-key.update-date.dto";
+import { ApiKeyUpdateNameDto } from "../dtos/api-key.update-name.dto";
 import { ApiKeyDoc, ApiKeyEntity } from "../repository/entities/api-key.entity";
 import { ApiKeyGetSerialization } from "../serializations/api-key.get.serialization";
 import { ApiKeyListSerialization } from "../serializations/api-key.list.serialization";
@@ -193,6 +197,7 @@ export class ApiKeyAdminController {
     };
   }
 
+  @ApiKeyAdminDeleteDoc()
   @ApiKeyAdminDeleteGuard()
   @Response("apiKey.delete")
   @ApiKeyAdminDeleteGuard()
@@ -208,8 +213,26 @@ export class ApiKeyAdminController {
     return;
   }
 
+  @ApiKeyAdminUpdateNameDoc()
+  @Response("apiKey.updateName", { serialization: ResponseIdSerialization })
+  @PolicyAbilityProtected({
+    subject: ENUM_POLICY_SUBJECT.API_KEY,
+    action: [ENUM_POLICY_ACTION.READ, ENUM_POLICY_ACTION.UPDATE],
+  })
+  @ApiKeyAdminUpdateGuard()
+  @AuthJwtAdminAccessProtected()
+  @RequestParamGuard(ApiKeyRequestDto)
+  @Put("/update/:apiKey")
+  async updateName(
+    @GetApiKey() apiKey: ApiKeyDoc,
+    @Body() dto: ApiKeyUpdateNameDto,
+  ): Promise<IResponse> {
+    await this.apiKeyService.updateName(apiKey, dto.name);
+    return { data: { _id: apiKey._id } };
+  }
+
   @ApiKeyAdminUpdateDoc()
-  @Response("apiKey.updateDate")
+  @Response("apiKey.updateDate", { serialization: ResponseIdSerialization })
   @PolicyAbilityProtected({
     subject: ENUM_POLICY_SUBJECT.API_KEY,
     action: [ENUM_POLICY_ACTION.READ, ENUM_POLICY_ACTION.UPDATE],
@@ -225,6 +248,4 @@ export class ApiKeyAdminController {
     await this.apiKeyService.updateDate(apiKey, body);
     return { data: { _id: apiKey._id } };
   }
-
-  //TODO: updateName
 }

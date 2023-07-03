@@ -20,7 +20,7 @@ export class ApiKeyUpdateDateDto {
 
   @ApiProperty({
     description: "Api Key end date",
-    example: faker.date.recent(),
+    example: faker.date.future(),
     required: false,
     nullable: true,
   })

@@ -190,4 +190,19 @@ export class ApiKeyService implements IApiKeyService {
 
     return this.apiKeyRepository.save(repository);
   }
+
+  /**
+   * Update Apikey name.
+   *
+   * @param repository apiKeyDoc
+   * @param name new name apikey string
+   * @example
+   *    await apiKeyService.updateDate(apiKey,"simple name")
+   * @returns Promise ApiKeyDoc
+   */
+  async updateName(repository: ApiKeyDoc, name: string): Promise<ApiKeyDoc> {
+    repository.name = name;
+
+    return this.apiKeyRepository.save(repository);
+  }
 }
