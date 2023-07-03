@@ -1,3 +1,25 @@
+## [0.2.0](https://github.com/anucha-tk/spec-finder-api/compare/0.1.0...0.2.0) (2023-07-03)
+
+### Features
+
+- **api-key:** active, inactive service and unittest ([d3f871b](https://github.com/anucha-tk/spec-finder-api/commit/d3f871b0180cc890548dfe7fb2ab5f73ce57e347))
+- **api-key:** active, inactive controller and e2e testing ([ed3f466](https://github.com/anucha-tk/spec-finder-api/commit/ed3f4660d72f546eaf7b47d8ef8fe68737739722))
+- **api-key:** add updateDate and test ([2b330d3](https://github.com/anucha-tk/spec-finder-api/commit/2b330d30d239eff44fd9cf3a8e98735ec060f2a2))
+- **api-key:** api-key list ([fbf040e](https://github.com/anucha-tk/spec-finder-api/commit/fbf040e2d412431d982cb4222049bedcd9ea178d))
+- **api-key:** create api controller and e2e testing ([bddfa19](https://github.com/anucha-tk/spec-finder-api/commit/bddfa196b971d75ff8cd4750875910501265ce48))
+- **api-key:** delete with deleteSoft api-key controller and testing ([3e70410](https://github.com/anucha-tk/spec-finder-api/commit/3e7041062905adbfdb3f8fc60487d665542224e8))
+- **api-key:** findOneById service, guard and unittest ([52a0a24](https://github.com/anucha-tk/spec-finder-api/commit/52a0a24768ca984a038c445a30d511126289d1be))
+- **api-key:** get api controller ([a109b0e](https://github.com/anucha-tk/spec-finder-api/commit/a109b0e57e606aa0c566af67abf954ad758d258c))
+- **api-key:** guard and unittest ([30a2eea](https://github.com/anucha-tk/spec-finder-api/commit/30a2eea14857130b4d866ef75eb91f415c6c0a23))
+- **api-key:** reset apiKey controller and e2e testing ([51673f5](https://github.com/anucha-tk/spec-finder-api/commit/51673f56d6a25ad40542191cc0669e4a0bdf1ad5))
+- **api-key:** reset service and uniitest ([2306006](https://github.com/anucha-tk/spec-finder-api/commit/23060063130fd4ad48e8abfa78df0515ee73a192))
+- **api-key:** updateName and separate testing ([adfd1bb](https://github.com/anucha-tk/spec-finder-api/commit/adfd1bb04146aeea31caf66b7a685f7ad738374f))
+- **debugger:** add denugger module and fix another ([fbbe5c8](https://github.com/anucha-tk/spec-finder-api/commit/fbbe5c8067e870cdcfc6996f81e73c29bf062913))
+
+### Bug Fixes
+
+- **api-key:** fix testing and dto position decorator ([ea00518](https://github.com/anucha-tk/spec-finder-api/commit/ea00518e534c592bceb9be8b823835c498774bb9))
+
 ## [0.1.0](https://github.com/anucha-tk/spec-finder-api/compare/0.0.2...0.1.0) (2023-06-26)
 
 ### Features
