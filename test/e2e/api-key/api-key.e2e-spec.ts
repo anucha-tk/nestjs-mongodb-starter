@@ -99,15 +99,16 @@ describe("api-key e2e", () => {
     await app.close();
   });
   describe(`PUT ${APIKEY_UPDATE_URL}/:apiKey/date`, () => {
-    // NOTE: keep to top i don't know why error
-    it.skip("should return 200 when update date successful", async () => {
+    it("should return 200 when update date successful", async () => {
+      const startDate = faker.date.future({ years: 0.5 }).toISOString();
+      const endDate = faker.date.future({ years: 1 }).toISOString();
       const { status, body } = await request(app.getHttpServer())
         .put(`${APIKEY_UPDATE_URL}/${apiKeyDoc._id}/date`)
         .set("x-api-key", xApiKey)
         .set("Authorization", `Bearer ${adminAccessToken}`)
         .send({
-          startDate: faker.date.future({ years: 0.5 }).toUTCString(),
-          endDate: faker.date.future({ years: 2 }).toUTCString(),
+          startDate,
+          endDate,
         });
 
       expect(body).toBeDefined();

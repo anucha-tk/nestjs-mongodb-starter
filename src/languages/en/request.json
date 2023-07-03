@@ -7,6 +7,7 @@
   "isEmail": "{property} should be a type of email.",
   "isEnum": "{property} don't match with enum",
   "isString": "{property} should be a type of string.",
+  "isDateString": "{property} should be a type of date string.",
   "isDate": "{property} should be a date",
   "MinDateTodayConstraint": "{property} has less date than the {value}",
   "minDateGreaterThan": "{property} has less date than the {value}",
