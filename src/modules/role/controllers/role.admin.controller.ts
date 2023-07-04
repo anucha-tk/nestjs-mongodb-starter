@@ -14,8 +14,9 @@ import {
   ENUM_POLICY_SUBJECT,
 } from "src/common/policy/constants/policy.enum.constant";
 import { PolicyAbilityProtected } from "src/common/policy/decorators/policy.decorator";
-import { ResponsePaging } from "src/common/response/decorators/response.decorator";
-import { IResponsePaging } from "src/common/response/interfaces/response.interface";
+import { RequestParamGuard } from "src/common/request/decorators/request.decorator";
+import { Response, ResponsePaging } from "src/common/response/decorators/response.decorator";
+import { IResponse, IResponsePaging } from "src/common/response/interfaces/response.interface";
 import { ENUM_ROLE_TYPE } from "../constants/role.enum.constant";
 import {
   ROLE_DEFAULT_AVAILABLE_ORDER_BY,
@@ -26,8 +27,11 @@ import {
   ROLE_DEFAULT_PER_PAGE,
   ROLE_DEFAULT_TYPE,
 } from "../constants/role.list.constant";
-import { RoleAdminListDoc } from "../docs/role.admin.doc";
-import { RoleEntity } from "../repository/entities/role.entity";
+import { GetRole, RoleGetGuard } from "../decorators/role.decorator";
+import { RoleAdminGetDoc, RoleAdminListDoc } from "../docs/role.admin.doc";
+import { RoleRequestDto } from "../dtos/role.request.dto";
+import { RoleDoc, RoleEntity } from "../repository/entities/role.entity";
+import { RoleGetSerialization } from "../serializations/role.get.serialization";
 import { RoleListSerialization } from "../serializations/role.list.serialization";
 import { RoleService } from "../services/role.service";
 
@@ -89,4 +93,26 @@ export class RoleAdminController {
       data: roles,
     };
   }
+
+  @RoleAdminGetDoc()
+  @Response("role.get", { serialization: RoleGetSerialization })
+  @RoleGetGuard()
+  @PolicyAbilityProtected({
+    subject: ENUM_POLICY_SUBJECT.ROLE,
+    action: [ENUM_POLICY_ACTION.READ],
+  })
+  @AuthJwtAdminAccessProtected()
+  @RequestParamGuard(RoleRequestDto)
+  @Get("/get/:role")
+  async get(@GetRole(true) role: RoleDoc): Promise<IResponse> {
+    return { data: role };
+  }
+
+  // TODO: create
+  // TODO: reset
+  // TODO: updateName
+  // TODO: inactive
+  // TODO: active
+  // TODO: updateDate
+  // TODO: delete
 }

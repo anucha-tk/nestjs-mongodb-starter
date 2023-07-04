@@ -33,6 +33,7 @@ describe("api-key update-date e2e", () => {
   let xApiKey: string;
   let adminAccessToken: string;
   let userAccessToken: string;
+  let apiKeyDoc: ApiKeyDoc;
   let apiKeyTwoDoc: ApiKeyDoc;
 
   beforeAll(async () => {
@@ -57,7 +58,6 @@ describe("api-key update-date e2e", () => {
     apiKeyDoc = apiKeyRes.doc;
     apiKeyTwoDoc = apiKeyResTwo.doc;
     xApiKey = `${apiKeyRes.doc.key}:${apiKeyRes.secret}`;
-    xApiKeyTwo = `${apiKeyResTwo.doc.key}:${apiKeyResTwo.secret}`;
 
     // create user
     admin = await createAdmin({ app, roleId: roleAdmin._id });

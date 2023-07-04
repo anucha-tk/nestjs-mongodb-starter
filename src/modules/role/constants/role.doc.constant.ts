@@ -1,3 +1,4 @@
+import { faker } from "@faker-js/faker";
 import { ENUM_ROLE_TYPE } from "./role.enum.constant";
 
 export const RoleDocQueryIsActive = [
@@ -19,5 +20,14 @@ export const RoleDocQueryType = [
     type: "string",
     example: Object.values(ENUM_ROLE_TYPE).join(","),
     description: "enum value with ',' delimiter",
+  },
+];
+export const RoleDocParamsId = [
+  {
+    name: "role",
+    allowEmptyValue: false,
+    required: true,
+    type: "string",
+    example: faker.string.uuid(),
   },
 ];

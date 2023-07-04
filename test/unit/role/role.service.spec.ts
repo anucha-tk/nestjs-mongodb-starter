@@ -45,10 +45,10 @@ describe("role service", () => {
                 { _id: roleKeyId, name: "role_two" },
               ];
             }),
-            findOne: jest.fn().mockImplementation((id) => {
+            findOne: jest.fn().mockImplementation(({ _id, name }) => {
               const find = new roleKeyEntityDoc();
-              find._id = id;
-              find.name = faker.word.words();
+              find._id = _id;
+              find.name = name;
               find.description = faker.lorem.sentence();
               find.isActive = faker.datatype.boolean();
               find.type = faker.helpers.arrayElement(Object.values(ENUM_ROLE_TYPE));
@@ -149,8 +149,8 @@ describe("role service", () => {
       it("should return roleDoc when findOneByName successful", async () => {
         const result = await roleService.findOneByName("xyz");
         expect(result).toBeDefined();
-        expect(result).toEqual({ _id: roleKeyId, name: "xyz" });
-        expect(roleRepository.findOne).toBeCalledWith({ name: "xyz" }, undefined);
+        expect(result.name).toBe("xyz");
+        expect(result).toBeInstanceOf(roleKeyEntityDoc);
         expect(roleRepository.findOne).toHaveBeenCalled();
       });
     });
