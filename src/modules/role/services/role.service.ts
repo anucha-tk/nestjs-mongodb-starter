@@ -19,6 +19,10 @@ export class RoleService implements IRoleService {
     return this.roleRepository.findAll<RoleEntity>(find, options);
   }
 
+  async findOneById(_id: string, options?: IDatabaseFindOneOptions): Promise<RoleDoc> {
+    return this.roleRepository.findOne({ _id }, options);
+  }
+
   async findOneByName(name: string, options?: IDatabaseFindOneOptions): Promise<RoleDoc> {
     return this.roleRepository.findOne<RoleDoc>({ name }, options);
   }
