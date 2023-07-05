@@ -12,5 +12,6 @@
   "isDate": "{property} should be a date",
   "MinDateTodayConstraint": "{property} has less date than the {value}",
   "minDateGreaterThan": "{property} has less date than the {value}",
-  "MinGreaterThanEqualConstraint": "{property} has greater then the {value}"
+  "MinGreaterThanEqualConstraint": "{property} has greater then the {value}",
+  "isArray": "{property} should be a array"
 }

@@ -24,6 +24,7 @@ import {
   IDocRequestFileOptions,
   IDocRequestOptions,
   IDocResponseFileOptions,
+  IDocResponseIdOptions,
   IDocResponsePagingOptions,
 } from "src/common/doc/interfaces/doc.interface";
 import {
@@ -459,9 +460,9 @@ export function DocResponse<T = void>(
   return applyDecorators(ApiProduces("application/json"), DocDefault(docs));
 }
 
-export function DocResponseId<T = void>(
+export function DocResponseId(
   messagePath: string,
-  options?: IDocResponseOptions<T>,
+  options?: IDocResponseIdOptions,
 ): MethodDecorator {
   const docs: IDocDefaultOptions = {
     httpStatus: options?.httpStatus ?? HttpStatus.OK,

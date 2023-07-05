@@ -51,6 +51,8 @@ export interface IDocResponseOptions<T> {
   serialization?: ClassConstructor<T>;
 }
 
+export type IDocResponseIdOptions = Omit<IDocResponseOptions<any>, "serialization">;
+
 export interface IDocResponsePagingOptions<T>
   extends Omit<IDocResponseOptions<T>, "serialization"> {
   serialization: ClassConstructor<T>;

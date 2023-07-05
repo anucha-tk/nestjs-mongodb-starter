@@ -8,7 +8,11 @@ import {
 } from "../constants/response.constant";
 import { ResponseDefaultInterceptor } from "../interceptors/response.default.interceptor";
 import { ResponsePagingInterceptor } from "../interceptors/response.paging.interceptor";
-import { IResponseOptions, IResponsePagingOptions } from "../interfaces/response.interface";
+import {
+  IResponseIdOptions,
+  IResponseOptions,
+  IResponsePagingOptions,
+} from "../interfaces/response.interface";
 import { ResponseIdSerialization } from "../serializations/response.id.serialization";
 
 export function Response<T>(messagePath: string, options?: IResponseOptions<T>): MethodDecorator {
@@ -25,7 +29,7 @@ export function Response<T>(messagePath: string, options?: IResponseOptions<T>):
  * @UseInterceptors ResponseIdSerialization
  * @returns response object with id only
  * */
-export function ResponseId<T>(messagePath: string, options?: IResponseOptions<T>): MethodDecorator {
+export function ResponseId<T>(messagePath: string, options?: IResponseIdOptions): MethodDecorator {
   return applyDecorators(
     UseInterceptors(ResponseDefaultInterceptor<T>),
     SetMetadata(RESPONSE_MESSAGE_PATH_META_KEY, messagePath),

@@ -9,9 +9,9 @@ import {
   DocOneOf,
   DocRequest,
   DocResponse,
+  DocResponseId,
   DocResponsePaging,
 } from "src/common/doc/decorators/doc.decorator";
-import { ResponseIdSerialization } from "src/common/response/serializations/response.id.serialization";
 import { ApiKeyDocParamsId, ApiKeyDocQueryIsActive } from "../constants/api-key.doc.constant";
 import { ENUM_API_KEY_STATUS_CODE_ERROR } from "../constants/api-key.status-code.constant";
 import { ApiKeyCreateSerialization } from "../serializations/api-key.create.serialization";
@@ -211,7 +211,7 @@ export function ApiKeyAdminUpdateDoc(): MethodDecorator {
       apiKey: true,
     }),
     DocGuard({ role: true, policy: true }),
-    DocResponse("apiKey.updateDate", { serialization: ResponseIdSerialization }),
+    DocResponseId("apiKey.updateDate"),
     DocErrorGroup([
       DocDefault({
         httpStatus: HttpStatus.NOT_FOUND,
@@ -245,7 +245,7 @@ export function ApiKeyAdminUpdateNameDoc(): MethodDecorator {
       apiKey: true,
     }),
     DocGuard({ role: true, policy: true }),
-    DocResponse("apiKey.updateName", { serialization: ResponseIdSerialization }),
+    DocResponseId("apiKey.updateName"),
     DocErrorGroup([
       DocDefault({
         httpStatus: HttpStatus.NOT_FOUND,

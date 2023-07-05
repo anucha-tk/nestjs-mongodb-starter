@@ -14,9 +14,12 @@ import {
 } from "src/common/policy/constants/policy.enum.constant";
 import { PolicyAbilityProtected } from "src/common/policy/decorators/policy.decorator";
 import { RequestParamGuard } from "src/common/request/decorators/request.decorator";
-import { Response, ResponsePaging } from "src/common/response/decorators/response.decorator";
+import {
+  Response,
+  ResponseId,
+  ResponsePaging,
+} from "src/common/response/decorators/response.decorator";
 import { IResponse, IResponsePaging } from "src/common/response/interfaces/response.interface";
-import { ResponseIdSerialization } from "src/common/response/serializations/response.id.serialization";
 import { ENUM_API_KEY_TYPE } from "../constants/api-key.enum.constant";
 import {
   API_KEY_DEFAULT_AVAILABLE_ORDER_BY,
@@ -214,7 +217,7 @@ export class ApiKeyAdminController {
   }
 
   @ApiKeyAdminUpdateNameDoc()
-  @Response("apiKey.updateName", { serialization: ResponseIdSerialization })
+  @ResponseId("apiKey.updateName")
   @PolicyAbilityProtected({
     subject: ENUM_POLICY_SUBJECT.API_KEY,
     action: [ENUM_POLICY_ACTION.READ, ENUM_POLICY_ACTION.UPDATE],
@@ -232,7 +235,7 @@ export class ApiKeyAdminController {
   }
 
   @ApiKeyAdminUpdateDoc()
-  @Response("apiKey.updateDate", { serialization: ResponseIdSerialization })
+  @ResponseId("apiKey.updateDate")
   @PolicyAbilityProtected({
     subject: ENUM_POLICY_SUBJECT.API_KEY,
     action: [ENUM_POLICY_ACTION.READ, ENUM_POLICY_ACTION.UPDATE],
