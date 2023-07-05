@@ -1,5 +1,6 @@
 {
   "validation": "Validation errors",
+  "minLength": "{property} has less elements than the minimum allowed.",
   "maxLength": "{property} has more elements than the maximum allowed.",
   "isNotEmpty": "{property} cannot be empty.",
   "isNumber": "{property} should be a number {value}.",

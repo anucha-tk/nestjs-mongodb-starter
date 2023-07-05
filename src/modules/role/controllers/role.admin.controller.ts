@@ -1,4 +1,4 @@
-import { Controller, Get } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Get, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { ApiKeyPublicProtected } from "src/common/api-key/decorators/api-key.decorator";
 import { AuthJwtAdminAccessProtected } from "src/common/auth/decorators/auth.jwt.decorator";
@@ -15,7 +15,11 @@ import {
 } from "src/common/policy/constants/policy.enum.constant";
 import { PolicyAbilityProtected } from "src/common/policy/decorators/policy.decorator";
 import { RequestParamGuard } from "src/common/request/decorators/request.decorator";
-import { Response, ResponsePaging } from "src/common/response/decorators/response.decorator";
+import {
+  Response,
+  ResponseId,
+  ResponsePaging,
+} from "src/common/response/decorators/response.decorator";
 import { IResponse, IResponsePaging } from "src/common/response/interfaces/response.interface";
 import { ENUM_ROLE_TYPE } from "../constants/role.enum.constant";
 import {
@@ -27,8 +31,10 @@ import {
   ROLE_DEFAULT_PER_PAGE,
   ROLE_DEFAULT_TYPE,
 } from "../constants/role.list.constant";
+import { ENUM_ROLE_STATUS_CODE_ERROR } from "../constants/role.status-code.constant";
 import { GetRole, RoleGetGuard } from "../decorators/role.decorator";
-import { RoleAdminGetDoc, RoleAdminListDoc } from "../docs/role.admin.doc";
+import { RoleAdminCreateDoc, RoleAdminGetDoc, RoleAdminListDoc } from "../docs/role.admin.doc";
+import { RoleCreateDto } from "../dtos/role.create.dto";
 import { RoleRequestDto } from "../dtos/role.request.dto";
 import { RoleDoc, RoleEntity } from "../repository/entities/role.entity";
 import { RoleGetSerialization } from "../serializations/role.get.serialization";
@@ -108,7 +114,28 @@ export class RoleAdminController {
     return { data: role };
   }
 
-  // TODO: create
+  @RoleAdminCreateDoc()
+  @ResponseId("role.create")
+  @PolicyAbilityProtected({
+    subject: ENUM_POLICY_SUBJECT.ROLE,
+    action: [ENUM_POLICY_ACTION.READ, ENUM_POLICY_ACTION.CREATE],
+  })
+  @AuthJwtAdminAccessProtected()
+  @Post("/create")
+  async create(@Body() body: RoleCreateDto): Promise<IResponse> {
+    const existName = await this.roleService.findOneByName(body.name);
+    if (existName) {
+      throw new BadRequestException({
+        statusCode: ENUM_ROLE_STATUS_CODE_ERROR.ROLE_EXIST_ERROR,
+        message: "role.error.exist",
+      });
+    }
+    const { _id } = await this.roleService.create(body);
+    return {
+      data: { _id },
+    };
+  }
+
   // TODO: reset
   // TODO: updateName
   // TODO: inactive

@@ -1,4 +1,5 @@
 import { applyDecorators, HttpStatus } from "@nestjs/common";
+import { ENUM_DOC_REQUEST_BODY_TYPE } from "src/common/doc/constants/doc.enum.constant";
 import {
   Doc,
   DocAuth,
@@ -8,6 +9,7 @@ import {
   DocErrorGroup,
   DocDefault,
   DocResponse,
+  DocResponseId,
 } from "src/common/doc/decorators/doc.decorator";
 import {
   RoleDocParamsId,
@@ -58,6 +60,30 @@ export function RoleAdminGetDoc(): MethodDecorator {
         httpStatus: HttpStatus.NOT_FOUND,
         statusCode: ENUM_ROLE_STATUS_CODE_ERROR.ROLE_NOT_FOUND_ERROR,
         messagePath: "role.error.notFound",
+      }),
+    ]),
+  );
+}
+
+export function RoleAdminCreateDoc(): MethodDecorator {
+  return applyDecorators(
+    Doc({
+      operation: "modules.admin.role",
+    }),
+    DocRequest({
+      bodyType: ENUM_DOC_REQUEST_BODY_TYPE.JSON,
+    }),
+    DocAuth({
+      apiKey: true,
+      jwtAccessToken: true,
+    }),
+    DocGuard({ role: true, policy: true }),
+    DocResponseId("role.create"),
+    DocErrorGroup([
+      DocDefault({
+        httpStatus: HttpStatus.BAD_REQUEST,
+        statusCode: ENUM_ROLE_STATUS_CODE_ERROR.ROLE_EXIST_ERROR,
+        messagePath: "role.error.exist",
       }),
     ]),
   );

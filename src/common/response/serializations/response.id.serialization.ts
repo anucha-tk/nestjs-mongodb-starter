@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Type } from "class-transformer";
+import { Expose, Type } from "class-transformer";
 
 export class ResponseIdSerialization {
   @ApiProperty({
@@ -9,5 +9,6 @@ export class ResponseIdSerialization {
     nullable: false,
   })
   @Type(() => String)
+  @Expose()
   _id: string;
 }

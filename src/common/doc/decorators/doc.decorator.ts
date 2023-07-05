@@ -40,6 +40,7 @@ import { ENUM_PAGINATION_ORDER_DIRECTION_TYPE } from "src/common/pagination/cons
 import { ENUM_POLICY_STATUS_CODE_ERROR } from "src/common/policy/constants/policy.status-code.constant";
 import { ENUM_REQUEST_STATUS_CODE_ERROR } from "src/common/request/constants/request.status-code.constant";
 import { ResponseDefaultSerialization } from "src/common/response/serializations/response.default.serialization";
+import { ResponseIdSerialization } from "src/common/response/serializations/response.id.serialization";
 import { ResponsePagingSerialization } from "src/common/response/serializations/response.paging.serialization";
 import { ENUM_ROLE_STATUS_CODE_ERROR } from "src/modules/role/constants/role.status-code.constant";
 
@@ -454,6 +455,21 @@ export function DocResponse<T = void>(
   if (options?.serialization) {
     docs.serialization = options?.serialization;
   }
+
+  return applyDecorators(ApiProduces("application/json"), DocDefault(docs));
+}
+
+export function DocResponseId<T = void>(
+  messagePath: string,
+  options?: IDocResponseOptions<T>,
+): MethodDecorator {
+  const docs: IDocDefaultOptions = {
+    httpStatus: options?.httpStatus ?? HttpStatus.OK,
+    messagePath,
+    statusCode: options?.statusCode ?? options?.httpStatus ?? HttpStatus.OK,
+  };
+
+  docs.serialization = ResponseIdSerialization;
 
   return applyDecorators(ApiProduces("application/json"), DocDefault(docs));
 }

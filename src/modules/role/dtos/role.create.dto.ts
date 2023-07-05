@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
 import { ApiProperty, PartialType } from "@nestjs/swagger";
-import { Transform, Type } from "class-transformer";
+import { Type } from "class-transformer";
 import {
   ArrayNotEmpty,
   IsArray,
@@ -9,7 +9,6 @@ import {
   IsString,
   MaxLength,
   MinLength,
-  ValidateIf,
 } from "class-validator";
 import {
   ENUM_POLICY_ACTION,
@@ -23,6 +22,7 @@ class RolePermissionsDto {
     required: true,
     description: "Permission subject",
     enum: ENUM_POLICY_SUBJECT,
+    example: faker.helpers.arrayElement(Object.values(ENUM_POLICY_SUBJECT)),
   })
   @IsNotEmpty()
   @IsString()
@@ -35,6 +35,7 @@ class RolePermissionsDto {
     isArray: true,
     default: [],
     enum: ENUM_POLICY_ACTION,
+    example: faker.helpers.arrayElements(Object.values(ENUM_POLICY_ACTION)),
   })
   @IsString({ each: true })
   @IsEnum(ENUM_POLICY_ACTION, { each: true })
@@ -71,12 +72,19 @@ export class RoleCreateDto extends PartialType(RoleUpdateDto) {
     description: "Permission list of role",
     isArray: true,
     default: [],
+    example: [
+      {
+        subject: faker.helpers.arrayElement(Object.values(ENUM_POLICY_SUBJECT)),
+        action: faker.helpers.arrayElements(Object.values(ENUM_POLICY_ACTION)),
+      },
+    ],
     type: () => RolePermissionsDto,
   })
   @Type(() => RolePermissionsDto)
   @IsNotEmpty()
   @IsArray()
-  @ValidateIf((e) => e.type === ENUM_ROLE_TYPE.ADMIN)
-  @Transform(({ value, obj }) => (obj.type !== ENUM_ROLE_TYPE.ADMIN ? [] : value))
+  // NOTE: un comment code when you want grant permissions ENUM_ROLE_TYPE.ADMIN only
+  // @ValidateIf((e) => e.type === ENUM_ROLE_TYPE.ADMIN)
+  // @Transform(({ value, obj }) => (obj.type !== ENUM_ROLE_TYPE.ADMIN ? [] : value))
   readonly permissions: RolePermissionsDto[];
 }

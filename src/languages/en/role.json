@@ -1,7 +1,9 @@
 {
   "list": "Role lists",
   "get": "Role get",
+  "create": "Create Succeed",
   "error": {
+    "exist": "Role exist",
     "notFound": "Role not found",
     "typeForbidden": "Role type not allowed",
     "inactive": "Role is inactive"
