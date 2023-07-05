@@ -1,5 +1,6 @@
 import { CanActivate, ExecutionContext, ForbiddenException, Injectable } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
+import { ENUM_AUTH_STATUS_CODE_ERROR } from "src/common/auth/constants/auth.status-code.constant";
 import { POLICY_RULE_META_KEY } from "src/common/policy/constants/policy.constant";
 import { ENUM_POLICY_STATUS_CODE_ERROR } from "src/common/policy/constants/policy.status-code.constant";
 import { PolicyAbilityFactory } from "src/common/policy/factories/policy.ability.factory";
@@ -22,6 +23,12 @@ export class PolicyGuard implements CanActivate {
       this.reflector.get<IPolicyRule[]>(POLICY_RULE_META_KEY, context.getHandler()) || [];
 
     const { user } = context.switchToHttp().getRequest<IRequestApp>();
+    if (!user) {
+      throw new ForbiddenException({
+        statusCode: ENUM_AUTH_STATUS_CODE_ERROR.AUTH_JWT_ACCESS_TOKEN_ERROR,
+        message: "auth.error.accessTokenUnauthorized",
+      });
+    }
     const { type, permissions } = user;
 
     const ability = this.policyAbilityFactory.defineAbilityFromRole({

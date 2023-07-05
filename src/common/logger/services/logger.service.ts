@@ -149,6 +149,7 @@ export class LoggerService implements ILoggerService {
     user,
     method,
     requestId,
+    role,
     type,
     params,
     bodies,
@@ -165,6 +166,7 @@ export class LoggerService implements ILoggerService {
     create.description = description;
     create.method = method;
     create.requestId = requestId;
+    create.role = role;
     create.type = type;
     create.params = params;
     create.bodies = bodies;

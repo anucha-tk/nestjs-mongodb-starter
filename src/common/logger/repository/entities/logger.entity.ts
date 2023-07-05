@@ -49,6 +49,12 @@ export class LoggerEntity extends DatabaseMongoUUIDEntityAbstract {
 
   @Prop({
     required: false,
+    type: String,
+  })
+  role?: string;
+
+  @Prop({
+    required: false,
     ref: ApiKeyEntity.name,
     type: String,
   })

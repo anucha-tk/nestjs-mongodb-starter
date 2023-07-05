@@ -15,19 +15,15 @@ import {
   LOGGER_OPTIONS_META_KEY,
 } from "src/common/logger/constants/logger.constant";
 import { ILoggerOptions } from "src/common/logger/interfaces/logger.interface";
-import { ConfigService } from "@nestjs/config";
-import { ENUM_APP_ENVIRONMENT } from "src/app/constants/app.enum.constant";
+import { UserEntity } from "src/modules/user/repository/entities/user.entity";
+import { ENUM_ROLE_TYPE } from "src/modules/role/constants/role.enum.constant";
 
 @Injectable()
 export class LoggerInterceptor implements NestInterceptor<any> {
-  private readonly appEnv: string;
   constructor(
     private readonly reflector: Reflector,
     private readonly loggerService: LoggerService,
-    private readonly configService: ConfigService,
-  ) {
-    this.appEnv = this.configService.get<string>("app.env");
-  }
+  ) {}
 
   async intercept(
     context: ExecutionContext,
@@ -54,25 +50,24 @@ export class LoggerInterceptor implements NestInterceptor<any> {
             context.getHandler(),
           );
 
-          if (this.appEnv !== ENUM_APP_ENVIRONMENT.TEST) {
-            await this.loggerService.raw({
-              level: loggerOptions?.level ?? ENUM_LOGGER_LEVEL.INFO,
-              action: loggerAction,
-              description:
-                loggerOptions?.description ??
-                `Request ${method} called, url ${originalUrl}, and action ${loggerAction}`,
-              apiKey: apiKey?._id,
-              user: user?._id,
-              requestId: __id,
-              method: method as ENUM_REQUEST_METHOD,
-              type: user?.role,
-              params,
-              bodies: body,
-              path,
-              statusCode,
-              tags: loggerOptions?.tags ?? [],
-            });
-          }
+          await this.loggerService.raw({
+            level: loggerOptions?.level ?? ENUM_LOGGER_LEVEL.INFO,
+            action: loggerAction,
+            description:
+              loggerOptions?.description ??
+              `Request ${method} called, url ${originalUrl}, and action ${loggerAction}`,
+            apiKey: apiKey?._id,
+            user: user instanceof UserEntity ? user?._id : undefined,
+            requestId: __id,
+            method: method as ENUM_REQUEST_METHOD,
+            role: user instanceof UserEntity ? user?.role : undefined,
+            type: user?.type in ENUM_ROLE_TYPE ? user?.type : undefined,
+            params,
+            bodies: body,
+            path,
+            statusCode,
+            tags: loggerOptions?.tags ?? [],
+          });
         }),
       );
     }

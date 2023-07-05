@@ -13,6 +13,7 @@ export class LoggerCreateDto {
   requestId?: string;
   method: ENUM_REQUEST_METHOD;
   path: string;
+  role?: string;
   type?: ENUM_ROLE_TYPE;
   tags?: string[];
   params?: Record<string, any>;
