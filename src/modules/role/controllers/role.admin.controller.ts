@@ -123,7 +123,7 @@ export class RoleAdminController {
   @AuthJwtAdminAccessProtected()
   @Post("/create")
   async create(@Body() body: RoleCreateDto): Promise<IResponse> {
-    const existName = await this.roleService.findOneByName(body.name);
+    const existName = await this.roleService.existByName(body.name);
     if (existName) {
       throw new BadRequestException({
         statusCode: ENUM_ROLE_STATUS_CODE_ERROR.ROLE_EXIST_ERROR,

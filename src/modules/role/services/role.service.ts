@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import {
+  IDatabaseExistOptions,
   IDatabaseFindAllOptions,
   IDatabaseFindOneOptions,
 } from "src/common/database/interfaces/database.interface";
@@ -57,5 +58,21 @@ export class RoleService implements IRoleService {
 
   async getTotal(find?: Record<string, any>): Promise<number> {
     return this.roleRepository.getTotal(find);
+  }
+
+  /**
+   * Find role name.
+   *
+   * @param name name string
+   * @param options IDatabaseExistOptions
+   * @param options.join join relation another schema
+   * @param options.withDeleted (default true) boolean merge find document withDeleted
+   * @param options.excludeId exclude id string
+   * @example await roleService.existByName('abc', { withDeleted: true })
+   *
+   * @returns Promise boolean
+   */
+  async existByName(name: string, options?: IDatabaseExistOptions): Promise<boolean> {
+    return this.roleRepository.exists({ name }, { ...options, withDeleted: true });
   }
 }

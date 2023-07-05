@@ -62,6 +62,7 @@ describe("role service", () => {
               return find;
             }),
             getTotal: jest.fn().mockResolvedValue(1),
+            exists: jest.fn().mockResolvedValue(true),
           },
         },
       ],
@@ -173,6 +174,19 @@ describe("role service", () => {
       expect(result._id).toBe("123");
       expect(result).toBeInstanceOf(roleKeyEntityDoc);
       expect(roleRepository.findOne).toBeCalled();
+    });
+  });
+
+  describe("existByName", () => {
+    it("should return result boolean", async () => {
+      jest.spyOn(roleService, "existByName");
+      const result = await roleService.existByName("abc");
+
+      expect(result).toBeDefined();
+      expect(roleRepository.exists).toBeCalled();
+      expect(roleService.existByName).toBeCalled();
+      expect(roleService.existByName).toBeCalledWith("abc");
+      expect(roleRepository.exists).toBeCalledWith({ name: "abc" }, { withDeleted: true });
     });
   });
 });

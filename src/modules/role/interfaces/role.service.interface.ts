@@ -1,4 +1,7 @@
-import { IDatabaseFindOneOptions } from "src/common/database/interfaces/database.interface";
+import {
+  IDatabaseExistOptions,
+  IDatabaseFindOneOptions,
+} from "src/common/database/interfaces/database.interface";
 import { RoleCreateDto } from "../dtos/role.create.dto";
 import { RoleDoc } from "../repository/entities/role.entity";
 
@@ -9,4 +12,5 @@ export interface IRoleService {
   findOneById(_id: string, options?: IDatabaseFindOneOptions): Promise<RoleDoc>;
   deleteMany(find: Record<string, any>): Promise<boolean>;
   getTotal(find?: Record<string, any>): Promise<number>;
+  existByName(name: string, options?: IDatabaseExistOptions): Promise<boolean>;
 }
