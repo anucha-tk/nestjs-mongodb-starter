@@ -14,6 +14,7 @@ export class RoleGetPermissionSerialization {
     nullable: false,
     description: "Permission subject",
     enum: ENUM_POLICY_SUBJECT,
+    example: faker.helpers.arrayElement(Object.values(ENUM_POLICY_SUBJECT)),
   })
   subject: ENUM_POLICY_SUBJECT;
 
@@ -24,6 +25,7 @@ export class RoleGetPermissionSerialization {
     isArray: true,
     enum: ENUM_POLICY_ACTION,
     default: Object.values(ENUM_POLICY_ACTION),
+    example: faker.helpers.arrayElements(Object.values(ENUM_POLICY_ACTION)),
   })
   action: ENUM_POLICY_ACTION[];
 }
@@ -65,7 +67,12 @@ export class RoleGetSerialization extends ResponseIdSerialization {
     type: () => RoleGetPermissionSerialization,
     required: true,
     nullable: false,
-    default: [],
+    example: [
+      {
+        subject: faker.helpers.arrayElement(Object.values(ENUM_POLICY_SUBJECT)),
+        action: faker.helpers.arrayElements(Object.values(ENUM_POLICY_ACTION)),
+      },
+    ],
   })
   @Type(() => RoleGetPermissionSerialization)
   readonly permissions: RoleGetPermissionSerialization;
