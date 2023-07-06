@@ -159,7 +159,7 @@ export abstract class DatabaseMongoUUIDRepositoryAbstract<
       );
     }
 
-    return findAll.lean() as any;
+    return findAll.lean();
   }
 
   async deleteMany(find: Record<string, any>, options?: IDatabaseManyOptions): Promise<boolean> {

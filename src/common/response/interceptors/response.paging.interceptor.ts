@@ -4,6 +4,7 @@ import {
   ExecutionContext,
   CallHandler,
   HttpStatus,
+  InternalServerErrorException,
 } from "@nestjs/common";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
@@ -31,6 +32,8 @@ import {
 } from "src/common/response/constants/response.constant";
 import { IResponsePaging } from "src/common/response/interfaces/response.interface";
 import { HelperArrayService } from "src/common/helper/services/helper.array.service";
+import mongoose from "mongoose";
+import { ENUM_RESPONSE_STATUS_CODE_ERROR } from "../constants/response.status-error.constant";
 
 @Injectable()
 export class ResponsePagingInterceptor<T> implements NestInterceptor<Promise<T>> {
@@ -102,7 +105,14 @@ export class ResponsePagingInterceptor<T> implements NestInterceptor<Promise<T>>
           data = responseData.data;
 
           if (classSerialization) {
-            data = plainToInstance(classSerialization, data, classSerializationOptions);
+            try {
+              data = plainToInstance(classSerialization, data, classSerializationOptions);
+            } catch (error) {
+              throw new InternalServerErrorException({
+                statusCode: ENUM_RESPONSE_STATUS_CODE_ERROR.RESPONSE_SERIALIZATION_ERROR,
+                message: "response.error.serialization",
+              });
+            }
           }
 
           httpStatus = _metadata?.customProperty?.httpStatus ?? httpStatus;
