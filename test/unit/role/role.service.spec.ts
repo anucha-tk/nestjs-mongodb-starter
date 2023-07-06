@@ -14,6 +14,7 @@ import {
 import { RoleRepository } from "src/modules/role/repository/repositories/role.repository";
 import mongoose from "mongoose";
 import { RoleCreateDto } from "src/modules/role/dtos/role.create.dto";
+import { RoleUpdateDto } from "src/modules/role/dtos/role.update.dto";
 
 describe("role service", () => {
   let roleService: RoleService;
@@ -63,6 +64,19 @@ describe("role service", () => {
             }),
             getTotal: jest.fn().mockResolvedValue(1),
             exists: jest.fn().mockResolvedValue(true),
+            save: jest
+              .fn()
+              .mockImplementation(({ name, description, type, permissions, isActive }) => {
+                const find = new roleKeyEntityDoc();
+                find._id = roleKeyId;
+                find.name = name;
+                find.description = description;
+                find.type = type;
+                find.permissions = permissions;
+                find.isActive = isActive;
+
+                return find;
+              }),
           },
         },
       ],
@@ -183,10 +197,38 @@ describe("role service", () => {
       const result = await roleService.existByName("abc");
 
       expect(result).toBeDefined();
+      expect(typeof result).toBe("boolean");
       expect(roleRepository.exists).toBeCalled();
       expect(roleService.existByName).toBeCalled();
       expect(roleService.existByName).toBeCalledWith("abc");
       expect(roleRepository.exists).toBeCalledWith({ name: "abc" }, { withDeleted: true });
+    });
+  });
+
+  describe("update", () => {
+    it("should return roleDoc when create successful", async () => {
+      jest.spyOn(roleService, "update");
+      const updateRoleDto: RoleUpdateDto = {
+        name: faker.word.words(),
+        description: faker.word.words(3),
+        type: ENUM_ROLE_TYPE.SUPER_ADMIN,
+        permissions: [
+          {
+            subject: ENUM_POLICY_SUBJECT.API_KEY,
+            action: [ENUM_POLICY_ACTION.MANAGE],
+          },
+        ],
+        isActive: false,
+      };
+      const result = await roleService.update(new roleKeyEntityDoc(), updateRoleDto);
+      expect(result).toBeDefined();
+      expect(result).toHaveProperty("_id");
+      expect(result).toHaveProperty("name");
+      expect(result).toHaveProperty("type");
+      expect(result).toHaveProperty("description");
+      expect(result).toHaveProperty("isActive");
+      expect(roleRepository.save).toBeCalled();
+      expect(roleService.update).toBeCalled();
     });
   });
 });

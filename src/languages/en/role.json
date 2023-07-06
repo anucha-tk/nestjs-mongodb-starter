@@ -2,6 +2,7 @@
   "list": "Role lists",
   "get": "Role get",
   "create": "Create Succeed",
+  "update": "Update Succeed",
   "error": {
     "exist": "Role exist",
     "notFound": "Role not found",

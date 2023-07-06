@@ -1,4 +1,12 @@
-import { BadRequestException, Body, Controller, Get, Post } from "@nestjs/common";
+import {
+  BadRequestException,
+  Body,
+  ConflictException,
+  Controller,
+  Get,
+  Post,
+  Put,
+} from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { ApiKeyPublicProtected } from "src/common/api-key/decorators/api-key.decorator";
 import { AuthJwtAdminAccessProtected } from "src/common/auth/decorators/auth.jwt.decorator";
@@ -33,12 +41,19 @@ import {
 } from "../constants/role.list.constant";
 import { ENUM_ROLE_STATUS_CODE_ERROR } from "../constants/role.status-code.constant";
 import { GetRole, RoleGetGuard } from "../decorators/role.decorator";
-import { RoleAdminCreateDoc, RoleAdminGetDoc, RoleAdminListDoc } from "../docs/role.admin.doc";
+import {
+  RoleAdminCreateDoc,
+  RoleAdminGetDoc,
+  RoleAdminListDoc,
+  RoleAdminUpdateDoc,
+} from "../docs/role.admin.doc";
 import { RoleCreateDto } from "../dtos/role.create.dto";
 import { RoleRequestDto } from "../dtos/role.request.dto";
+import { RoleUpdateDto } from "../dtos/role.update.dto";
 import { RoleDoc, RoleEntity } from "../repository/entities/role.entity";
 import { RoleGetSerialization } from "../serializations/role.get.serialization";
 import { RoleListSerialization } from "../serializations/role.list.serialization";
+import { RoleUpdateSerialization } from "../serializations/role.update.serialization";
 import { RoleService } from "../services/role.service";
 
 @ApiKeyPublicProtected()
@@ -136,10 +151,32 @@ export class RoleAdminController {
     };
   }
 
-  // TODO: reset
-  // TODO: updateName
-  // TODO: inactive
-  // TODO: active
-  // TODO: updateDate
+  @RoleAdminUpdateDoc()
+  @Response("role.update", { serialization: RoleUpdateSerialization })
+  @PolicyAbilityProtected({
+    subject: ENUM_POLICY_SUBJECT.ROLE,
+    action: [ENUM_POLICY_ACTION.READ, ENUM_POLICY_ACTION.UPDATE],
+  })
+  @AuthJwtAdminAccessProtected()
+  @RoleGetGuard()
+  @RequestParamGuard(RoleRequestDto)
+  @Put("/update/:role")
+  async update(@GetRole() role: RoleDoc, @Body() body: RoleUpdateDto): Promise<IResponse> {
+    const existName = await this.roleService.existByName(body.name);
+
+    if (existName) {
+      throw new ConflictException({
+        statusCode: ENUM_ROLE_STATUS_CODE_ERROR.ROLE_EXIST_ERROR,
+        message: "role.error.exist",
+      });
+    }
+    const update = await this.roleService.update(role, body);
+    return { data: update };
+  }
+
+  // TODO: update
+  // TODO: updatePermission
   // TODO: delete
+  // TODO: inActive
+  // TODO: active
 }

@@ -19,6 +19,7 @@ import {
 import { RoleListSerialization } from "src/modules/role/serializations/role.list.serialization";
 import { ENUM_ROLE_STATUS_CODE_ERROR } from "../constants/role.status-code.constant";
 import { RoleGetSerialization } from "../serializations/role.get.serialization";
+import { RoleUpdateSerialization } from "../serializations/role.update.serialization";
 
 export function RoleAdminListDoc(): MethodDecorator {
   return applyDecorators(
@@ -82,6 +83,31 @@ export function RoleAdminCreateDoc(): MethodDecorator {
     DocErrorGroup([
       DocDefault({
         httpStatus: HttpStatus.BAD_REQUEST,
+        statusCode: ENUM_ROLE_STATUS_CODE_ERROR.ROLE_EXIST_ERROR,
+        messagePath: "role.error.exist",
+      }),
+    ]),
+  );
+}
+
+export function RoleAdminUpdateDoc(): MethodDecorator {
+  return applyDecorators(
+    Doc({
+      operation: "modules.admin.role",
+    }),
+    DocRequest({
+      params: RoleDocParamsId,
+      bodyType: ENUM_DOC_REQUEST_BODY_TYPE.JSON,
+    }),
+    DocAuth({
+      apiKey: true,
+      jwtAccessToken: true,
+    }),
+    DocGuard({ role: true, policy: true }),
+    DocResponse("role.update", { serialization: RoleUpdateSerialization }),
+    DocErrorGroup([
+      DocDefault({
+        httpStatus: HttpStatus.CONFLICT,
         statusCode: ENUM_ROLE_STATUS_CODE_ERROR.ROLE_EXIST_ERROR,
         messagePath: "role.error.exist",
       }),

@@ -1,17 +1,22 @@
-import { ApiProperty } from "@nestjs/swagger";
 import { faker } from "@faker-js/faker";
-import { IsNotEmpty, IsString } from "class-validator";
+import { ApiProperty, PartialType } from "@nestjs/swagger";
 import { Type } from "class-transformer";
+import { IsBoolean, IsOptional } from "class-validator";
+import { RoleCreateDto } from "./role.create.dto";
 
-export class RoleUpdateDto {
+/**
+ * RoleUpdateDto.
+ * @extends PartialType RoleCreateDto
+ */
+export class RoleUpdateDto extends PartialType(RoleCreateDto) {
   @ApiProperty({
-    description: "Description of role",
-    example: faker.lorem.sentence(),
+    description: "Role active",
     required: false,
-    nullable: true,
+    example: faker.datatype.boolean(),
+    nullable: false,
   })
-  @IsString()
-  @IsNotEmpty()
-  @Type(() => String)
-  readonly description: string;
+  @IsOptional()
+  @IsBoolean()
+  @Type(() => Boolean)
+  isActive?: boolean;
 }

@@ -15,7 +15,7 @@ import {
   ENUM_POLICY_SUBJECT,
 } from "src/common/policy/constants/policy.enum.constant";
 import { ENUM_ROLE_TYPE } from "../constants/role.enum.constant";
-import { RoleUpdateDto } from "./role.update.dto";
+import { RoleUpdateDescriptionDto } from "./role.update-description.dto";
 
 class RolePermissionsDto {
   @ApiProperty({
@@ -45,7 +45,7 @@ class RolePermissionsDto {
   action: ENUM_POLICY_ACTION[];
 }
 
-export class RoleCreateDto extends PartialType(RoleUpdateDto) {
+export class RoleCreateDto extends PartialType(RoleUpdateDescriptionDto) {
   @ApiProperty({
     description: "Name of role",
     example: faker.person.jobTitle(),
