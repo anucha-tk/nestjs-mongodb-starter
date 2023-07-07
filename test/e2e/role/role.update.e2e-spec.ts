@@ -9,6 +9,7 @@ import {
   ENUM_POLICY_ACTION,
   ENUM_POLICY_SUBJECT,
 } from "src/common/policy/constants/policy.enum.constant";
+import { ENUM_POLICY_STATUS_CODE_ERROR } from "src/common/policy/constants/policy.status-code.constant";
 import { ENUM_REQUEST_STATUS_CODE_ERROR } from "src/common/request/constants/request.status-code.constant";
 import { ENUM_ROLE_TYPE } from "src/modules/role/constants/role.enum.constant";
 import { ENUM_ROLE_STATUS_CODE_ERROR } from "src/modules/role/constants/role.status-code.constant";
@@ -34,8 +35,9 @@ describe("role update e2e", () => {
   let adminAccessToken: string;
   let xApiKey: string;
   let roleUserDoc: RoleDoc;
+  let roleAdminDoc: RoleDoc;
 
-  beforeAll(async () => {
+  beforeEach(async () => {
     const modRef: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
@@ -52,6 +54,7 @@ describe("role update e2e", () => {
       createRoleAdmin(app, "admin"),
     ]);
     roleUserDoc = roleUser;
+    roleAdminDoc = roleAdmin;
 
     // create user
     const [adminRes, userRes, apiKeyRes] = await Promise.all([
@@ -80,7 +83,7 @@ describe("role update e2e", () => {
     userAccessToken = responses[1].body.data.accessToken;
   });
 
-  afterAll(async () => {
+  afterEach(async () => {
     await userService.deleteMany({});
     await roleService.deleteMany({});
     await apiKeyService.deleteMany({});
@@ -160,6 +163,57 @@ describe("role update e2e", () => {
       expect(status).toBe(200);
       expect(body.data).toHaveProperty("_id");
       expect(body.data).toHaveProperty("name", roleCreateDto.name);
+    });
+    it("should return 403 when attempt after update false isActive", async () => {
+      const roleCreateDto: RoleUpdateDto = {
+        name: faker.word.words(3),
+        description: faker.lorem.sentence(),
+        type: ENUM_ROLE_TYPE.USER,
+        permissions: [],
+        isActive: false,
+      };
+      await request(app.getHttpServer())
+        .put(`${UPDATE_URL}/${roleAdminDoc._id}`)
+        .set("x-api-key", xApiKey)
+        .set("Authorization", `Bearer ${adminAccessToken}`)
+        .send(roleCreateDto);
+
+      const { status, body } = await request(app.getHttpServer())
+        .post("/public/user/login")
+        .set("x-api-key", xApiKey)
+        .send({ email: admin.email, password: mockPassword });
+
+      expect(status).toBe(403);
+      expect(body.statusCode).toBe(ENUM_ROLE_STATUS_CODE_ERROR.ROLE_INACTIVE_ERROR);
+    });
+
+    it("should return 403 when attempt after update role empty permissions", async () => {
+      const roleCreateDto: RoleUpdateDto = {
+        name: faker.word.words(3),
+        description: faker.lorem.sentence(),
+        type: ENUM_ROLE_TYPE.ADMIN,
+        permissions: [],
+        isActive: true,
+      };
+      await request(app.getHttpServer())
+        .put(`${UPDATE_URL}/${roleAdminDoc._id}`)
+        .set("x-api-key", xApiKey)
+        .set("Authorization", `Bearer ${adminAccessToken}`)
+        .send(roleCreateDto);
+
+      const resultLogin = await request(app.getHttpServer())
+        .post("/public/user/login")
+        .set("x-api-key", xApiKey)
+        .send({ email: admin.email, password: mockPassword });
+
+      const { status, body } = await request(app.getHttpServer())
+        .put(`${UPDATE_URL}/${roleAdminDoc._id}`)
+        .set("x-api-key", xApiKey)
+        .set("Authorization", `Bearer ${resultLogin.body.data.accessToken}`)
+        .send({ ...roleCreateDto, name: "abc" });
+
+      expect(status).toBe(403);
+      expect(body.statusCode).toBe(ENUM_POLICY_STATUS_CODE_ERROR.POLICY_ABILITY_FORBIDDEN_ERROR);
     });
     it("should return 200 when update full role successful", async () => {
       const roleCreateDto: RoleUpdateDto = {
