@@ -3,7 +3,9 @@
   "get": "Role get",
   "create": "Create Succeed",
   "update": "Update Succeed",
+  "delete": "Delete Succeed",
   "error": {
+    "used": "Role in used",
     "exist": "Role exist",
     "notFound": "Role not found",
     "typeForbidden": "Role type not allowed",

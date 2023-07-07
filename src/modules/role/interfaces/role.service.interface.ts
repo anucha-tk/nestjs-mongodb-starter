@@ -13,4 +13,5 @@ export interface IRoleService {
   deleteMany(find: Record<string, any>): Promise<boolean>;
   getTotal(find?: Record<string, any>): Promise<number>;
   existByName(name: string, options?: IDatabaseExistOptions): Promise<boolean>;
+  delete(repository: RoleDoc): Promise<RoleDoc>;
 }

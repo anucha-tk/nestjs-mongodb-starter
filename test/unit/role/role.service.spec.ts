@@ -77,6 +77,13 @@ describe("role service", () => {
 
                 return find;
               }),
+            softDelete: jest.fn().mockImplementation(() => {
+              const find = new roleKeyEntityDoc();
+              find._id = roleKeyId;
+              find.deletedAt = new Date();
+
+              return find;
+            }),
           },
         },
       ],
@@ -229,6 +236,13 @@ describe("role service", () => {
       expect(result).toHaveProperty("isActive");
       expect(roleRepository.save).toBeCalled();
       expect(roleService.update).toBeCalled();
+    });
+  });
+
+  describe("delete", () => {
+    it("should add deleteAt property", async () => {
+      const result = await roleService.delete(new roleKeyEntityDoc());
+      expect(result).toHaveProperty("deletedAt");
     });
   });
 });

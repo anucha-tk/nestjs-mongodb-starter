@@ -3,6 +3,7 @@ import {
   Body,
   ConflictException,
   Controller,
+  Delete,
   Get,
   Post,
   Put,
@@ -29,6 +30,7 @@ import {
   ResponsePaging,
 } from "src/common/response/decorators/response.decorator";
 import { IResponse, IResponsePaging } from "src/common/response/interfaces/response.interface";
+import { UserService } from "src/modules/user/services/user.service";
 import { ENUM_ROLE_TYPE } from "../constants/role.enum.constant";
 import {
   ROLE_DEFAULT_AVAILABLE_ORDER_BY,
@@ -43,6 +45,7 @@ import { ENUM_ROLE_STATUS_CODE_ERROR } from "../constants/role.status-code.const
 import { GetRole, RoleGetGuard } from "../decorators/role.decorator";
 import {
   RoleAdminCreateDoc,
+  RoleAdminDeleteDoc,
   RoleAdminGetDoc,
   RoleAdminListDoc,
   RoleAdminUpdateDoc,
@@ -66,6 +69,7 @@ export class RoleAdminController {
   constructor(
     private readonly paginationService: PaginationService,
     private readonly roleService: RoleService,
+    private readonly userService: UserService,
   ) {}
 
   @RoleAdminListDoc()
@@ -174,9 +178,31 @@ export class RoleAdminController {
     return { data: update };
   }
 
-  // TODO: update
   // TODO: updatePermission
-  // TODO: delete
+
+  @RoleAdminDeleteDoc()
+  @ResponseId("role.delete")
+  @RoleGetGuard()
+  @PolicyAbilityProtected({
+    subject: ENUM_POLICY_SUBJECT.ROLE,
+    action: [ENUM_POLICY_ACTION.READ, ENUM_POLICY_ACTION.DELETE],
+  })
+  @AuthJwtAdminAccessProtected()
+  @RequestParamGuard(RoleRequestDto)
+  @Delete("/delete/:role")
+  async delete(@GetRole() role: RoleDoc): Promise<IResponse> {
+    const used = await this.userService.findOne({
+      role: role._id,
+    });
+    if (used) {
+      throw new ConflictException({
+        statusCode: ENUM_ROLE_STATUS_CODE_ERROR.ROLE_USED_ERROR,
+        message: "role.error.used",
+      });
+    }
+    const { _id } = await this.roleService.delete(role);
+    return { data: { _id } };
+  }
   // TODO: inActive
   // TODO: active
 }

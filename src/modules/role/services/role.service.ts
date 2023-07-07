@@ -98,4 +98,14 @@ export class RoleService implements IRoleService {
 
     return this.roleRepository.save(repository);
   }
+
+  /**
+   * softDelete Role document
+   *
+   * @param repository RoleDoc
+   * @returns Promise RoleDoc
+   */
+  async delete(repository: RoleDoc): Promise<RoleDoc> {
+    return this.roleRepository.softDelete(repository);
+  }
 }

@@ -107,9 +107,43 @@ export function RoleAdminUpdateDoc(): MethodDecorator {
     DocResponse("role.update", { serialization: RoleUpdateSerialization }),
     DocErrorGroup([
       DocDefault({
+        httpStatus: HttpStatus.NOT_FOUND,
+        statusCode: ENUM_ROLE_STATUS_CODE_ERROR.ROLE_NOT_FOUND_ERROR,
+        messagePath: "role.error.notFound",
+      }),
+      DocDefault({
         httpStatus: HttpStatus.CONFLICT,
         statusCode: ENUM_ROLE_STATUS_CODE_ERROR.ROLE_EXIST_ERROR,
         messagePath: "role.error.exist",
+      }),
+    ]),
+  );
+}
+
+export function RoleAdminDeleteDoc(): MethodDecorator {
+  return applyDecorators(
+    Doc({
+      operation: "modules.admin.role",
+    }),
+    DocRequest({
+      params: RoleDocParamsId,
+    }),
+    DocAuth({
+      apiKey: true,
+      jwtAccessToken: true,
+    }),
+    DocGuard({ role: true, policy: true }),
+    DocResponseId("role.delete"),
+    DocErrorGroup([
+      DocDefault({
+        httpStatus: HttpStatus.NOT_FOUND,
+        statusCode: ENUM_ROLE_STATUS_CODE_ERROR.ROLE_NOT_FOUND_ERROR,
+        messagePath: "role.error.notFound",
+      }),
+      DocDefault({
+        httpStatus: HttpStatus.CONFLICT,
+        statusCode: ENUM_ROLE_STATUS_CODE_ERROR.ROLE_USED_ERROR,
+        messagePath: "role.error.used",
       }),
     ]),
   );
