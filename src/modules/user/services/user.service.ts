@@ -48,6 +48,24 @@ export class UserService implements IUserService {
     return this.userRepository.create<UserEntity>(create);
   }
 
+  /**
+   * Find one user
+   * @param find Object to find Record<string, any>
+   * @param options Optional IDatabaseFindOneOptions
+   * @param options.select Optional boolean
+   * @param options.join Optional boolean
+   * @param options.withDelete Optional boolean
+   * @param options.order Optional Record<string,ENUM_PAGINATION_ORDER_DIRECTION_TYPE>
+   *
+   * @returns Promise UserDoc
+   * */
+  async findOne<T = UserDoc>(
+    find: Record<string, any>,
+    options?: IDatabaseFindOneOptions,
+  ): Promise<T> {
+    return this.userRepository.findOne<T>(find, options);
+  }
+
   async findOneById<T>(_id: string, options?: IDatabaseFindOneOptions): Promise<T> {
     return this.userRepository.findOneById<T>(_id, options);
   }

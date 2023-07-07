@@ -15,7 +15,6 @@ import {
 } from "src/modules/role/repository/entities/role.entity";
 import { ENUM_USER_SIGN_UP_FROM } from "src/modules/user/constants/user.enum.constant";
 import { UserCreateDto } from "src/modules/user/dtos/user.create.dto";
-import { IUserDoc } from "src/modules/user/interfaces/user.interface";
 import {
   UserDatabaseName,
   UserDoc,
@@ -66,11 +65,6 @@ describe("user service", () => {
     isActive: true,
     permissions: [{ subject: ENUM_POLICY_SUBJECT.USER, action: [ENUM_POLICY_ACTION.READ] }],
   } as RoleDoc;
-
-  const userDocWithRole: IUserDoc = {
-    ...userDoc,
-    role: roleDoc,
-  } as IUserDoc;
 
   beforeAll(async () => {
     const modRef: TestingModule = await Test.createTestingModule({
@@ -143,8 +137,20 @@ describe("user service", () => {
                 },
               ];
             }),
-            findOne: jest.fn().mockImplementation(() => {
-              return { _id: userKeyId, ...userDocWithRole };
+            findOne: jest.fn().mockImplementation(({ _id }, join) => {
+              let find = new userKeyEntityDoc();
+              find._id = userKeyId;
+
+              if (_id) {
+                find._id = _id;
+              }
+
+              if (join) {
+                find = find.toObject();
+                return { ...find, role: roleDoc };
+              }
+
+              return find;
             }),
             deleteMany: jest.fn().mockResolvedValue(true),
             exists: jest.fn().mockResolvedValue(true),
@@ -270,10 +276,6 @@ describe("user service", () => {
     });
   });
 
-  describe("joinWithRole", () => {
-    it.todo("should return user with populate role");
-  });
-
   describe("resetPasswordAttempt", () => {
     it("should return passwordAttempt 0", async () => {
       jest.spyOn(userService, "resetPasswordAttempt");
@@ -364,6 +366,24 @@ describe("user service", () => {
       const phone = faker.phone.number();
       const result = await userService.existByMobileNumber(phone);
       expect(result).toBeFalsy();
+    });
+  });
+
+  describe("findOne", () => {
+    it("should return userDoc", async () => {
+      const result = await userService.findOne({ _id: "123" });
+
+      expect(result._id).toBe("123");
+      expect(userRepository.findOne).toBeCalled();
+      expect(userRepository.findOne).toBeCalledWith({ _id: "123" }, undefined);
+    });
+    it.only("should return userDocWithRole", async () => {
+      const result = await userService.findOne({ _id: "123" }, { join: true });
+
+      expect(result._id).toBe("123");
+      expect(result.role).toBeDefined();
+      expect(userRepository.findOne).toBeCalled();
+      expect(userRepository.findOne).toBeCalledWith({ _id: "123" }, { join: true });
     });
   });
 });

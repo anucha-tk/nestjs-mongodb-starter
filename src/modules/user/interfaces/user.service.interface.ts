@@ -15,6 +15,7 @@ export interface IUserService {
     { firstName, lastName, email, mobileNumber, role, userName }: UserCreateDto,
     { passwordExpired, passwordHash, salt, passwordCreated }: IAuthPassword,
   ): Promise<UserDoc>;
+  findOne<T = UserDoc>(find: Record<string, any>, options?: IDatabaseFindOneOptions): Promise<T>;
   findAll(find?: Record<string, any>, options?: IDatabaseFindAllOptions): Promise<IUserEntity[]>;
   findOneById<T>(_id: string, options?: IDatabaseFindOneOptions): Promise<T>;
   findOneByEmail<T>(email: string, options?: IDatabaseFindOneOptions): Promise<T>;
