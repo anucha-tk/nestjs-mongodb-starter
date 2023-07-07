@@ -245,4 +245,24 @@ describe("role service", () => {
       expect(result).toHaveProperty("deletedAt");
     });
   });
+
+  describe("inActive", () => {
+    it("should return false isActive role", async () => {
+      const result = await roleService.inActive(new roleKeyEntityDoc());
+
+      expect(result).toBeDefined();
+      expect(result.isActive).toBeFalsy();
+      expect(roleRepository.save).toBeCalled();
+    });
+  });
+
+  describe("active", () => {
+    it("should return true isActive role", async () => {
+      const result = await roleService.active(new roleKeyEntityDoc());
+
+      expect(result).toBeDefined();
+      expect(result.isActive).toBeTruthy();
+      expect(roleRepository.save).toBeCalled();
+    });
+  });
 });

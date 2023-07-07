@@ -108,4 +108,28 @@ export class RoleService implements IRoleService {
   async delete(repository: RoleDoc): Promise<RoleDoc> {
     return this.roleRepository.softDelete(repository);
   }
+
+  /**
+   * Update role inActive
+   *
+   * @param repository RoleDoc
+   * @returns Promise RoleDoc
+   */
+  async inActive(repository: RoleDoc): Promise<RoleDoc> {
+    repository.isActive = false;
+
+    return this.roleRepository.save(repository);
+  }
+
+  /**
+   * Update role active
+   *
+   * @param repository RoleDoc
+   * @returns Promise RoleDoc
+   */
+  async active(repository: RoleDoc): Promise<RoleDoc> {
+    repository.isActive = true;
+
+    return this.roleRepository.save(repository);
+  }
 }
