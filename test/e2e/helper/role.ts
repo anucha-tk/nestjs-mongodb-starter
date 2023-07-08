@@ -5,6 +5,7 @@ import {
 } from "src/common/policy/constants/policy.enum.constant";
 import { ENUM_ROLE_TYPE } from "src/modules/role/constants/role.enum.constant";
 import { RoleCreateDto } from "src/modules/role/dtos/role.create.dto";
+import { RoleRepository } from "src/modules/role/repository/repositories/role.repository";
 import { RoleService } from "src/modules/role/services/role.service";
 
 interface CreateUserIPolicyRule {
@@ -25,6 +26,24 @@ export const createRoleUser = (
 
   const roleService = app.get(RoleService);
   return roleService.create(roles);
+};
+
+export const createInActiveRoleUser = async (
+  app: INestApplication,
+  name: string,
+  permissions?: CreateUserIPolicyRule[],
+) => {
+  const roles: RoleCreateDto = {
+    name,
+    type: ENUM_ROLE_TYPE.USER,
+    permissions,
+  };
+
+  const roleService = app.get(RoleService);
+  const roleRepository = app.get(RoleRepository);
+  const role = await roleService.create(roles);
+  role.isActive = false;
+  return roleRepository.save(role);
 };
 
 export const createRoleAdmin = (

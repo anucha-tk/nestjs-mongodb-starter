@@ -34,3 +34,10 @@ export function RoleInActiveGuard(): MethodDecorator {
     SetMetadata(ROLE_IS_ACTIVE_META_KEY, [true]),
   );
 }
+
+export function RoleCheckActiveGuard(): MethodDecorator {
+  return applyDecorators(
+    UseGuards(RolePutToRequestGuard, RoleNotFoundGuard, RoleActiveGuard),
+    SetMetadata(ROLE_IS_ACTIVE_META_KEY, [false]),
+  );
+}

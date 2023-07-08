@@ -5,6 +5,7 @@
   "update": "Update Succeed",
   "delete": "Delete Succeed",
   "inactive": "Role update inactive succeed",
+  "active": "Role update active succeed",
   "error": {
     "used": "Role in used",
     "exist": "Role exist",

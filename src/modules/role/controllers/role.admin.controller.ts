@@ -43,8 +43,14 @@ import {
   ROLE_DEFAULT_TYPE,
 } from "../constants/role.list.constant";
 import { ENUM_ROLE_STATUS_CODE_ERROR } from "../constants/role.status-code.constant";
-import { GetRole, RoleGetGuard, RoleInActiveGuard } from "../decorators/role.decorator";
 import {
+  GetRole,
+  RoleCheckActiveGuard,
+  RoleGetGuard,
+  RoleInActiveGuard,
+} from "../decorators/role.decorator";
+import {
+  RoleAdminActiveDoc,
   RoleAdminCreateDoc,
   RoleAdminDeleteDoc,
   RoleAdminGetDoc,
@@ -56,6 +62,7 @@ import { RoleCreateDto } from "../dtos/role.create.dto";
 import { RoleRequestDto } from "../dtos/role.request.dto";
 import { RoleUpdateDto } from "../dtos/role.update.dto";
 import { RoleDoc, RoleEntity } from "../repository/entities/role.entity";
+import { RoleActiveSerialization } from "../serializations/role.active.serialization";
 import { RoleGetSerialization } from "../serializations/role.get.serialization";
 import { RoleInActiveSerialization } from "../serializations/role.inActive.serialization";
 import { RoleListSerialization } from "../serializations/role.list.serialization";
@@ -226,5 +233,24 @@ export class RoleAdminController {
       },
     };
   }
-  // TODO: active
+
+  @RoleAdminActiveDoc()
+  @Response("role.active", { serialization: RoleActiveSerialization })
+  @RoleCheckActiveGuard()
+  @PolicyAbilityProtected({
+    subject: ENUM_POLICY_SUBJECT.ROLE,
+    action: [ENUM_POLICY_ACTION.READ, ENUM_POLICY_ACTION.UPDATE],
+  })
+  @AuthJwtAdminAccessProtected()
+  @RequestParamGuard(RoleRequestDto)
+  @Patch("/update/:role/active")
+  async active(@GetRole() role: RoleDoc): Promise<IResponse> {
+    const { isActive } = await this.roleService.active(role);
+    return {
+      data: {
+        _id: role._id,
+        isActive,
+      },
+    };
+  }
 }
