@@ -1,3 +1,25 @@
+## [0.3.0](https://github.com/anucha-tk/spec-finder-api/compare/0.2.0...0.3.0) (2023-07-08)
+
+### Features
+
+- **role:** active and inactive service and unittest ([4259711](https://github.com/anucha-tk/spec-finder-api/commit/42597113acb305259d4ac958c6c33d01d7db7bf4))
+- **role:** active guard and unit test ([6cb8b8c](https://github.com/anucha-tk/spec-finder-api/commit/6cb8b8cc355b6c7249c04d30cfab3dd638c58156))
+- **role:** active role controller api and testing ([006e762](https://github.com/anucha-tk/spec-finder-api/commit/006e76225361f730f8ac6ad9433b478f8ce0c1d9))
+- **role:** delete controller api, service, unittest and e2e test ([09adab0](https://github.com/anucha-tk/spec-finder-api/commit/09adab0a38467daa58241eb06ad1062b4dd37dcc))
+- **role:** findOneById service, put-to-request guard and test ([f83f9cd](https://github.com/anucha-tk/spec-finder-api/commit/f83f9cd6d00502c7c4a5c7a98c706cf78ea378e6))
+- **role:** get role api controller and testing ([d5eb1fe](https://github.com/anucha-tk/spec-finder-api/commit/d5eb1fe11ada8d853ddea93d55a5293d66119b6c))
+- **role:** inactive controller api and e2e test ([d8ad790](https://github.com/anucha-tk/spec-finder-api/commit/d8ad79015f7b9752d861807058f28f0ff9d92aa1))
+- **role:** role create controller and fix response interceptor and response doc ([2098d6b](https://github.com/anucha-tk/spec-finder-api/commit/2098d6bc34e5a3a9a35bf27376bf76ea0224ba3f))
+- **role:** update controller api ([fdab5ff](https://github.com/anucha-tk/spec-finder-api/commit/fdab5fff4963ed14c782a25d3613b4784a53443d))
+- **role:** updatePermission controller api and e2e testing ([7131b2a](https://github.com/anucha-tk/spec-finder-api/commit/7131b2a73f465aa49e29390f85d1c1e489f35f50))
+- **role:** updatePermission service and unittest ([6121b9e](https://github.com/anucha-tk/spec-finder-api/commit/6121b9eec7c452c25216f69b87d31202d152fbcd))
+- **user:** findOne service and unit test ([f76dd7e](https://github.com/anucha-tk/spec-finder-api/commit/f76dd7e03784fe46880fc333c409e2c17d310145))
+
+### Bug Fixes
+
+- **logger:** fix req.user equal req.apikey ([a312989](https://github.com/anucha-tk/spec-finder-api/commit/a312989f74520bbc18b0014a0bd17708f93b4a9b))
+- **response:** fix response default and paging interceptor catch ([df30876](https://github.com/anucha-tk/spec-finder-api/commit/df308765d58bdb0ad49e101780dd72293c0e4c83))
+
 ## [0.2.0](https://github.com/anucha-tk/spec-finder-api/compare/0.1.0...0.2.0) (2023-07-03)
 
 ### Features
