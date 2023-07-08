@@ -4,11 +4,13 @@
   "create": "Create Succeed",
   "update": "Update Succeed",
   "delete": "Delete Succeed",
+  "inactive": "Role update inactive succeed",
   "error": {
     "used": "Role in used",
     "exist": "Role exist",
     "notFound": "Role not found",
     "typeForbidden": "Role type not allowed",
-    "inactive": "Role is inactive"
+    "inactive": "Role is inactive",
+    "isActiveInvalid": "Role is active invalid"
   }
 }
