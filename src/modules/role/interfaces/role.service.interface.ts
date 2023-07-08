@@ -3,6 +3,7 @@ import {
   IDatabaseFindOneOptions,
 } from "src/common/database/interfaces/database.interface";
 import { RoleCreateDto } from "../dtos/role.create.dto";
+import { RoleUpdatePermissionsDto } from "../dtos/role.update-permissions.dto";
 import { RoleDoc } from "../repository/entities/role.entity";
 
 export interface IRoleService {
@@ -14,4 +15,10 @@ export interface IRoleService {
   getTotal(find?: Record<string, any>): Promise<number>;
   existByName(name: string, options?: IDatabaseExistOptions): Promise<boolean>;
   delete(repository: RoleDoc): Promise<RoleDoc>;
+  inActive(repository: RoleDoc): Promise<RoleDoc>;
+  active(repository: RoleDoc): Promise<RoleDoc>;
+  updatePermissions(
+    repository: RoleDoc,
+    { type, permissions }: RoleUpdatePermissionsDto,
+  ): Promise<RoleDoc>;
 }

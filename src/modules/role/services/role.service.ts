@@ -1,10 +1,12 @@
 import { Injectable } from "@nestjs/common";
+import { options } from "joi";
 import {
   IDatabaseExistOptions,
   IDatabaseFindAllOptions,
   IDatabaseFindOneOptions,
 } from "src/common/database/interfaces/database.interface";
 import { RoleCreateDto } from "../dtos/role.create.dto";
+import { RoleUpdatePermissionsDto } from "../dtos/role.update-permissions.dto";
 import { RoleUpdateDto } from "../dtos/role.update.dto";
 import { IRoleService } from "../interfaces/role.service.interface";
 import { RoleDoc, RoleEntity } from "../repository/entities/role.entity";
@@ -129,6 +131,26 @@ export class RoleService implements IRoleService {
    */
   async active(repository: RoleDoc): Promise<RoleDoc> {
     repository.isActive = true;
+
+    return this.roleRepository.save(repository);
+  }
+
+  /**
+   * Update role permission and type
+   *
+   * @param repository RoleDoc
+   * @param dto RoleUpdatePermissionsDto
+   * @param dto.type ENUM_ROLE_TYPE
+   * @param dto.permissions IPolicyRule[]
+   *
+   * @returns Promise RoleDoc
+   */
+  async updatePermissions(
+    repository: RoleDoc,
+    { type, permissions }: RoleUpdatePermissionsDto,
+  ): Promise<RoleDoc> {
+    repository.type = type;
+    repository.permissions = permissions;
 
     return this.roleRepository.save(repository);
   }

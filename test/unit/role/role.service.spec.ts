@@ -8,6 +8,7 @@ import { ENUM_ROLE_TYPE } from "src/modules/role/constants/role.enum.constant";
 import { RoleService } from "src/modules/role/services/role.service";
 import {
   RoleDatabaseName,
+  RoleDoc,
   RoleEntity,
   RoleSchema,
 } from "src/modules/role/repository/entities/role.entity";
@@ -15,6 +16,7 @@ import { RoleRepository } from "src/modules/role/repository/repositories/role.re
 import mongoose from "mongoose";
 import { RoleCreateDto } from "src/modules/role/dtos/role.create.dto";
 import { RoleUpdateDto } from "src/modules/role/dtos/role.update.dto";
+import { access } from "fs";
 
 describe("role service", () => {
   let roleService: RoleService;
@@ -263,6 +265,101 @@ describe("role service", () => {
       expect(result).toBeDefined();
       expect(result.isActive).toBeTruthy();
       expect(roleRepository.save).toBeCalled();
+    });
+  });
+
+  describe("updatePermissions", () => {
+    let role: RoleDoc;
+    beforeEach(() => {
+      role = new roleKeyEntityDoc();
+      role.name = "user";
+      role.type = ENUM_ROLE_TYPE.USER;
+      role.permissions = [
+        {
+          subject: ENUM_POLICY_SUBJECT.USER,
+          action: [ENUM_POLICY_ACTION.READ],
+        },
+      ];
+      role.isActive = true;
+      role.description = "abc";
+    });
+
+    it("should update type only", async () => {
+      const result = await roleService.updatePermissions(role, {
+        type: ENUM_ROLE_TYPE.ADMIN,
+        permissions: [
+          {
+            subject: ENUM_POLICY_SUBJECT.USER,
+            action: [ENUM_POLICY_ACTION.READ],
+          },
+        ],
+      });
+
+      expect(result).toBeDefined();
+      expect(result).toHaveProperty("name", "user");
+      expect(result).toHaveProperty("isActive", true);
+      expect(result).toHaveProperty("description", "abc");
+      expect(result).toHaveProperty("type", "ADMIN");
+      expect(result.permissions).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            subject: ENUM_POLICY_SUBJECT.USER,
+            action: [ENUM_POLICY_ACTION.READ],
+          }),
+        ]),
+      );
+    });
+
+    it("should update permissions only", async () => {
+      const result = await roleService.updatePermissions(role, {
+        type: ENUM_ROLE_TYPE.USER,
+        permissions: [
+          {
+            subject: ENUM_POLICY_SUBJECT.USER,
+            action: [ENUM_POLICY_ACTION.UPDATE, ENUM_POLICY_ACTION.DELETE],
+          },
+        ],
+      });
+
+      expect(result).toBeDefined();
+      expect(result).toHaveProperty("name", "user");
+      expect(result).toHaveProperty("isActive", true);
+      expect(result).toHaveProperty("description", "abc");
+      expect(result).toHaveProperty("type", "USER");
+      expect(result.permissions).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            subject: ENUM_POLICY_SUBJECT.USER,
+            action: [ENUM_POLICY_ACTION.UPDATE, ENUM_POLICY_ACTION.DELETE],
+          }),
+        ]),
+      );
+    });
+
+    it("should update type and permissions", async () => {
+      const result = await roleService.updatePermissions(role, {
+        type: ENUM_ROLE_TYPE.ADMIN,
+        permissions: [
+          {
+            subject: ENUM_POLICY_SUBJECT.ROLE,
+            action: [ENUM_POLICY_ACTION.READ, ENUM_POLICY_ACTION.CREATE],
+          },
+        ],
+      });
+
+      expect(result).toBeDefined();
+      expect(result).toHaveProperty("name", "user");
+      expect(result).toHaveProperty("isActive", true);
+      expect(result).toHaveProperty("description", "abc");
+      expect(result).toHaveProperty("type", "ADMIN");
+      expect(result.permissions).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            subject: ENUM_POLICY_SUBJECT.ROLE,
+            action: [ENUM_POLICY_ACTION.READ, ENUM_POLICY_ACTION.CREATE],
+          }),
+        ]),
+      );
     });
   });
 });
