@@ -48,6 +48,8 @@ import {
   RoleCheckActiveGuard,
   RoleGetGuard,
   RoleInActiveGuard,
+  RoleUpdateGuard,
+  RoleUpdatePermissionsGuard,
 } from "../decorators/role.decorator";
 import {
   RoleAdminActiveDoc,
@@ -57,15 +59,18 @@ import {
   RoleAdminInActiveDoc,
   RoleAdminListDoc,
   RoleAdminUpdateDoc,
+  RoleAdminUpdatePermissionDoc,
 } from "../docs/role.admin.doc";
 import { RoleCreateDto } from "../dtos/role.create.dto";
 import { RoleRequestDto } from "../dtos/role.request.dto";
+import { RoleUpdatePermissionsDto } from "../dtos/role.update-permissions.dto";
 import { RoleUpdateDto } from "../dtos/role.update.dto";
 import { RoleDoc, RoleEntity } from "../repository/entities/role.entity";
 import { RoleActiveSerialization } from "../serializations/role.active.serialization";
 import { RoleGetSerialization } from "../serializations/role.get.serialization";
 import { RoleInActiveSerialization } from "../serializations/role.inActive.serialization";
 import { RoleListSerialization } from "../serializations/role.list.serialization";
+import { RoleUpdatePermissionsSerialization } from "../serializations/role.update-permissions.serialization";
 import { RoleUpdateSerialization } from "../serializations/role.update.serialization";
 import { RoleService } from "../services/role.service";
 
@@ -172,7 +177,7 @@ export class RoleAdminController {
     action: [ENUM_POLICY_ACTION.READ, ENUM_POLICY_ACTION.UPDATE],
   })
   @AuthJwtAdminAccessProtected()
-  @RoleGetGuard()
+  @RoleUpdateGuard()
   @RequestParamGuard(RoleRequestDto)
   @Put("/update/:role")
   async update(@GetRole() role: RoleDoc, @Body() body: RoleUpdateDto): Promise<IResponse> {
@@ -188,7 +193,32 @@ export class RoleAdminController {
     return { data: update };
   }
 
-  // TODO: updatePermission
+  @RoleAdminUpdatePermissionDoc()
+  @Response("role.updatePermissions", { serialization: RoleUpdatePermissionsSerialization })
+  @RoleUpdatePermissionsGuard()
+  @PolicyAbilityProtected({
+    subject: ENUM_POLICY_SUBJECT.ROLE,
+    action: [ENUM_POLICY_ACTION.READ, ENUM_POLICY_ACTION.UPDATE],
+  })
+  @AuthJwtAdminAccessProtected()
+  @RequestParamGuard(RoleRequestDto)
+  @Put("/update/:role/permissions")
+  async updatePermission(
+    @GetRole() role: RoleDoc,
+    @Body() dto: RoleUpdatePermissionsDto,
+  ): Promise<IResponse> {
+    const { _id, type, permissions } = await this.roleService
+      .updatePermissions(role, dto)
+      .then((e) => e.toObject());
+
+    return {
+      data: {
+        _id,
+        type,
+        permissions,
+      },
+    };
+  }
 
   @RoleAdminDeleteDoc()
   @ResponseId("role.delete")

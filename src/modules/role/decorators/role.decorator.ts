@@ -28,6 +28,17 @@ export function RoleGetGuard(): MethodDecorator {
   return applyDecorators(UseGuards(RolePutToRequestGuard, RoleNotFoundGuard));
 }
 
+export function RoleUpdateGuard(): MethodDecorator {
+  return applyDecorators(UseGuards(RolePutToRequestGuard, RoleNotFoundGuard));
+}
+
+export function RoleUpdatePermissionsGuard(): MethodDecorator {
+  return applyDecorators(
+    UseGuards(RolePutToRequestGuard, RoleNotFoundGuard, RoleActiveGuard),
+    SetMetadata(ROLE_IS_ACTIVE_META_KEY, [true]),
+  );
+}
+
 export function RoleInActiveGuard(): MethodDecorator {
   return applyDecorators(
     UseGuards(RolePutToRequestGuard, RoleNotFoundGuard, RoleActiveGuard),

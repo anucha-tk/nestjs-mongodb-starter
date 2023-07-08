@@ -16,7 +16,6 @@ import { RoleRepository } from "src/modules/role/repository/repositories/role.re
 import mongoose from "mongoose";
 import { RoleCreateDto } from "src/modules/role/dtos/role.create.dto";
 import { RoleUpdateDto } from "src/modules/role/dtos/role.update.dto";
-import { access } from "fs";
 
 describe("role service", () => {
   let roleService: RoleService;

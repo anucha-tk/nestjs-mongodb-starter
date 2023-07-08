@@ -21,6 +21,7 @@ import { ENUM_ROLE_STATUS_CODE_ERROR } from "../constants/role.status-code.const
 import { RoleActiveSerialization } from "../serializations/role.active.serialization";
 import { RoleGetSerialization } from "../serializations/role.get.serialization";
 import { RoleInActiveSerialization } from "../serializations/role.inActive.serialization";
+import { RoleUpdatePermissionsSerialization } from "../serializations/role.update-permissions.serialization";
 import { RoleUpdateSerialization } from "../serializations/role.update.serialization";
 
 export function RoleAdminListDoc(): MethodDecorator {
@@ -194,6 +195,36 @@ export function RoleAdminActiveDoc(): MethodDecorator {
     }),
     DocGuard({ role: true, policy: true }),
     DocResponse("role.active", { serialization: RoleActiveSerialization }),
+    DocErrorGroup([
+      DocDefault({
+        httpStatus: HttpStatus.NOT_FOUND,
+        statusCode: ENUM_ROLE_STATUS_CODE_ERROR.ROLE_NOT_FOUND_ERROR,
+        messagePath: "role.error.notFound",
+      }),
+      DocDefault({
+        httpStatus: HttpStatus.BAD_REQUEST,
+        statusCode: ENUM_ROLE_STATUS_CODE_ERROR.ROLE_IS_ACTIVE_ERROR,
+        messagePath: "role.error.isActiveInvalid",
+      }),
+    ]),
+  );
+}
+
+export function RoleAdminUpdatePermissionDoc(): MethodDecorator {
+  return applyDecorators(
+    Doc({
+      operation: "modules.admin.role",
+    }),
+    DocRequest({
+      params: RoleDocParamsId,
+      bodyType: ENUM_DOC_REQUEST_BODY_TYPE.JSON,
+    }),
+    DocAuth({
+      apiKey: true,
+      jwtAccessToken: true,
+    }),
+    DocGuard({ role: true, policy: true }),
+    DocResponse("role.updatePermissions", { serialization: RoleUpdatePermissionsSerialization }),
     DocErrorGroup([
       DocDefault({
         httpStatus: HttpStatus.NOT_FOUND,
