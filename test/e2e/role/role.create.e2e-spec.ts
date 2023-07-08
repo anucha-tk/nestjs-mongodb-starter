@@ -132,7 +132,7 @@ describe("role create e2e", () => {
     });
     it("should return 201 when create role successful", async () => {
       const roleCreateDto: RoleCreateDto = {
-        name: faker.word.words(),
+        name: faker.word.words(2),
         description: faker.lorem.sentence(),
         type: ENUM_ROLE_TYPE.USER,
         permissions: [],

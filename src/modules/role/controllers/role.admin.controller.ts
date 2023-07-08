@@ -5,6 +5,7 @@ import {
   Controller,
   Delete,
   Get,
+  Patch,
   Post,
   Put,
 } from "@nestjs/common";
@@ -42,11 +43,12 @@ import {
   ROLE_DEFAULT_TYPE,
 } from "../constants/role.list.constant";
 import { ENUM_ROLE_STATUS_CODE_ERROR } from "../constants/role.status-code.constant";
-import { GetRole, RoleGetGuard } from "../decorators/role.decorator";
+import { GetRole, RoleGetGuard, RoleInActiveGuard } from "../decorators/role.decorator";
 import {
   RoleAdminCreateDoc,
   RoleAdminDeleteDoc,
   RoleAdminGetDoc,
+  RoleAdminInActiveDoc,
   RoleAdminListDoc,
   RoleAdminUpdateDoc,
 } from "../docs/role.admin.doc";
@@ -55,6 +57,7 @@ import { RoleRequestDto } from "../dtos/role.request.dto";
 import { RoleUpdateDto } from "../dtos/role.update.dto";
 import { RoleDoc, RoleEntity } from "../repository/entities/role.entity";
 import { RoleGetSerialization } from "../serializations/role.get.serialization";
+import { RoleInActiveSerialization } from "../serializations/role.inActive.serialization";
 import { RoleListSerialization } from "../serializations/role.list.serialization";
 import { RoleUpdateSerialization } from "../serializations/role.update.serialization";
 import { RoleService } from "../services/role.service";
@@ -203,6 +206,25 @@ export class RoleAdminController {
     const { _id } = await this.roleService.delete(role);
     return { data: { _id } };
   }
-  // TODO: inActive
+
+  @RoleAdminInActiveDoc()
+  @Response("role.inactive", { serialization: RoleInActiveSerialization })
+  @RoleInActiveGuard()
+  @PolicyAbilityProtected({
+    subject: ENUM_POLICY_SUBJECT.ROLE,
+    action: [ENUM_POLICY_ACTION.READ, ENUM_POLICY_ACTION.UPDATE],
+  })
+  @AuthJwtAdminAccessProtected()
+  @RequestParamGuard(RoleRequestDto)
+  @Patch("/update/:role/inactive")
+  async inActive(@GetRole() role: RoleDoc): Promise<IResponse> {
+    const { isActive } = await this.roleService.inActive(role);
+    return {
+      data: {
+        _id: role._id,
+        isActive,
+      },
+    };
+  }
   // TODO: active
 }
