@@ -103,6 +103,12 @@ export class UserService implements IUserService {
     });
   }
 
+  /**
+   * Reset password attempt user repository
+   *
+   * @param repository user repository
+   * @returns Promise UserDoc
+   */
   async resetPasswordAttempt(repository: UserDoc): Promise<UserDoc> {
     repository.passwordAttempt = 0;
 
@@ -174,6 +180,30 @@ export class UserService implements IUserService {
       accessToken,
       refreshToken,
     };
+
+    return this.userRepository.save(repository);
+  }
+
+  /**
+   * Update user new password
+   *
+   * @param repository User repository
+   * @param authPassword IAuthPassword
+   * @param authPassword.passwordHash password hash string
+   * @param authPassword.passwordExpired password expired Date
+   * @param authPassword.passwordCreated password created Date
+   * @param authPassword.salt salt password
+   *
+   * @returns Promise UserDoc
+   * */
+  async updatePassword(
+    repository: UserDoc,
+    { passwordHash, passwordExpired, passwordCreated, salt }: IAuthPassword,
+  ): Promise<UserDoc> {
+    repository.password = passwordHash;
+    repository.passwordExpired = passwordExpired;
+    repository.passwordCreated = passwordCreated;
+    repository.salt = salt;
 
     return this.userRepository.save(repository);
   }

@@ -157,7 +157,17 @@ describe("user service", () => {
             save: jest
               .fn()
               .mockImplementation(
-                ({ blocked, passwordAttempt, isActive, inactiveDate, inactivePermanent }) => {
+                ({
+                  blocked,
+                  passwordAttempt,
+                  isActive,
+                  inactiveDate,
+                  inactivePermanent,
+                  salt,
+                  password,
+                  passwordCreated,
+                  passwordExpired,
+                }) => {
                   const find = new userKeyEntityDoc();
                   find._id = userKeyId;
                   find.blocked = blocked;
@@ -165,6 +175,10 @@ describe("user service", () => {
                   find.isActive = isActive;
                   find.inactiveDate = inactiveDate;
                   find.inactivePermanent = inactivePermanent;
+                  find.password = password;
+                  find.salt = salt;
+                  (find.passwordCreated = passwordCreated),
+                    (find.passwordExpired = passwordExpired);
 
                   return find;
                 },
@@ -377,13 +391,33 @@ describe("user service", () => {
       expect(userRepository.findOne).toBeCalled();
       expect(userRepository.findOne).toBeCalledWith({ _id: "123" }, undefined);
     });
-    it.only("should return userDocWithRole", async () => {
+    it("should return userDocWithRole", async () => {
       const result = await userService.findOne({ _id: "123" }, { join: true });
 
       expect(result._id).toBe("123");
       expect(result.role).toBeDefined();
       expect(userRepository.findOne).toBeCalled();
       expect(userRepository.findOne).toBeCalledWith({ _id: "123" }, { join: true });
+    });
+  });
+
+  describe("updatePassword", () => {
+    it("should return IAuthPassword when updatePassword", async () => {
+      const userDoc = new userKeyEntityDoc();
+      const authPassword: IAuthPassword = {
+        passwordHash: faker.string.alphanumeric(10),
+        passwordCreated: faker.date.recent(),
+        passwordExpired: faker.date.future(),
+        salt: faker.string.alphanumeric(10),
+      };
+      const result = await userService.updatePassword(userDoc, authPassword);
+
+      expect(result).toBeDefined();
+      expect(result.salt).toBe(authPassword.salt);
+      expect(result.password).toBe(authPassword.passwordHash);
+      expect(result.passwordCreated).toBe(authPassword.passwordCreated);
+      expect(result.passwordExpired).toBe(authPassword.passwordExpired);
+      expect(userRepository.save).toBeCalled();
     });
   });
 });

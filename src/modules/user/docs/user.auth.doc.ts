@@ -1,6 +1,7 @@
 import { applyDecorators, HttpStatus } from "@nestjs/common";
 import {
   Doc,
+  DocAllOf,
   DocAuth,
   DocDefault,
   DocErrorGroup,
@@ -58,6 +59,43 @@ export function UserAuthProfileDoc(): MethodDecorator {
         statusCode: ENUM_USER_STATUS_CODE_ERROR.USER_NOT_FOUND_ERROR,
         messagePath: "user.error.notFound",
       }),
+    ]),
+  );
+}
+
+export function UserAuthChangePasswordDoc(): MethodDecorator {
+  return applyDecorators(
+    Doc({
+      operation: "modules.auth.user",
+      description: "Api user change password",
+    }),
+    DocAuth({
+      jwtAccessToken: true,
+      apiKey: true,
+    }),
+    DocResponse("user.change-password"),
+    DocErrorGroup([
+      DocDefault({
+        httpStatus: HttpStatus.NOT_FOUND,
+        statusCode: ENUM_USER_STATUS_CODE_ERROR.USER_NOT_FOUND_ERROR,
+        messagePath: "user.error.notFound",
+      }),
+      DocDefault({
+        httpStatus: HttpStatus.FORBIDDEN,
+        statusCode: ENUM_USER_STATUS_CODE_ERROR.USER_PASSWORD_ATTEMPT_MAX_ERROR,
+        messagePath: "user.error.passwordAttemptMax",
+      }),
+      DocAllOf(
+        HttpStatus.BAD_REQUEST,
+        {
+          statusCode: ENUM_USER_STATUS_CODE_ERROR.USER_PASSWORD_NOT_MATCH_ERROR,
+          messagePath: "user.error.passwordNotMatch",
+        },
+        {
+          statusCode: ENUM_USER_STATUS_CODE_ERROR.USER_PASSWORD_NEW_MUST_DIFFERENCE_ERROR,
+          messagePath: "user.error.newPasswordMustDifference",
+        },
+      ),
     ]),
   );
 }

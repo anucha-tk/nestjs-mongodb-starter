@@ -1,4 +1,14 @@
-import { Controller, ForbiddenException, Get, HttpCode, HttpStatus, Post } from "@nestjs/common";
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  ForbiddenException,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Patch,
+  Post,
+} from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { AuthService } from "src/common/auth/services/auth.service";
 import { UserService } from "../services/user.service";
@@ -16,11 +26,19 @@ import {
   AuthJwtToken,
 } from "src/common/auth/decorators/auth.jwt.decorator";
 import { ApiKeyPublicProtected } from "src/common/api-key/decorators/api-key.decorator";
-import { UserAuthInfoDoc, UserAuthProfileDoc, UserAuthRefreshDoc } from "../docs/user.auth.doc";
+import {
+  UserAuthChangePasswordDoc,
+  UserAuthInfoDoc,
+  UserAuthProfileDoc,
+  UserAuthRefreshDoc,
+} from "../docs/user.auth.doc";
 import { UserAuthProtected, UserProtected } from "../decorators/user.decorator";
 import { UserPayloadSerialization } from "../serializations/user.payload.serialization";
 import { UserInfoSerialization } from "../serializations/user.info.serialization";
 import { UserProfileSerialization } from "../serializations/user.profile.serialization";
+import { UserChangePasswordDto } from "../dtos/user.change-password.dto";
+import { ConfigService } from "@nestjs/config";
+import { ENUM_USER_STATUS_CODE_ERROR } from "../constants/user.status-code.constant";
 
 @ApiKeyPublicProtected()
 @ApiTags("modules.auth.user")
@@ -32,6 +50,7 @@ export class UserAuthController {
   constructor(
     private readonly userService: UserService,
     private readonly authService: AuthService,
+    private readonly configService: ConfigService,
   ) {}
 
   @UserAuthRefreshDoc()
@@ -77,7 +96,58 @@ export class UserAuthController {
     };
   }
 
-  // TODO: Change password
+  @UserAuthChangePasswordDoc()
+  @Response("user.change-password")
+  @UserProtected()
+  @AuthJwtAccessProtected()
+  @Patch("/change-password")
+  async changePassword(
+    @GetUser() user: UserDoc,
+    @Body() body: UserChangePasswordDto,
+  ): Promise<void> {
+    const [passwordAttempt, maxPasswordAttempt] = await Promise.all([
+      this.configService.get<boolean>("auth.password.attempt"),
+      this.configService.get<number>("auth.password.maxAttempt"),
+    ]);
+    if (passwordAttempt && user.passwordAttempt >= maxPasswordAttempt) {
+      throw new ForbiddenException({
+        statusCode: ENUM_USER_STATUS_CODE_ERROR.USER_PASSWORD_ATTEMPT_MAX_ERROR,
+        message: "user.error.passwordAttemptMax",
+      });
+    }
+
+    const isPasswordMatch: boolean = await this.authService.validateUser(
+      body.oldPassword,
+      user.password,
+    );
+    if (!isPasswordMatch) {
+      await this.userService.increasePasswordAttempt(user);
+      throw new BadRequestException({
+        statusCode: ENUM_USER_STATUS_CODE_ERROR.USER_PASSWORD_NOT_MATCH_ERROR,
+        message: "user.error.passwordNotMatch",
+      });
+    }
+
+    const newMatchPassword: boolean = await this.authService.validateUser(
+      body.newPassword,
+      user.password,
+    );
+    if (newMatchPassword) {
+      throw new BadRequestException({
+        statusCode: ENUM_USER_STATUS_CODE_ERROR.USER_PASSWORD_NEW_MUST_DIFFERENCE_ERROR,
+        message: "user.error.newPasswordMustDifference",
+      });
+    }
+
+    const [newAuthPassword] = await Promise.all([
+      this.authService.createPassword(body.newPassword),
+      this.userService.resetPasswordAttempt(user),
+    ]);
+
+    await this.userService.updatePassword(user, newAuthPassword);
+
+    return;
+  }
 
   @UserAuthInfoDoc()
   @Response("user.info", { serialization: UserInfoSerialization })

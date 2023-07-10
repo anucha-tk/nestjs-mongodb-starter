@@ -112,6 +112,12 @@ export class AuthService implements IAuthService {
     return this.helperHashService.randomSalt(length);
   }
 
+  /**
+   * CreatePassword.
+   *
+   * @param password password string
+   * @returns Promise IAuthPassword
+   */
   async createPassword(password: string): Promise<IAuthPassword> {
     const salt: string = await this.createSalt(this.passwordSaltLength);
 
@@ -126,6 +132,13 @@ export class AuthService implements IAuthService {
     };
   }
 
+  /**
+   * Validate user password.
+   *
+   * @param passwordString password user string
+   * @param passwordHash password user hash
+   * @returns Promise boolean
+   */
   async validateUser(passwordString: string, passwordHash: string): Promise<boolean> {
     return this.helperHashService.bcryptCompare(passwordString, passwordHash);
   }

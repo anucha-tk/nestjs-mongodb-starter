@@ -11,6 +11,7 @@
   "refresh": "Refresh token success",
   "info": "Info success",
   "profile": "Profile success",
+  "change-password": "Change password success",
   "error": {
     "emailExist": "Email user used",
     "mobileNumberExist": "Mobile Number user used",
@@ -21,6 +22,7 @@
     "isActiveInvalid": "User is active invalid",
     "inactivePermanent": "User inactive permanent",
     "passwordExpired": "User password expired",
+    "newPasswordMustDifference": "Old password must difference",
     "inactive": "User is inactive"
   }
 }
