@@ -11,7 +11,7 @@ import {
   PolicyHandler,
 } from "src/common/policy/interfaces/policy.interface";
 import { ENUM_ROLE_TYPE } from "src/modules/role/constants/role.enum.constant";
-import { UserPayloadPermissionSerialization } from "src/modules/user/serializations/user.payload.serialization";
+import { UserPayloadPermissionSerialization } from "src/modules/user/serializations/user.permission-payload.serialization";
 
 @Injectable()
 export class PolicyAbilityFactory {

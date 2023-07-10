@@ -1,29 +1,12 @@
 import { faker } from "@faker-js/faker";
 import { ApiHideProperty, ApiProperty, OmitType } from "@nestjs/swagger";
 import { Exclude, Expose, Transform } from "class-transformer";
-import {
-  ENUM_POLICY_REQUEST_ACTION,
-  ENUM_POLICY_SUBJECT,
-} from "src/common/policy/constants/policy.enum.constant";
+import { ENUM_POLICY_REQUEST_ACTION } from "src/common/policy/constants/policy.enum.constant";
 import { IPolicyRule } from "src/common/policy/interfaces/policy.interface";
 import { ENUM_ROLE_TYPE } from "src/modules/role/constants/role.enum.constant";
-import { ENUM_USER_SIGN_UP_FROM } from "src/modules/user/constants/user.enum.constant";
-import { UserProfileSerialization } from "src/modules/user/serializations/user.profile.serialization";
-export class UserPayloadPermissionSerialization {
-  @ApiProperty({
-    required: true,
-    nullable: false,
-    enum: ENUM_POLICY_SUBJECT,
-    example: ENUM_POLICY_SUBJECT.API_KEY,
-  })
-  subject: ENUM_POLICY_SUBJECT;
-
-  @ApiProperty({
-    required: true,
-    nullable: false,
-  })
-  action: string;
-}
+import { ENUM_USER_SIGN_UP_FROM } from "../constants/user.enum.constant";
+import { UserPayloadPermissionSerialization } from "./user.permission-payload.serialization";
+import { UserProfileSerialization } from "./user.profile.serialization";
 
 export class UserPayloadSerialization extends OmitType(UserProfileSerialization, [
   "role",
@@ -32,7 +15,7 @@ export class UserPayloadSerialization extends OmitType(UserProfileSerialization,
   "updatedAt",
 ] as const) {
   @ApiProperty({
-    example: [faker.string.uuid()],
+    example: faker.string.uuid(),
     type: "string",
     isArray: true,
     required: true,
@@ -78,12 +61,7 @@ export class UserPayloadSerialization extends OmitType(UserProfileSerialization,
   @Exclude()
   readonly signUpFrom: ENUM_USER_SIGN_UP_FROM;
 
-  @ApiProperty({
-    required: true,
-    nullable: false,
-    example: faker.date.recent(),
-  })
-  @Expose()
+  @Exclude()
   readonly loginDate: Date;
 
   @ApiHideProperty()

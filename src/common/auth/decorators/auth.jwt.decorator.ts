@@ -31,19 +31,33 @@ export function AuthJwtAdminAccessProtected(): MethodDecorator {
 }
 
 /**
- * get user from app request
+ * Get user serialization from app request
+ *
  * @example
  * request.user
- * @returns user
+ *
+ * @returns User UserPayloadSerialization
  * */
 export const AuthJwtPayload = createParamDecorator(
   (data: string, ctx: ExecutionContext): Record<string, any> => {
     const { user } = ctx
       .switchToHttp()
       .getRequest<IRequestApp & { user: UserPayloadSerialization }>();
+
     return data ? user[data] : user;
   },
 );
+
+/**
+ * Guard JWT Authentication AccessToken
+ * @example
+ * request.user
+ *
+ * @returns MethodDecorator
+ */
+export function AuthJwtAccessProtected(): MethodDecorator {
+  return applyDecorators(UseGuards(AuthJwtAccessGuard));
+}
 
 /**
  * Guard refreshToken with AuthGuard("jwtRefresh")
@@ -55,7 +69,7 @@ export function AuthJwtRefreshProtected(): MethodDecorator {
 
 /**
  * Get authorization token from header request
- * @returns AccessToken string or undefined
+ * @returns authorizations string or undefined
  * */
 export const AuthJwtToken = createParamDecorator((_: string, ctx: ExecutionContext): string => {
   const { headers } = ctx.switchToHttp().getRequest<IRequestApp>();

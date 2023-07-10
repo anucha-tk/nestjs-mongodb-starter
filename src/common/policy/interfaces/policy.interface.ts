@@ -1,6 +1,6 @@
 import { InferSubjects, MongoAbility } from "@casl/ability";
 import { ENUM_ROLE_TYPE } from "src/modules/role/constants/role.enum.constant";
-import { UserPayloadPermissionSerialization } from "src/modules/user/serializations/user.payload.serialization";
+import { UserPayloadPermissionSerialization } from "src/modules/user/serializations/user.permission-payload.serialization";
 import { ENUM_POLICY_ACTION, ENUM_POLICY_SUBJECT } from "../constants/policy.enum.constant";
 
 export type IPolicySubjectAbility = InferSubjects<ENUM_POLICY_SUBJECT> | "all";
