@@ -10,6 +10,7 @@
   "signUpGoogleCallback": "Sign up with google succeed",
   "refresh": "Refresh token success",
   "info": "Info success",
+  "profile": "Profile success",
   "error": {
     "emailExist": "Email user used",
     "mobileNumberExist": "Mobile Number user used",

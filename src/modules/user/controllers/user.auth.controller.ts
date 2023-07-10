@@ -16,10 +16,11 @@ import {
   AuthJwtToken,
 } from "src/common/auth/decorators/auth.jwt.decorator";
 import { ApiKeyPublicProtected } from "src/common/api-key/decorators/api-key.decorator";
-import { UserAuthInfoDoc, UserAuthRefreshDoc } from "../docs/user.auth.doc";
+import { UserAuthInfoDoc, UserAuthProfileDoc, UserAuthRefreshDoc } from "../docs/user.auth.doc";
 import { UserAuthProtected, UserProtected } from "../decorators/user.decorator";
 import { UserPayloadSerialization } from "../serializations/user.payload.serialization";
 import { UserInfoSerialization } from "../serializations/user.info.serialization";
+import { UserProfileSerialization } from "../serializations/user.profile.serialization";
 
 @ApiKeyPublicProtected()
 @ApiTags("modules.auth.user")
@@ -85,7 +86,16 @@ export class UserAuthController {
   async info(@AuthJwtPayload() user: UserPayloadSerialization): Promise<IResponse> {
     return { data: user };
   }
-  // TODO: Profile
+
+  @UserAuthProfileDoc()
+  @Response("user.profile", { serialization: UserProfileSerialization })
+  @UserProtected()
+  @AuthJwtAccessProtected()
+  @Get("/profile")
+  async profile(@GetUser() user: UserDoc): Promise<IResponse> {
+    const userWithRole = await this.userService.joinWithRole(user);
+    return { data: userWithRole.toObject() };
+  }
   // TODO: Update Profile
   // TODO: Claim Username
   // TODO: Upload
