@@ -166,8 +166,12 @@ export class UserPublicController {
     }
 
     const [role, emailExist, mobileNumberExist] = await Promise.all(promises);
-
-    if (emailExist) {
+    if (!role) {
+      throw new BadRequestException({
+        statusCode: ENUM_ROLE_STATUS_CODE_ERROR.ROLE_NOT_FOUND_ERROR,
+        message: "role.error.notFound",
+      });
+    } else if (emailExist) {
       throw new ConflictException({
         statusCode: ENUM_USER_STATUS_CODE_ERROR.USER_EMAIL_EXIST_ERROR,
         message: "user.error.emailExist",
