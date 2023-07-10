@@ -12,8 +12,8 @@
             "description": "User agent header",
             "required": false,
             "schema": {
-              "default": "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.5.2; rv:7.2) Gecko/20100101 Firefox/7.2.1",
-              "example": "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.5.2; rv:7.2) Gecko/20100101 Firefox/7.2.1",
+              "default": "Opera/11.98 (X11; Linux x86_64; U; NL Presto/2.9.167 Version/11.00)",
+              "example": "Opera/11.98 (X11; Linux x86_64; U; NL Presto/2.9.167 Version/11.00)",
               "type": "string"
             }
           },
@@ -29,7 +29,7 @@
             "in": "header",
             "description": "Timestamp header, in microseconds",
             "required": false,
-            "schema": { "default": 1688811457811, "example": 1688811457811, "type": "string" }
+            "schema": { "default": 1688970446795, "example": 1688970446795, "type": "string" }
           }
         ],
         "responses": {
@@ -105,8 +105,8 @@
             "description": "User agent header",
             "required": false,
             "schema": {
-              "default": "Mozilla/5.0 (X11; Linux i686 AppleWebKit/532.1.2 (KHTML, like Gecko) Chrome/36.0.842.0 Safari/532.1.2",
-              "example": "Mozilla/5.0 (X11; Linux i686 AppleWebKit/532.1.2 (KHTML, like Gecko) Chrome/36.0.842.0 Safari/532.1.2",
+              "default": "Opera/12.57 (Macintosh; Intel Mac OS X 10.10.8 U; CE Presto/2.9.190 Version/12.00)",
+              "example": "Opera/12.57 (Macintosh; Intel Mac OS X 10.10.8 U; CE Presto/2.9.190 Version/12.00)",
               "type": "string"
             }
           },
@@ -122,7 +122,7 @@
             "in": "header",
             "description": "Timestamp header, in microseconds",
             "required": false,
-            "schema": { "default": 1688811457816, "example": 1688811457816, "type": "string" }
+            "schema": { "default": 1688970446797, "example": 1688970446797, "type": "string" }
           }
         ],
         "responses": {
@@ -284,8 +284,8 @@
             "description": "User agent header",
             "required": false,
             "schema": {
-              "default": "Mozilla/5.0 (X11; Linux x86_64; rv:11.9) Gecko/20100101 Firefox/11.9.4",
-              "example": "Mozilla/5.0 (X11; Linux x86_64; rv:11.9) Gecko/20100101 Firefox/11.9.4",
+              "default": "Mozilla/5.0 (Windows; U; Windows NT 5.2)AppleWebKit/532.1.2 (KHTML, like Gecko) Version/4.1.5 Safari/532.1.2",
+              "example": "Mozilla/5.0 (Windows; U; Windows NT 5.2)AppleWebKit/532.1.2 (KHTML, like Gecko) Version/4.1.5 Safari/532.1.2",
               "type": "string"
             }
           },
@@ -301,7 +301,7 @@
             "in": "header",
             "description": "Timestamp header, in microseconds",
             "required": false,
-            "schema": { "default": 1688811457941, "example": 1688811457941, "type": "string" }
+            "schema": { "default": 1688970446930, "example": 1688970446930, "type": "string" }
           }
         ],
         "responses": {
@@ -377,8 +377,8 @@
             "description": "User agent header",
             "required": false,
             "schema": {
-              "default": "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:11.6) Gecko/20100101 Firefox/11.6.3",
-              "example": "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:11.6) Gecko/20100101 Firefox/11.6.3",
+              "default": "Mozilla/5.0 (Windows; U; Windows NT 5.0)AppleWebKit/531.2.0 (KHTML, like Gecko) Version/4.1.1 Safari/531.2.0",
+              "example": "Mozilla/5.0 (Windows; U; Windows NT 5.0)AppleWebKit/531.2.0 (KHTML, like Gecko) Version/4.1.1 Safari/531.2.0",
               "type": "string"
             }
           },
@@ -394,7 +394,7 @@
             "in": "header",
             "description": "Timestamp header, in microseconds",
             "required": false,
-            "schema": { "default": 1688811457950, "example": 1688811457950, "type": "string" }
+            "schema": { "default": 1688970446940, "example": 1688970446940, "type": "string" }
           }
         ],
         "requestBody": {
@@ -490,8 +490,8 @@
             "description": "User agent header",
             "required": false,
             "schema": {
-              "default": "Mozilla/5.0 (Windows; U; Windows NT 5.3)AppleWebKit/536.0.2 (KHTML, like Gecko) Version/4.1.10 Safari/536.0.2",
-              "example": "Mozilla/5.0 (Windows; U; Windows NT 5.3)AppleWebKit/536.0.2 (KHTML, like Gecko) Version/4.1.10 Safari/536.0.2",
+              "default": "Mozilla/5.0 (Windows; U; Windows NT 6.2)AppleWebKit/538.2.1 (KHTML, like Gecko) Version/4.0.6 Safari/538.2.1",
+              "example": "Mozilla/5.0 (Windows; U; Windows NT 6.2)AppleWebKit/538.2.1 (KHTML, like Gecko) Version/4.0.6 Safari/538.2.1",
               "type": "string"
             }
           },
@@ -507,7 +507,7 @@
             "in": "header",
             "description": "Timestamp header, in microseconds",
             "required": false,
-            "schema": { "default": 1688811457951, "example": 1688811457951, "type": "string" }
+            "schema": { "default": 1688970446941, "example": 1688970446941, "type": "string" }
           }
         ],
         "requestBody": {
@@ -602,8 +602,8 @@
             "description": "User agent header",
             "required": false,
             "schema": {
-              "default": "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 5.1; Trident/5.0)",
-              "example": "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 5.1; Trident/5.0)",
+              "default": "Opera/13.26 (X11; Linux x86_64; U; DA Presto/2.9.187 Version/11.00)",
+              "example": "Opera/13.26 (X11; Linux x86_64; U; DA Presto/2.9.187 Version/11.00)",
               "type": "string"
             }
           },
@@ -619,7 +619,7 @@
             "in": "header",
             "description": "Timestamp header, in microseconds",
             "required": false,
-            "schema": { "default": 1688811457911, "example": 1688811457911, "type": "string" }
+            "schema": { "default": 1688970446887, "example": 1688970446887, "type": "string" }
           },
           {
             "name": "isActive",
@@ -839,8 +839,8 @@
             "description": "User agent header",
             "required": false,
             "schema": {
-              "default": "Mozilla/5.0 (X11; Linux x86_64; rv:10.6) Gecko/20100101 Firefox/10.6.0",
-              "example": "Mozilla/5.0 (X11; Linux x86_64; rv:10.6) Gecko/20100101 Firefox/10.6.0",
+              "default": "Opera/10.15 (Macintosh; Intel Mac OS X 10.7.1 U; SQ Presto/2.9.160 Version/10.00)",
+              "example": "Opera/10.15 (Macintosh; Intel Mac OS X 10.7.1 U; SQ Presto/2.9.160 Version/10.00)",
               "type": "string"
             }
           },
@@ -856,14 +856,14 @@
             "in": "header",
             "description": "Timestamp header, in microseconds",
             "required": false,
-            "schema": { "default": 1688811457912, "example": 1688811457912, "type": "string" }
+            "schema": { "default": 1688970446889, "example": 1688970446889, "type": "string" }
           },
           {
             "name": "role",
             "required": true,
             "in": "path",
             "allowEmptyValue": false,
-            "example": "a66f2d0d-b4fd-44e0-ab9b-e29d8c45cad3",
+            "example": "8c02e8c1-2a07-4311-9dd0-93653b780bb3",
             "schema": { "type": "string" }
           }
         ],
@@ -1033,8 +1033,8 @@
             "description": "User agent header",
             "required": false,
             "schema": {
-              "default": "Mozilla/5.0 (Macintosh; U; PPC Mac OS X 10.7.9; rv:14.4) Gecko/20100101 Firefox/14.4.8",
-              "example": "Mozilla/5.0 (Macintosh; U; PPC Mac OS X 10.7.9; rv:14.4) Gecko/20100101 Firefox/14.4.8",
+              "default": "Mozilla/5.0 (compatible; MSIE 7.0; Windows NT 6.3; Trident/4.0)",
+              "example": "Mozilla/5.0 (compatible; MSIE 7.0; Windows NT 6.3; Trident/4.0)",
               "type": "string"
             }
           },
@@ -1050,7 +1050,7 @@
             "in": "header",
             "description": "Timestamp header, in microseconds",
             "required": false,
-            "schema": { "default": 1688811457912, "example": 1688811457912, "type": "string" }
+            "schema": { "default": 1688970446889, "example": 1688970446889, "type": "string" }
           }
         ],
         "requestBody": {
@@ -1239,8 +1239,8 @@
             "description": "User agent header",
             "required": false,
             "schema": {
-              "default": "Mozilla/5.0 (X11; Linux i686; rv:14.2) Gecko/20100101 Firefox/14.2.7",
-              "example": "Mozilla/5.0 (X11; Linux i686; rv:14.2) Gecko/20100101 Firefox/14.2.7",
+              "default": "Mozilla/5.0 (Macintosh; U; PPC Mac OS X 10.8.6; rv:13.3) Gecko/20100101 Firefox/13.3.5",
+              "example": "Mozilla/5.0 (Macintosh; U; PPC Mac OS X 10.8.6; rv:13.3) Gecko/20100101 Firefox/13.3.5",
               "type": "string"
             }
           },
@@ -1256,14 +1256,14 @@
             "in": "header",
             "description": "Timestamp header, in microseconds",
             "required": false,
-            "schema": { "default": 1688811457913, "example": 1688811457913, "type": "string" }
+            "schema": { "default": 1688970446890, "example": 1688970446890, "type": "string" }
           },
           {
             "name": "role",
             "required": true,
             "in": "path",
             "allowEmptyValue": false,
-            "example": "a66f2d0d-b4fd-44e0-ab9b-e29d8c45cad3",
+            "example": "8c02e8c1-2a07-4311-9dd0-93653b780bb3",
             "schema": { "type": "string" }
           }
         ],
@@ -1467,8 +1467,8 @@
             "description": "User agent header",
             "required": false,
             "schema": {
-              "default": "Mozilla/5.0 (Windows NT 6.2; rv:11.0) Gecko/20100101 Firefox/11.0.8",
-              "example": "Mozilla/5.0 (Windows NT 6.2; rv:11.0) Gecko/20100101 Firefox/11.0.8",
+              "default": "Mozilla/5.0 (X11; Linux i686; rv:5.3) Gecko/20100101 Firefox/5.3.8",
+              "example": "Mozilla/5.0 (X11; Linux i686; rv:5.3) Gecko/20100101 Firefox/5.3.8",
               "type": "string"
             }
           },
@@ -1484,14 +1484,14 @@
             "in": "header",
             "description": "Timestamp header, in microseconds",
             "required": false,
-            "schema": { "default": 1688811457913, "example": 1688811457913, "type": "string" }
+            "schema": { "default": 1688970446890, "example": 1688970446890, "type": "string" }
           },
           {
             "name": "role",
             "required": true,
             "in": "path",
             "allowEmptyValue": false,
-            "example": "a66f2d0d-b4fd-44e0-ab9b-e29d8c45cad3",
+            "example": "8c02e8c1-2a07-4311-9dd0-93653b780bb3",
             "schema": { "type": "string" }
           }
         ],
@@ -1697,8 +1697,8 @@
             "description": "User agent header",
             "required": false,
             "schema": {
-              "default": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_5)  AppleWebKit/531.0.1 (KHTML, like Gecko) Chrome/36.0.827.0 Safari/531.0.1",
-              "example": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_5)  AppleWebKit/531.0.1 (KHTML, like Gecko) Chrome/36.0.827.0 Safari/531.0.1",
+              "default": "Mozilla/5.0 (Windows; U; Windows NT 5.1) AppleWebKit/534.1.1 (KHTML, like Gecko) Chrome/32.0.862.0 Safari/534.1.1",
+              "example": "Mozilla/5.0 (Windows; U; Windows NT 5.1) AppleWebKit/534.1.1 (KHTML, like Gecko) Chrome/32.0.862.0 Safari/534.1.1",
               "type": "string"
             }
           },
@@ -1714,14 +1714,14 @@
             "in": "header",
             "description": "Timestamp header, in microseconds",
             "required": false,
-            "schema": { "default": 1688811457914, "example": 1688811457914, "type": "string" }
+            "schema": { "default": 1688970446891, "example": 1688970446891, "type": "string" }
           },
           {
             "name": "role",
             "required": true,
             "in": "path",
             "allowEmptyValue": false,
-            "example": "a66f2d0d-b4fd-44e0-ab9b-e29d8c45cad3",
+            "example": "8c02e8c1-2a07-4311-9dd0-93653b780bb3",
             "schema": { "type": "string" }
           }
         ],
@@ -1905,8 +1905,8 @@
             "description": "User agent header",
             "required": false,
             "schema": {
-              "default": "Mozilla/5.0 (Macintosh; U; PPC Mac OS X 10.5.5; rv:10.6) Gecko/20100101 Firefox/10.6.3",
-              "example": "Mozilla/5.0 (Macintosh; U; PPC Mac OS X 10.5.5; rv:10.6) Gecko/20100101 Firefox/10.6.3",
+              "default": "Mozilla/5.0 (compatible; MSIE 8.0; Windows NT 5.3; Trident/4.1; .NET CLR 2.8.72472.7)",
+              "example": "Mozilla/5.0 (compatible; MSIE 8.0; Windows NT 5.3; Trident/4.1; .NET CLR 2.8.72472.7)",
               "type": "string"
             }
           },
@@ -1922,14 +1922,14 @@
             "in": "header",
             "description": "Timestamp header, in microseconds",
             "required": false,
-            "schema": { "default": 1688811457914, "example": 1688811457914, "type": "string" }
+            "schema": { "default": 1688970446892, "example": 1688970446892, "type": "string" }
           },
           {
             "name": "role",
             "required": true,
             "in": "path",
             "allowEmptyValue": false,
-            "example": "a66f2d0d-b4fd-44e0-ab9b-e29d8c45cad3",
+            "example": "8c02e8c1-2a07-4311-9dd0-93653b780bb3",
             "schema": { "type": "string" }
           }
         ],
@@ -2113,8 +2113,8 @@
             "description": "User agent header",
             "required": false,
             "schema": {
-              "default": "Mozilla/5.0 (X11; Linux i686; rv:6.9) Gecko/20100101 Firefox/6.9.2",
-              "example": "Mozilla/5.0 (X11; Linux i686; rv:6.9) Gecko/20100101 Firefox/6.9.2",
+              "default": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5 rv:3.0; BE) AppleWebKit/535.0.1 (KHTML, like Gecko) Version/4.0.10 Safari/535.0.1",
+              "example": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5 rv:3.0; BE) AppleWebKit/535.0.1 (KHTML, like Gecko) Version/4.0.10 Safari/535.0.1",
               "type": "string"
             }
           },
@@ -2130,14 +2130,14 @@
             "in": "header",
             "description": "Timestamp header, in microseconds",
             "required": false,
-            "schema": { "default": 1688811457915, "example": 1688811457915, "type": "string" }
+            "schema": { "default": 1688970446892, "example": 1688970446892, "type": "string" }
           },
           {
             "name": "role",
             "required": true,
             "in": "path",
             "allowEmptyValue": false,
-            "example": "a66f2d0d-b4fd-44e0-ab9b-e29d8c45cad3",
+            "example": "8c02e8c1-2a07-4311-9dd0-93653b780bb3",
             "schema": { "type": "string" }
           }
         ],
@@ -2321,8 +2321,8 @@
             "description": "User agent header",
             "required": false,
             "schema": {
-              "default": "Mozilla/5.0 (compatible; MSIE 8.0; Windows NT 6.1; Trident/3.1; .NET CLR 1.0.33268.0)",
-              "example": "Mozilla/5.0 (compatible; MSIE 8.0; Windows NT 6.1; Trident/3.1; .NET CLR 1.0.33268.0)",
+              "default": "Mozilla/5.0 (compatible; MSIE 8.0; Windows NT 6.1; Trident/4.0)",
+              "example": "Mozilla/5.0 (compatible; MSIE 8.0; Windows NT 6.1; Trident/4.0)",
               "type": "string"
             }
           },
@@ -2338,14 +2338,14 @@
             "in": "header",
             "description": "Timestamp header, in microseconds",
             "required": false,
-            "schema": { "default": 1688811457929, "example": 1688811457929, "type": "string" }
+            "schema": { "default": 1688970446911, "example": 1688970446911, "type": "string" }
           },
           {
             "name": "user",
             "required": true,
             "in": "path",
             "allowEmptyValue": false,
-            "example": "a7adcc05-921c-4439-a838-4984b0c037d0",
+            "example": "1f19be38-fa8e-4ec9-a369-8da2e9aa251a",
             "schema": { "type": "string" }
           }
         ],
@@ -2500,8 +2500,8 @@
             "description": "User agent header",
             "required": false,
             "schema": {
-              "default": "Mozilla/5.0 (X11; Linux i686; rv:14.0) Gecko/20100101 Firefox/14.0.0",
-              "example": "Mozilla/5.0 (X11; Linux i686; rv:14.0) Gecko/20100101 Firefox/14.0.0",
+              "default": "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 5.0; Trident/4.0; .NET CLR 3.1.91722.2)",
+              "example": "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 5.0; Trident/4.0; .NET CLR 3.1.91722.2)",
               "type": "string"
             }
           },
@@ -2517,14 +2517,14 @@
             "in": "header",
             "description": "Timestamp header, in microseconds",
             "required": false,
-            "schema": { "default": 1688811457930, "example": 1688811457930, "type": "string" }
+            "schema": { "default": 1688970446912, "example": 1688970446912, "type": "string" }
           },
           {
             "name": "user",
             "required": true,
             "in": "path",
             "allowEmptyValue": false,
-            "example": "a7adcc05-921c-4439-a838-4984b0c037d0",
+            "example": "1f19be38-fa8e-4ec9-a369-8da2e9aa251a",
             "schema": { "type": "string" }
           }
         ],
@@ -2679,8 +2679,8 @@
             "description": "User agent header",
             "required": false,
             "schema": {
-              "default": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.5.7; rv:15.8) Gecko/20100101 Firefox/15.8.4",
-              "example": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.5.7; rv:15.8) Gecko/20100101 Firefox/15.8.4",
+              "default": "Mozilla/5.0 (X11; Linux x86_64; rv:15.6) Gecko/20100101 Firefox/15.6.1",
+              "example": "Mozilla/5.0 (X11; Linux x86_64; rv:15.6) Gecko/20100101 Firefox/15.6.1",
               "type": "string"
             }
           },
@@ -2696,14 +2696,14 @@
             "in": "header",
             "description": "Timestamp header, in microseconds",
             "required": false,
-            "schema": { "default": 1688811457930, "example": 1688811457930, "type": "string" }
+            "schema": { "default": 1688970446912, "example": 1688970446912, "type": "string" }
           },
           {
             "name": "user",
             "required": true,
             "in": "path",
             "allowEmptyValue": false,
-            "example": "a7adcc05-921c-4439-a838-4984b0c037d0",
+            "example": "1f19be38-fa8e-4ec9-a369-8da2e9aa251a",
             "schema": { "type": "string" }
           }
         ],
@@ -2858,8 +2858,8 @@
             "description": "User agent header",
             "required": false,
             "schema": {
-              "default": "Mozilla/5.0 (Windows NT 6.0; rv:10.7) Gecko/20100101 Firefox/10.7.3",
-              "example": "Mozilla/5.0 (Windows NT 6.0; rv:10.7) Gecko/20100101 Firefox/10.7.3",
+              "default": "Mozilla/5.0 (X11; Linux i686; rv:14.4) Gecko/20100101 Firefox/14.4.5",
+              "example": "Mozilla/5.0 (X11; Linux i686; rv:14.4) Gecko/20100101 Firefox/14.4.5",
               "type": "string"
             }
           },
@@ -2875,7 +2875,7 @@
             "in": "header",
             "description": "Timestamp header, in microseconds",
             "required": false,
-            "schema": { "default": 1688811457864, "example": 1688811457864, "type": "string" }
+            "schema": { "default": 1688970446837, "example": 1688970446837, "type": "string" }
           },
           {
             "name": "isActive",
@@ -3086,8 +3086,8 @@
             "description": "User agent header",
             "required": false,
             "schema": {
-              "default": "Mozilla/5.0 (compatible; MSIE 8.0; Windows NT 5.2; Trident/3.1; .NET CLR 3.3.63881.6)",
-              "example": "Mozilla/5.0 (compatible; MSIE 8.0; Windows NT 5.2; Trident/3.1; .NET CLR 3.3.63881.6)",
+              "default": "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 5.1; Trident/4.0)",
+              "example": "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 5.1; Trident/4.0)",
               "type": "string"
             }
           },
@@ -3103,14 +3103,14 @@
             "in": "header",
             "description": "Timestamp header, in microseconds",
             "required": false,
-            "schema": { "default": 1688811457868, "example": 1688811457868, "type": "string" }
+            "schema": { "default": 1688970446840, "example": 1688970446840, "type": "string" }
           },
           {
             "name": "apiKey",
             "required": true,
             "in": "path",
             "allowEmptyValue": false,
-            "example": "61c68f6c-8d3c-477c-a535-0da26d896bdf",
+            "example": "cc91ca7d-8f83-4ad4-9ea0-b37fd03bc166",
             "schema": { "type": "string" }
           }
         ],
@@ -3280,8 +3280,8 @@
             "description": "User agent header",
             "required": false,
             "schema": {
-              "default": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.5.1; rv:13.5) Gecko/20100101 Firefox/13.5.2",
-              "example": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.5.1; rv:13.5) Gecko/20100101 Firefox/13.5.2",
+              "default": "Mozilla/5.0 (Windows NT 6.2; WOW64; rv:15.5) Gecko/20100101 Firefox/15.5.4",
+              "example": "Mozilla/5.0 (Windows NT 6.2; WOW64; rv:15.5) Gecko/20100101 Firefox/15.5.4",
               "type": "string"
             }
           },
@@ -3297,14 +3297,14 @@
             "in": "header",
             "description": "Timestamp header, in microseconds",
             "required": false,
-            "schema": { "default": 1688811457869, "example": 1688811457869, "type": "string" }
+            "schema": { "default": 1688970446841, "example": 1688970446841, "type": "string" }
           },
           {
             "name": "apiKey",
             "required": true,
             "in": "path",
             "allowEmptyValue": false,
-            "example": "61c68f6c-8d3c-477c-a535-0da26d896bdf",
+            "example": "cc91ca7d-8f83-4ad4-9ea0-b37fd03bc166",
             "schema": { "type": "string" }
           }
         ],
@@ -3499,8 +3499,8 @@
             "description": "User agent header",
             "required": false,
             "schema": {
-              "default": "Mozilla/5.0 (Windows; U; Windows NT 5.1) AppleWebKit/535.2.1 (KHTML, like Gecko) Chrome/26.0.894.0 Safari/535.2.1",
-              "example": "Mozilla/5.0 (Windows; U; Windows NT 5.1) AppleWebKit/535.2.1 (KHTML, like Gecko) Chrome/26.0.894.0 Safari/535.2.1",
+              "default": "Mozilla/5.0 (X11; Linux x86_64; rv:10.5) Gecko/20100101 Firefox/10.5.1",
+              "example": "Mozilla/5.0 (X11; Linux x86_64; rv:10.5) Gecko/20100101 Firefox/10.5.1",
               "type": "string"
             }
           },
@@ -3516,14 +3516,14 @@
             "in": "header",
             "description": "Timestamp header, in microseconds",
             "required": false,
-            "schema": { "default": 1688811457870, "example": 1688811457870, "type": "string" }
+            "schema": { "default": 1688970446842, "example": 1688970446842, "type": "string" }
           },
           {
             "name": "apiKey",
             "required": true,
             "in": "path",
             "allowEmptyValue": false,
-            "example": "61c68f6c-8d3c-477c-a535-0da26d896bdf",
+            "example": "cc91ca7d-8f83-4ad4-9ea0-b37fd03bc166",
             "schema": { "type": "string" }
           }
         ],
@@ -3717,8 +3717,8 @@
             "description": "User agent header",
             "required": false,
             "schema": {
-              "default": "Mozilla/5.0 (Macintosh; U; PPC Mac OS X 10_10_7 rv:4.0; MO) AppleWebKit/536.0.1 (KHTML, like Gecko) Version/5.1.4 Safari/536.0.1",
-              "example": "Mozilla/5.0 (Macintosh; U; PPC Mac OS X 10_10_7 rv:4.0; MO) AppleWebKit/536.0.1 (KHTML, like Gecko) Version/5.1.4 Safari/536.0.1",
+              "default": "Mozilla/5.0 (Windows NT 5.3; WOW64; rv:11.9) Gecko/20100101 Firefox/11.9.8",
+              "example": "Mozilla/5.0 (Windows NT 5.3; WOW64; rv:11.9) Gecko/20100101 Firefox/11.9.8",
               "type": "string"
             }
           },
@@ -3734,14 +3734,14 @@
             "in": "header",
             "description": "Timestamp header, in microseconds",
             "required": false,
-            "schema": { "default": 1688811457871, "example": 1688811457871, "type": "string" }
+            "schema": { "default": 1688970446842, "example": 1688970446842, "type": "string" }
           },
           {
             "name": "apiKey",
             "required": true,
             "in": "path",
             "allowEmptyValue": false,
-            "example": "61c68f6c-8d3c-477c-a535-0da26d896bdf",
+            "example": "cc91ca7d-8f83-4ad4-9ea0-b37fd03bc166",
             "schema": { "type": "string" }
           }
         ],
@@ -3935,8 +3935,8 @@
             "description": "User agent header",
             "required": false,
             "schema": {
-              "default": "Mozilla/5.0 (X11; Linux x86_64 AppleWebKit/536.2.2 (KHTML, like Gecko) Chrome/33.0.820.0 Safari/536.2.2",
-              "example": "Mozilla/5.0 (X11; Linux x86_64 AppleWebKit/536.2.2 (KHTML, like Gecko) Chrome/33.0.820.0 Safari/536.2.2",
+              "default": "Mozilla/5.0 (Macintosh; PPC Mac OS X 10.10.6; rv:5.0) Gecko/20100101 Firefox/5.0.9",
+              "example": "Mozilla/5.0 (Macintosh; PPC Mac OS X 10.10.6; rv:5.0) Gecko/20100101 Firefox/5.0.9",
               "type": "string"
             }
           },
@@ -3952,7 +3952,7 @@
             "in": "header",
             "description": "Timestamp header, in microseconds",
             "required": false,
-            "schema": { "default": 1688811457871, "example": 1688811457871, "type": "string" }
+            "schema": { "default": 1688970446843, "example": 1688970446843, "type": "string" }
           }
         ],
         "requestBody": {
@@ -4127,8 +4127,8 @@
             "description": "User agent header",
             "required": false,
             "schema": {
-              "default": "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/4.1; .NET CLR 2.0.16196.5)",
-              "example": "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/4.1; .NET CLR 2.0.16196.5)",
+              "default": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.7.1; rv:13.6) Gecko/20100101 Firefox/13.6.6",
+              "example": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.7.1; rv:13.6) Gecko/20100101 Firefox/13.6.6",
               "type": "string"
             }
           },
@@ -4144,14 +4144,14 @@
             "in": "header",
             "description": "Timestamp header, in microseconds",
             "required": false,
-            "schema": { "default": 1688811457872, "example": 1688811457872, "type": "string" }
+            "schema": { "default": 1688970446843, "example": 1688970446843, "type": "string" }
           },
           {
             "name": "apiKey",
             "required": true,
             "in": "path",
             "allowEmptyValue": false,
-            "example": "61c68f6c-8d3c-477c-a535-0da26d896bdf",
+            "example": "cc91ca7d-8f83-4ad4-9ea0-b37fd03bc166",
             "schema": { "type": "string" }
           }
         ],
@@ -4320,8 +4320,8 @@
             "description": "User agent header",
             "required": false,
             "schema": {
-              "default": "Mozilla/5.0 (Windows NT 6.3; WOW64; rv:8.3) Gecko/20100101 Firefox/8.3.0",
-              "example": "Mozilla/5.0 (Windows NT 6.3; WOW64; rv:8.3) Gecko/20100101 Firefox/8.3.0",
+              "default": "Mozilla/5.0 (Windows NT 6.2; Trident/7.0; Touch; rv:11.0) like Gecko",
+              "example": "Mozilla/5.0 (Windows NT 6.2; Trident/7.0; Touch; rv:11.0) like Gecko",
               "type": "string"
             }
           },
@@ -4337,14 +4337,14 @@
             "in": "header",
             "description": "Timestamp header, in microseconds",
             "required": false,
-            "schema": { "default": 1688811457873, "example": 1688811457873, "type": "string" }
+            "schema": { "default": 1688970446844, "example": 1688970446844, "type": "string" }
           },
           {
             "name": "apiKey",
             "required": true,
             "in": "path",
             "allowEmptyValue": false,
-            "example": "61c68f6c-8d3c-477c-a535-0da26d896bdf",
+            "example": "cc91ca7d-8f83-4ad4-9ea0-b37fd03bc166",
             "schema": { "type": "string" }
           }
         ],
@@ -4559,8 +4559,8 @@
             "description": "User agent header",
             "required": false,
             "schema": {
-              "default": "Mozilla/5.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/7.0; .NET CLR 4.2.78783.3)",
-              "example": "Mozilla/5.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/7.0; .NET CLR 4.2.78783.3)",
+              "default": "Mozilla/5.0 (Windows; U; Windows NT 5.3) AppleWebKit/532.1.2 (KHTML, like Gecko) Chrome/29.0.896.0 Safari/532.1.2",
+              "example": "Mozilla/5.0 (Windows; U; Windows NT 5.3) AppleWebKit/532.1.2 (KHTML, like Gecko) Chrome/29.0.896.0 Safari/532.1.2",
               "type": "string"
             }
           },
@@ -4576,14 +4576,14 @@
             "in": "header",
             "description": "Timestamp header, in microseconds",
             "required": false,
-            "schema": { "default": 1688811457873, "example": 1688811457873, "type": "string" }
+            "schema": { "default": 1688970446845, "example": 1688970446845, "type": "string" }
           },
           {
             "name": "apiKey",
             "required": true,
             "in": "path",
             "allowEmptyValue": false,
-            "example": "61c68f6c-8d3c-477c-a535-0da26d896bdf",
+            "example": "cc91ca7d-8f83-4ad4-9ea0-b37fd03bc166",
             "schema": { "type": "string" }
           }
         ],
@@ -4777,6 +4777,7 @@
       "post": {
         "operationId": "UserAuthController_refresh",
         "summary": "modules.auth.user",
+        "description": "Api refresh jwt accessToken",
         "parameters": [
           {
             "name": "user-agent",
@@ -4784,8 +4785,8 @@
             "description": "User agent header",
             "required": false,
             "schema": {
-              "default": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_6 rv:3.0; KG) AppleWebKit/531.1.2 (KHTML, like Gecko) Version/5.1.2 Safari/531.1.2",
-              "example": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_6 rv:3.0; KG) AppleWebKit/531.1.2 (KHTML, like Gecko) Version/5.1.2 Safari/531.1.2",
+              "default": "Opera/11.98 (Windows NT 6.3; U; HR Presto/2.9.185 Version/12.00)",
+              "example": "Opera/11.98 (Windows NT 6.3; U; HR Presto/2.9.185 Version/12.00)",
               "type": "string"
             }
           },
@@ -4801,7 +4802,7 @@
             "in": "header",
             "description": "Timestamp header, in microseconds",
             "required": false,
-            "schema": { "default": 1688811457938, "example": 1688811457938, "type": "string" }
+            "schema": { "default": 1688970446925, "example": 1688970446925, "type": "string" }
           }
         ],
         "responses": {
@@ -4919,6 +4920,154 @@
         "tags": ["modules.auth.user"],
         "security": [{ "refreshToken": [] }, { "apiKey": [] }]
       }
+    },
+    "/api/v1/auth/user/info": {
+      "get": {
+        "operationId": "UserAuthController_info",
+        "summary": "modules.auth.user",
+        "description": "Api user serialization information",
+        "parameters": [
+          {
+            "name": "user-agent",
+            "in": "header",
+            "description": "User agent header",
+            "required": false,
+            "schema": {
+              "default": "Mozilla/5.0 (X11; Linux i686 AppleWebKit/537.1.2 (KHTML, like Gecko) Chrome/30.0.872.0 Safari/537.1.2",
+              "example": "Mozilla/5.0 (X11; Linux i686 AppleWebKit/537.1.2 (KHTML, like Gecko) Chrome/30.0.872.0 Safari/537.1.2",
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-custom-lang",
+            "in": "header",
+            "description": "Custom language header",
+            "required": false,
+            "schema": { "default": "en", "example": "en", "type": "string" }
+          },
+          {
+            "name": "x-timestamp",
+            "in": "header",
+            "description": "Timestamp header, in microseconds",
+            "required": false,
+            "schema": { "default": 1688970446925, "example": 1688970446925, "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [{ "$ref": "#/components/schemas/ResponseDefaultSerialization" }],
+                  "properties": {
+                    "message": { "example": "user.info" },
+                    "statusCode": { "type": "number", "example": 200 },
+                    "data": { "$ref": "#/components/schemas/UserInfoSerialization" }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "allOf": [{ "$ref": "#/components/schemas/ResponseDefaultSerialization" }],
+                      "properties": {
+                        "message": { "example": "auth.error.accessTokenUnauthorized" },
+                        "statusCode": { "type": "number", "example": 5000 }
+                      }
+                    },
+                    {
+                      "allOf": [{ "$ref": "#/components/schemas/ResponseDefaultSerialization" }],
+                      "properties": {
+                        "message": { "example": "apiKey.error.keyNeeded" },
+                        "statusCode": { "type": "number", "example": 5020 }
+                      }
+                    },
+                    {
+                      "allOf": [{ "$ref": "#/components/schemas/ResponseDefaultSerialization" }],
+                      "properties": {
+                        "message": { "example": "apiKey.error.notFound" },
+                        "statusCode": { "type": "number", "example": 5021 }
+                      }
+                    },
+                    {
+                      "allOf": [{ "$ref": "#/components/schemas/ResponseDefaultSerialization" }],
+                      "properties": {
+                        "message": { "example": "apiKey.error.notActiveYet" },
+                        "statusCode": { "type": "number", "example": 5023 }
+                      }
+                    },
+                    {
+                      "allOf": [{ "$ref": "#/components/schemas/ResponseDefaultSerialization" }],
+                      "properties": {
+                        "message": { "example": "apiKey.error.expired" },
+                        "statusCode": { "type": "number", "example": 5024 }
+                      }
+                    },
+                    {
+                      "allOf": [{ "$ref": "#/components/schemas/ResponseDefaultSerialization" }],
+                      "properties": {
+                        "message": { "example": "apiKey.error.invalid" },
+                        "statusCode": { "type": "number", "example": 5025 }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [{ "$ref": "#/components/schemas/ResponseDefaultSerialization" }],
+                  "properties": {
+                    "message": { "example": "http.serverError.requestTimeout" },
+                    "statusCode": { "type": "number", "example": 5052 }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [{ "$ref": "#/components/schemas/ResponseDefaultSerialization" }],
+                  "properties": {
+                    "message": { "example": "http.serverError.internalServerError" },
+                    "statusCode": { "type": "number", "example": 5050 }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [{ "$ref": "#/components/schemas/ResponseDefaultSerialization" }],
+                  "properties": {
+                    "message": { "example": "http.serverError.serviceUnavailable" },
+                    "statusCode": { "type": "number", "example": 5051 }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["modules.auth.user"],
+        "security": [{ "accessToken": [] }, { "apiKey": [] }]
+      }
     }
   },
   "info": {
@@ -4990,9 +5139,9 @@
           "date": {
             "format": "date-time",
             "type": "string",
-            "example": "2023-07-08T07:36:48.481Z"
+            "example": "2023-07-09T16:16:24.364Z"
           },
-          "format": { "type": "string", "example": "2023-07-08T07:15:36.570Z" },
+          "format": { "type": "string", "example": "2023-07-09T18:42:30.659Z" },
           "timestamp": { "type": "number", "example": 1660190937231 }
         },
         "required": ["userAgent", "date", "format", "timestamp"]
@@ -5020,13 +5169,13 @@
           },
           "accessToken": {
             "type": "string",
-            "example": "GRBGujmxtq6qm9KPwl7feNF9Mrn9so",
+            "example": "GvWeXlkuzUMkt9aZkPbEUnRC9KivEG",
             "description": "Will be valid JWT Encode string",
             "nullable": false
           },
           "refreshToken": {
             "type": "string",
-            "example": "tObBCAk5jC8QF5HrjGRruJtByoxfeZ",
+            "example": "qMjV1WLBIjf0B8x6LpniOMp81Oby7g",
             "description": "Will be valid JWT Encode string",
             "nullable": false
           }
@@ -5036,11 +5185,11 @@
       "UserLoginDto": {
         "type": "object",
         "properties": {
-          "email": { "type": "string", "example": "Lyric_Schiller98@hotmail.com" },
+          "email": { "type": "string", "example": "Sterling.Bailey31@gmail.com" },
           "password": {
             "type": "string",
             "description": "string password",
-            "example": "r0qwpEF2BJ@@!123"
+            "example": "csioxSIISK@@!123"
           }
         },
         "required": ["email", "password"]
@@ -5048,15 +5197,15 @@
       "UserSignUpDto": {
         "type": "object",
         "properties": {
-          "email": { "type": "string", "example": "Lyric_Schiller98@hotmail.com" },
-          "firstName": { "type": "string", "example": "Abigale" },
-          "userName": { "type": "string", "example": "Kennedy" },
-          "lastName": { "type": "string", "example": "Schamberger" },
-          "mobileNumber": { "type": "string", "example": "62812127539787" },
+          "email": { "type": "string", "example": "Sterling.Bailey31@gmail.com" },
+          "firstName": { "type": "string", "example": "Edison" },
+          "userName": { "type": "string", "example": "Kyle" },
+          "lastName": { "type": "string", "example": "Goldner" },
+          "mobileNumber": { "type": "string", "example": "62812825689549" },
           "password": {
             "type": "string",
             "description": "string password",
-            "example": "r0qwpEF2BJ@@!123"
+            "example": "csioxSIISK@@!123"
           }
         },
         "required": ["email", "firstName", "lastName", "mobileNumber", "password"]
@@ -5094,7 +5243,7 @@
               "version": "1",
               "repoVersion": "1.0.0",
               "pagination": {
-                "search": "Leonie",
+                "search": "Sarai",
                 "page": 1,
                 "perPage": 20,
                 "orderBy": "createdAt",
@@ -5128,13 +5277,13 @@
           "name": {
             "type": "string",
             "description": "Name of role",
-            "example": "Direct Directives Facilitator",
+            "example": "Product Markets Facilitator",
             "nullable": false
           },
           "description": {
             "type": "string",
             "description": "Description of role",
-            "example": "Ipsam quia mollitia.",
+            "example": "Harum consequatur laboriosam.",
             "nullable": true
           },
           "isActive": {
@@ -5153,14 +5302,14 @@
             "format": "date-time",
             "type": "string",
             "description": "Date created at",
-            "example": "2023-07-08T03:29:29.305Z",
+            "example": "2023-07-09T14:30:28.993Z",
             "nullable": false
           },
           "updatedAt": {
             "format": "date-time",
             "type": "string",
             "description": "Date updated at",
-            "example": "2023-07-07T14:30:25.526Z",
+            "example": "2023-07-09T13:00:28.066Z",
             "nullable": false
           },
           "permissions": { "type": "number", "description": "count of permissions" }
@@ -5175,14 +5324,14 @@
             "nullable": false,
             "description": "Permission subject",
             "enum": ["API_KEY", "SETTING", "ROLE", "USER"],
-            "example": "API_KEY"
+            "example": "SETTING"
           },
           "action": {
             "type": "array",
             "nullable": false,
             "description": "Permission action base on subject",
             "default": ["manage", "read", "create", "update", "delete", "export", "import"],
-            "example": ["read", "manage", "delete", "export", "create"],
+            "example": ["read"],
             "items": {
               "type": "string",
               "enum": ["manage", "read", "create", "update", "delete", "export", "import"]
@@ -5203,13 +5352,13 @@
           "name": {
             "type": "string",
             "description": "Name of role",
-            "example": "Direct Directives Facilitator",
+            "example": "Product Markets Facilitator",
             "nullable": false
           },
           "description": {
             "type": "string",
             "description": "Description of role",
-            "example": "Ipsam quia mollitia.",
+            "example": "Harum consequatur laboriosam.",
             "nullable": true
           },
           "isActive": {
@@ -5226,21 +5375,21 @@
           },
           "permissions": {
             "nullable": false,
-            "example": [{ "subject": "USER", "action": ["read", "create", "import"] }],
+            "example": [{ "subject": "USER", "action": ["delete", "update"] }],
             "allOf": [{ "$ref": "#/components/schemas/RoleGetPermissionSerialization" }]
           },
           "createdAt": {
             "format": "date-time",
             "type": "string",
             "description": "Date created at",
-            "example": "2023-07-08T03:29:29.305Z",
+            "example": "2023-07-09T14:30:28.993Z",
             "nullable": false
           },
           "updatedAt": {
             "format": "date-time",
             "type": "string",
             "description": "Date updated at",
-            "example": "2023-07-07T14:30:25.526Z",
+            "example": "2023-07-09T13:00:28.066Z",
             "nullable": false
           }
         },
@@ -5265,13 +5414,13 @@
             "type": "string",
             "description": "Permission subject",
             "enum": ["API_KEY", "SETTING", "ROLE", "USER"],
-            "example": "SETTING"
+            "example": "USER"
           },
           "action": {
             "type": "array",
             "description": "Permission action base on subject",
             "default": [],
-            "example": ["import", "manage"],
+            "example": ["manage", "read", "update", "delete", "import", "create"],
             "items": {
               "type": "string",
               "enum": ["manage", "read", "create", "update", "delete", "export", "import"]
@@ -5286,13 +5435,13 @@
           "description": {
             "type": "string",
             "description": "Description of role",
-            "example": "Reiciendis reiciendis sunt.",
+            "example": "Incidunt nostrum atque magni occaecati distinctio quod rerum nesciunt veniam.",
             "nullable": true
           },
           "name": {
             "type": "string",
             "description": "Name of role",
-            "example": "Global Implementation Designer"
+            "example": "Legacy Identity Technician"
           },
           "type": {
             "type": "string",
@@ -5302,12 +5451,7 @@
           "permissions": {
             "description": "Permission list of role",
             "default": [],
-            "example": [
-              {
-                "subject": "ROLE",
-                "action": ["update", "read", "export", "manage", "delete", "import"]
-              }
-            ],
+            "example": [{ "subject": "USER", "action": ["import", "update"] }],
             "type": "array",
             "items": { "$ref": "#/components/schemas/RolePermissionsDto" }
           }
@@ -5326,13 +5470,13 @@
           "name": {
             "type": "string",
             "description": "Name of role",
-            "example": "Direct Directives Facilitator",
+            "example": "Product Markets Facilitator",
             "nullable": false
           },
           "description": {
             "type": "string",
             "description": "Description of role",
-            "example": "Ipsam quia mollitia.",
+            "example": "Harum consequatur laboriosam.",
             "nullable": true
           },
           "isActive": {
@@ -5349,7 +5493,7 @@
           },
           "permissions": {
             "nullable": false,
-            "example": [{ "subject": "USER", "action": ["read", "create", "import"] }],
+            "example": [{ "subject": "USER", "action": ["delete", "update"] }],
             "allOf": [{ "$ref": "#/components/schemas/RoleGetPermissionSerialization" }]
           }
         },
@@ -5361,13 +5505,13 @@
           "description": {
             "type": "string",
             "description": "Description of role",
-            "example": "Reiciendis reiciendis sunt.",
+            "example": "Incidunt nostrum atque magni occaecati distinctio quod rerum nesciunt veniam.",
             "nullable": true
           },
           "name": {
             "type": "string",
             "description": "Name of role",
-            "example": "Global Implementation Designer"
+            "example": "Legacy Identity Technician"
           },
           "type": {
             "type": "string",
@@ -5377,19 +5521,14 @@
           "permissions": {
             "description": "Permission list of role",
             "default": [],
-            "example": [
-              {
-                "subject": "ROLE",
-                "action": ["update", "read", "export", "manage", "delete", "import"]
-              }
-            ],
+            "example": [{ "subject": "USER", "action": ["import", "update"] }],
             "type": "array",
             "items": { "$ref": "#/components/schemas/RolePermissionsDto" }
           },
           "isActive": {
             "type": "boolean",
             "description": "Role active",
-            "example": false,
+            "example": true,
             "nullable": false
           }
         }
@@ -5411,7 +5550,7 @@
           },
           "permissions": {
             "nullable": false,
-            "example": [{ "subject": "USER", "action": ["read", "create", "import"] }],
+            "example": [{ "subject": "USER", "action": ["delete", "update"] }],
             "allOf": [{ "$ref": "#/components/schemas/RoleGetPermissionSerialization" }]
           }
         },
@@ -5428,12 +5567,7 @@
           "permissions": {
             "description": "Permission list of role",
             "default": [],
-            "example": [
-              {
-                "subject": "ROLE",
-                "action": ["update", "read", "export", "manage", "delete", "import"]
-              }
-            ],
+            "example": [{ "subject": "USER", "action": ["import", "update"] }],
             "type": "array",
             "items": { "$ref": "#/components/schemas/RolePermissionsDto" }
           }
@@ -5488,7 +5622,7 @@
           "name": {
             "type": "string",
             "description": "Alias name of api key",
-            "example": "Internal Functionality Developer",
+            "example": "Future Communications Executive",
             "nullable": false
           },
           "type": {
@@ -5500,7 +5634,7 @@
           "key": {
             "type": "string",
             "description": "Unique key of api key",
-            "example": "olBCfILpiwSOwfZ",
+            "example": "kLeeqmkKgoGomOO",
             "nullable": false
           },
           "isActive": {
@@ -5513,28 +5647,28 @@
             "format": "date-time",
             "type": "string",
             "description": "Api Key start date",
-            "example": "2022-10-30T00:36:08.675Z",
+            "example": "2023-06-04T18:55:21.898Z",
             "nullable": true
           },
           "endDate": {
             "format": "date-time",
             "type": "string",
             "description": "Api Key end date",
-            "example": "2024-03-25T08:25:49.571Z",
+            "example": "2024-01-15T09:08:04.939Z",
             "nullable": true
           },
           "createdAt": {
             "format": "date-time",
             "type": "string",
             "description": "Date created at",
-            "example": "2023-07-07T23:29:33.610Z",
+            "example": "2023-07-10T00:22:03.372Z",
             "nullable": false
           },
           "updatedAt": {
             "format": "date-time",
             "type": "string",
             "description": "Date updated at",
-            "example": "2023-07-08T09:06:43.909Z",
+            "example": "2023-07-09T20:48:22.490Z",
             "nullable": false
           }
         },
@@ -5552,7 +5686,7 @@
           "name": {
             "type": "string",
             "description": "Alias name of api key",
-            "example": "Internal Functionality Developer",
+            "example": "Future Communications Executive",
             "nullable": false
           },
           "type": {
@@ -5564,7 +5698,7 @@
           "key": {
             "type": "string",
             "description": "Unique key of api key",
-            "example": "olBCfILpiwSOwfZ",
+            "example": "kLeeqmkKgoGomOO",
             "nullable": false
           },
           "isActive": {
@@ -5577,28 +5711,28 @@
             "format": "date-time",
             "type": "string",
             "description": "Api Key start date",
-            "example": "2022-10-30T00:36:08.675Z",
+            "example": "2023-06-04T18:55:21.898Z",
             "nullable": true
           },
           "endDate": {
             "format": "date-time",
             "type": "string",
             "description": "Api Key end date",
-            "example": "2024-03-25T08:25:49.571Z",
+            "example": "2024-01-15T09:08:04.939Z",
             "nullable": true
           },
           "createdAt": {
             "format": "date-time",
             "type": "string",
             "description": "Date created at",
-            "example": "2023-07-07T23:29:33.610Z",
+            "example": "2023-07-10T00:22:03.372Z",
             "nullable": false
           },
           "updatedAt": {
             "format": "date-time",
             "type": "string",
             "description": "Date updated at",
-            "example": "2023-07-08T09:06:43.909Z",
+            "example": "2023-07-09T20:48:22.490Z",
             "nullable": false
           }
         },
@@ -5616,13 +5750,13 @@
           "key": {
             "type": "string",
             "description": "Unique key of api key",
-            "example": "olBCfILpiwSOwfZ",
+            "example": "kLeeqmkKgoGomOO",
             "nullable": false
           },
           "secret": {
             "type": "string",
             "description": "Secret key of ApiKey, only show at once",
-            "example": "IKaukVzjp8P92IAmZaSP"
+            "example": "mtcmxka1mJhonfeIoDYe"
           }
         },
         "required": ["_id", "key", "secret"]
@@ -5639,13 +5773,13 @@
           "key": {
             "type": "string",
             "description": "Unique key of api key",
-            "example": "olBCfILpiwSOwfZ",
+            "example": "kLeeqmkKgoGomOO",
             "nullable": false
           },
           "secret": {
             "type": "string",
             "description": "Secret key of ApiKey, only show at once",
-            "example": "IKaukVzjp8P92IAmZaSP"
+            "example": "mtcmxka1mJhonfeIoDYe"
           }
         },
         "required": ["_id", "key", "secret"]
@@ -5657,14 +5791,14 @@
             "format": "date-time",
             "type": "string",
             "description": "Api Key start date",
-            "example": "2023-07-07T18:45:00.839Z",
+            "example": "2023-07-10T01:02:29.512Z",
             "nullable": true
           },
           "endDate": {
             "format": "date-time",
             "type": "string",
             "description": "Api Key end date",
-            "example": "2024-05-25T20:15:52.183Z",
+            "example": "2024-01-13T08:52:46.774Z",
             "nullable": true
           },
           "name": { "type": "string", "description": "Api Key name", "example": "testapiname" },
@@ -5691,14 +5825,14 @@
             "format": "date-time",
             "type": "string",
             "description": "Api Key start date",
-            "example": "2023-07-07T18:45:00.839Z",
+            "example": "2023-07-10T01:02:29.512Z",
             "nullable": true
           },
           "endDate": {
             "format": "date-time",
             "type": "string",
             "description": "Api Key end date",
-            "example": "2024-05-25T20:15:52.183Z",
+            "example": "2024-01-13T08:52:46.774Z",
             "nullable": true
           }
         }
@@ -5715,18 +5849,65 @@
           },
           "accessToken": {
             "type": "string",
-            "example": "GRBGujmxtq6qm9KPwl7feNF9Mrn9so",
+            "example": "GvWeXlkuzUMkt9aZkPbEUnRC9KivEG",
             "description": "Will be valid JWT Encode string",
             "nullable": false
           },
           "refreshToken": {
             "type": "string",
-            "example": "tObBCAk5jC8QF5HrjGRruJtByoxfeZ",
+            "example": "qMjV1WLBIjf0B8x6LpniOMp81Oby7g",
             "description": "Will be valid JWT Encode string",
             "nullable": false
           }
         },
         "required": ["tokenType", "expiresIn", "accessToken", "refreshToken"]
+      },
+      "UserPayloadPermissionSerialization": {
+        "type": "object",
+        "properties": {
+          "subject": {
+            "type": "string",
+            "nullable": false,
+            "enum": ["API_KEY", "SETTING", "ROLE", "USER"],
+            "example": "ROLE"
+          },
+          "action": { "type": "string", "nullable": false, "example": "1,3" }
+        },
+        "required": ["subject", "action"]
+      },
+      "UserInfoSerialization": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "Id that representative with your target data",
+            "example": "631d9f32a65cf07250b8938c",
+            "nullable": false
+          },
+          "username": { "type": "string", "example": "Brandt.Denesik", "nullable": true },
+          "email": { "type": "string", "nullable": false, "example": "Elbert95@yahoo.com" },
+          "mobileNumber": { "type": "string", "nullable": true, "example": "0866227060" },
+          "firstName": { "type": "string", "nullable": false, "example": "Kevin" },
+          "lastName": { "type": "string", "nullable": false, "example": "Rodriguez" },
+          "role": {
+            "type": "string",
+            "example": "5c7f5e45-2697-40c5-8cb6-7ab012ac4d8c",
+            "nullable": false
+          },
+          "type": {
+            "type": "string",
+            "example": "ADMIN",
+            "enum": ["SUPER_ADMIN", "USER", "ADMIN"],
+            "nullable": false
+          },
+          "permissions": {
+            "nullable": false,
+            "example": [{ "subject": "ROLE", "acton": "1,3" }],
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/UserPayloadPermissionSerialization" }
+          }
+        },
+        "required": ["_id", "email", "firstName", "lastName", "role", "type", "permissions"]
       }
     }
   }

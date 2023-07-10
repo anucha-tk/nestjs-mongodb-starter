@@ -31,7 +31,7 @@ export class UserGetSerialization extends ResponseIdSerialization {
   @ApiProperty({
     nullable: true,
     required: false,
-    example: faker.internet.email(),
+    example: faker.phone.number("##########"),
   })
   readonly mobileNumber?: string;
 

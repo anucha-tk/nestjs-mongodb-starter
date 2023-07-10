@@ -1,4 +1,4 @@
-import { Controller, ForbiddenException, HttpCode, HttpStatus, Post } from "@nestjs/common";
+import { Controller, ForbiddenException, Get, HttpCode, HttpStatus, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { AuthService } from "src/common/auth/services/auth.service";
 import { UserService } from "../services/user.service";
@@ -10,12 +10,16 @@ import { IResponse } from "src/common/response/interfaces/response.interface";
 import { IUserDoc } from "../interfaces/user.interface";
 import { UserDoc } from "../repository/entities/user.entity";
 import {
+  AuthJwtAccessProtected,
+  AuthJwtPayload,
   AuthJwtRefreshProtected,
   AuthJwtToken,
 } from "src/common/auth/decorators/auth.jwt.decorator";
 import { ApiKeyPublicProtected } from "src/common/api-key/decorators/api-key.decorator";
-import { UserAuthRefreshDoc } from "../docs/user.auth.doc";
+import { UserAuthInfoDoc, UserAuthRefreshDoc } from "../docs/user.auth.doc";
 import { UserAuthProtected, UserProtected } from "../decorators/user.decorator";
+import { UserPayloadSerialization } from "../serializations/user.payload.serialization";
+import { UserInfoSerialization } from "../serializations/user.info.serialization";
 
 @ApiKeyPublicProtected()
 @ApiTags("modules.auth.user")
@@ -71,4 +75,18 @@ export class UserAuthController {
       },
     };
   }
+
+  // TODO: Change password
+
+  @UserAuthInfoDoc()
+  @Response("user.info", { serialization: UserInfoSerialization })
+  @AuthJwtAccessProtected()
+  @Get("/info")
+  async info(@AuthJwtPayload() user: UserPayloadSerialization): Promise<IResponse> {
+    return { data: user };
+  }
+  // TODO: Profile
+  // TODO: Update Profile
+  // TODO: Claim Username
+  // TODO: Upload
 }

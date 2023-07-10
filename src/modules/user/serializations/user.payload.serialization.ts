@@ -1,7 +1,10 @@
 import { faker } from "@faker-js/faker";
 import { ApiHideProperty, ApiProperty, OmitType } from "@nestjs/swagger";
 import { Exclude, Expose, Transform } from "class-transformer";
-import { ENUM_POLICY_REQUEST_ACTION } from "src/common/policy/constants/policy.enum.constant";
+import {
+  ENUM_POLICY_REQUEST_ACTION,
+  ENUM_POLICY_SUBJECT,
+} from "src/common/policy/constants/policy.enum.constant";
 import { IPolicyRule } from "src/common/policy/interfaces/policy.interface";
 import { ENUM_ROLE_TYPE } from "src/modules/role/constants/role.enum.constant";
 import { ENUM_USER_SIGN_UP_FROM } from "../constants/user.enum.constant";
@@ -13,6 +16,7 @@ export class UserPayloadSerialization extends OmitType(UserProfileSerialization,
   "signUpDate",
   "createdAt",
   "updatedAt",
+  "signUpFrom",
 ] as const) {
   @ApiProperty({
     example: faker.string.uuid(),
@@ -40,6 +44,12 @@ export class UserPayloadSerialization extends OmitType(UserProfileSerialization,
     isArray: true,
     required: true,
     nullable: false,
+    example: [
+      {
+        subject: faker.helpers.arrayElement(Object.values(ENUM_POLICY_SUBJECT)),
+        acton: "1,3",
+      },
+    ],
   })
   @Transform(({ obj }) => {
     return obj.role.permissions.map(({ action, subject }: IPolicyRule) => {
