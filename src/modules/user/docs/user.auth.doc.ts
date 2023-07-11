@@ -8,7 +8,6 @@ import {
   DocResponse,
 } from "src/common/doc/decorators/doc.decorator";
 import { ENUM_USER_STATUS_CODE_ERROR } from "../constants/user.status-code.constant";
-import { UserUpdateNameDto } from "../dtos/user.update-name.dto";
 import { UserInfoSerialization } from "../serializations/user.info.serialization";
 import { UserProfileSerialization } from "../serializations/user.profile.serialization";
 import { UserRefreshSerialization } from "../serializations/user.refresh.serialization";

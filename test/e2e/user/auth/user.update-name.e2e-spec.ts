@@ -13,7 +13,6 @@ import { ENUM_API_KEY_STATUS_CODE_ERROR } from "src/common/api-key/constants/api
 import { ApiKeyService } from "src/common/api-key/services/api-key.service";
 import { ENUM_REQUEST_STATUS_CODE_ERROR } from "src/common/request/constants/request.status-code.constant";
 import { faker } from "@faker-js/faker";
-import { ConfigService } from "@nestjs/config";
 
 describe("user update-name e2e", () => {
   const USER_UPDATE_NAME_URL = "/auth/user/update-name";
@@ -21,7 +20,6 @@ describe("user update-name e2e", () => {
   let userService: UserService;
   let roleService: RoleService;
   let apiKeyService: ApiKeyService;
-  let configService: ConfigService;
   let user: UserDoc;
   let xApiKey: string;
   let userAccessToken: string;
@@ -35,7 +33,6 @@ describe("user update-name e2e", () => {
     userService = modRef.get<UserService>(UserService);
     roleService = modRef.get<RoleService>(RoleService);
     apiKeyService = modRef.get<ApiKeyService>(ApiKeyService);
-    configService = modRef.get<ConfigService>(ConfigService);
     await app.init();
 
     // create userRole
