@@ -10,7 +10,7 @@
     "<rootDir>/test/e2e/language/*.e2e-spec.ts",
     "<rootDir>/test/e2e/role/*.e2e-spec.ts",
     "<rootDir>/test/e2e/user/**/*.e2e-spec.ts",
-    "<rootDir>/test/e2e/api-key/*.e2e-spec.ts"
+    "<rootDir>/test/e2e/api-key/**/*.e2e-spec.ts"
   ],
   "collectCoverage": true,
   "coverageDirectory": "coverage-e2e",

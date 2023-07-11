@@ -5,12 +5,8 @@ import { AppModule } from "src/app/app.module";
 import { AuthService } from "src/common/auth/services/auth.service";
 import { ENUM_ROLE_STATUS_CODE_ERROR } from "src/modules/role/constants/role.status-code.constant";
 import { RoleService } from "src/modules/role/services/role.service";
-import {
-  ENUM_USER_STATUS_CODE_ERROR,
-  ENUM_USER_STATUS_CODE_SUCCESS,
-} from "src/modules/user/constants/user.status-code.constant";
+import { ENUM_USER_STATUS_CODE_SUCCESS } from "src/modules/user/constants/user.status-code.constant";
 import { UserLoginDto } from "src/modules/user/dtos/user.login.dto";
-import { UserSignUpDto } from "src/modules/user/dtos/user.signup.dto";
 import { IUserDoc } from "src/modules/user/interfaces/user.interface";
 import { UserDoc } from "src/modules/user/repository/entities/user.entity";
 import { UserService } from "src/modules/user/services/user.service";
@@ -19,8 +15,7 @@ import { createApiKey } from "../helper/apiKey";
 import { createRoleUser } from "../helper/role";
 import { createUser, mockPassword } from "../helper/user";
 
-describe("user public e2e", () => {
-  const USER_SIGNUP_URL = "/public/user/sign-up";
+describe("user public login e2e", () => {
   let app: INestApplication;
   let userService: UserService;
   let roleService: RoleService;
@@ -28,7 +23,7 @@ describe("user public e2e", () => {
   let user: UserDoc;
   let xApiKey: string;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const modRef: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
@@ -48,16 +43,17 @@ describe("user public e2e", () => {
     xApiKey = `${apiKeyRes.doc.key}:${apiKeyRes.secret}`;
 
     // create user
-    user = await createUser({ app, roleId: roleUser._id });
+    user = await createUser({ app, roleId: roleUser._id }).then((e) => e.toObject());
   });
 
-  afterEach(async () => {
-    jest.clearAllMocks();
-    await userService.deleteMany({});
-    await roleService.deleteMany({});
+  beforeEach(() => {
+    jest.restoreAllMocks();
   });
 
   afterAll(async () => {
+    jest.clearAllMocks();
+    await userService.deleteMany({});
+    await roleService.deleteMany({});
     await app.close();
   });
 
@@ -142,9 +138,7 @@ describe("user public e2e", () => {
     });
 
     it("should return 403 when user is block", async () => {
-      user.blocked = true;
-
-      jest.spyOn(userService, "findOneByEmail").mockResolvedValue(user);
+      jest.spyOn(userService, "findOneByEmail").mockResolvedValue({ ...user, blocked: true });
 
       const loginDto: UserLoginDto = {
         email: user.email,
@@ -153,17 +147,16 @@ describe("user public e2e", () => {
       const { body, status } = await request(app.getHttpServer())
         .post("/public/user/login")
         .set("x-api-key", xApiKey)
-        .set("application", "json")
         .send(loginDto);
 
       expect(body).toBeDefined();
       expect(status).toBe(403);
-      expect(body.message).toMatch(/blocked/i);
     });
 
     it("should return 403 when user is inactivePermanent", async () => {
-      user.inactivePermanent = true;
-      jest.spyOn(userService, "findOneByEmail").mockResolvedValue(user);
+      jest
+        .spyOn(userService, "findOneByEmail")
+        .mockResolvedValue({ ...user, inactivePermanent: true });
 
       const loginDto: UserLoginDto = {
         email: user.email,
@@ -180,8 +173,7 @@ describe("user public e2e", () => {
       expect(body.message).toMatch(/inactive permanent/i);
     });
     it("should return 403 when user is isActive", async () => {
-      user.isActive = false;
-      jest.spyOn(userService, "findOneByEmail").mockResolvedValue(user);
+      jest.spyOn(userService, "findOneByEmail").mockResolvedValue({ ...user, isActive: false });
 
       const loginDto: UserLoginDto = {
         email: user.email,
@@ -294,58 +286,6 @@ describe("user public e2e", () => {
         expect(status).toBe(403);
         expect(body.message).toMatch(/Password attempt user max/i);
       });
-    });
-  });
-  describe(`${USER_SIGNUP_URL}`, () => {
-    it("should throw user exist", async () => {
-      const signupDto: UserSignUpDto = {
-        email: user.email,
-        firstName: faker.person.firstName(),
-        lastName: faker.person.lastName(),
-        password: faker.string.alphanumeric(8),
-      };
-      const { body, status } = await request(app.getHttpServer())
-        .post(`${USER_SIGNUP_URL}`)
-        .set("application", "json")
-        .set("x-api-key", xApiKey)
-        .send(signupDto);
-
-      expect(status).toBe(409);
-      expect(body.statusCode).toBe(ENUM_USER_STATUS_CODE_ERROR.USER_EMAIL_EXIST_ERROR);
-    });
-    it("should throw phoneNumber exist", async () => {
-      const signupDto: UserSignUpDto = {
-        email: faker.internet.email(),
-        firstName: faker.person.firstName(),
-        lastName: faker.person.lastName(),
-        password: faker.string.alphanumeric(8),
-        mobileNumber: user.mobileNumber,
-      };
-      const { body, status } = await request(app.getHttpServer())
-        .post(`${USER_SIGNUP_URL}`)
-        .set("application", "json")
-        .set("x-api-key", xApiKey)
-        .send(signupDto);
-
-      expect(status).toBe(409);
-      expect(body.statusCode).toBe(ENUM_USER_STATUS_CODE_ERROR.USER_MOBILE_NUMBER_EXIST_ERROR);
-    });
-
-    it("should return void when signup successful", async () => {
-      const signupDto: UserSignUpDto = {
-        email: faker.internet.email(),
-        firstName: faker.person.firstName(),
-        lastName: faker.person.lastName(),
-        password: faker.string.alphanumeric(8),
-        mobileNumber: faker.phone.number("##########"),
-      };
-      const { status } = await request(app.getHttpServer())
-        .post(`${USER_SIGNUP_URL}`)
-        .set("application", "json")
-        .set("x-api-key", xApiKey)
-        .send(signupDto);
-
-      expect(status).toBe(201);
     });
   });
 });

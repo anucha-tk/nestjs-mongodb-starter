@@ -24,7 +24,7 @@ describe("user update-name e2e", () => {
   let xApiKey: string;
   let userAccessToken: string;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const modRef: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
@@ -53,14 +53,11 @@ describe("user update-name e2e", () => {
     userAccessToken = userRes.body.data.accessToken;
   });
 
-  afterEach(async () => {
+  afterAll(async () => {
     jest.clearAllMocks();
     await userService.deleteMany({});
     await roleService.deleteMany({});
     await apiKeyService.deleteMany({});
-  });
-
-  afterAll(async () => {
     await app.close();
   });
 

@@ -28,7 +28,7 @@ describe("user change password e2e", () => {
   let xApiKey: string;
   let userAccessToken: string;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const modRef: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
@@ -58,7 +58,11 @@ describe("user change password e2e", () => {
     userAccessToken = userRes.body.data.accessToken;
   });
 
-  afterEach(async () => {
+  beforeEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  afterAll(async () => {
     jest.clearAllMocks();
     await userService.deleteMany({});
     await roleService.deleteMany({});
@@ -101,136 +105,115 @@ describe("user change password e2e", () => {
     });
     describe("password attempt true", () => {
       it("should return 403 when first attempt is maxAttempt password", async () => {
-        const isAttempt = configService.get("auth.password.attempt");
-        const maxAttempt = configService.get("auth.password.maxAttempt");
-        if (isAttempt) {
-          jest.spyOn(userService, "findOneById").mockResolvedValue({
-            _id: faker.string.uuid(),
-            passwordAttempt: maxAttempt,
-          });
-          const { status, body } = await request(app.getHttpServer())
-            .patch(USER_CHANGE_PASSWORD_URL)
-            .set("x-api-key", xApiKey)
-            .set("Authorization", `Bearer ${userAccessToken}`)
-            .send({ newPassword: "abc123", oldPassword: "xyz123" } as UserChangePasswordDto);
-
-          expect(status).toBe(403);
-          expect(body.statusCode).toBe(ENUM_USER_STATUS_CODE_ERROR.USER_PASSWORD_ATTEMPT_MAX_ERROR);
-        }
-      });
-      it("should return 403 when try oldPassword not match and maxAttempt", async () => {
-        const isAttempt = configService.get("auth.password.attempt");
-        const maxAttempt = configService.get("auth.password.maxAttempt");
-        if (isAttempt) {
-          let attempt = 0;
-          while (attempt < maxAttempt) {
-            const { status, body } = await request(app.getHttpServer())
-              .patch(USER_CHANGE_PASSWORD_URL)
-              .set("x-api-key", xApiKey)
-              .set("Authorization", `Bearer ${userAccessToken}`)
-              .send({ newPassword: "abc123", oldPassword: "xyz123" } as UserChangePasswordDto);
-            attempt++;
-            expect(status).toBe(400);
-            expect(body.statusCode).toBe(ENUM_USER_STATUS_CODE_ERROR.USER_PASSWORD_NOT_MATCH_ERROR);
+        jest.spyOn(configService, "get").mockImplementation((path: string) => {
+          switch (path) {
+            case "auth.password.attempt":
+              return true;
+            case "auth.password.maxAttempt":
+              return 5;
           }
-          const { status, body } = await request(app.getHttpServer())
-            .patch(USER_CHANGE_PASSWORD_URL)
-            .set("x-api-key", xApiKey)
-            .set("Authorization", `Bearer ${userAccessToken}`)
-            .send({ newPassword: "abc123", oldPassword: "xyz123" } as UserChangePasswordDto);
-
-          expect(status).toBe(403);
-          expect(body.statusCode).toBe(ENUM_USER_STATUS_CODE_ERROR.USER_PASSWORD_ATTEMPT_MAX_ERROR);
-        }
-      });
-    });
-    it("should return 400 when old password not match", async () => {
-      const { status, body } = await request(app.getHttpServer())
-        .patch(USER_CHANGE_PASSWORD_URL)
-        .set("x-api-key", xApiKey)
-        .set("Authorization", `Bearer ${userAccessToken}`)
-        .send({ newPassword: "abc123", oldPassword: "xyz123" } as UserChangePasswordDto);
-
-      expect(status).toBe(400);
-      expect(body.statusCode).toBe(ENUM_USER_STATUS_CODE_ERROR.USER_PASSWORD_NOT_MATCH_ERROR);
-    });
-  });
-  it("should return 400 when newPassword is same oldPassword", async () => {
-    const { status, body } = await request(app.getHttpServer())
-      .patch(USER_CHANGE_PASSWORD_URL)
-      .set("x-api-key", xApiKey)
-      .set("Authorization", `Bearer ${userAccessToken}`)
-      .send({ newPassword: mockPassword, oldPassword: mockPassword } as UserChangePasswordDto);
-
-    expect(status).toBe(400);
-    expect(body.statusCode).toBe(
-      ENUM_USER_STATUS_CODE_ERROR.USER_PASSWORD_NEW_MUST_DIFFERENCE_ERROR,
-    );
-  });
-  it("should return 200 when update password", async () => {
-    const { status } = await request(app.getHttpServer())
-      .patch(USER_CHANGE_PASSWORD_URL)
-      .set("x-api-key", xApiKey)
-      .set("Authorization", `Bearer ${userAccessToken}`)
-      .send({
-        newPassword: faker.string.alphanumeric(8),
-        oldPassword: mockPassword,
-      } as UserChangePasswordDto);
-
-    expect(status).toBe(200);
-  });
-  it("should return 400 when login after update password", async () => {
-    const { status } = await request(app.getHttpServer())
-      .patch(USER_CHANGE_PASSWORD_URL)
-      .set("x-api-key", xApiKey)
-      .set("Authorization", `Bearer ${userAccessToken}`)
-      .send({
-        newPassword: faker.string.alphanumeric(8),
-        oldPassword: mockPassword,
-      } as UserChangePasswordDto);
-
-    expect(status).toBe(200);
-
-    const response = await request(app.getHttpServer())
-      .post("/public/user/login")
-      .send({ email: user.email, password: mockPassword })
-      .set("x-api-key", xApiKey);
-
-    expect(response.status).toBe(400);
-    expect(response.body.statusCode).toBe(
-      ENUM_USER_STATUS_CODE_ERROR.USER_PASSWORD_NOT_MATCH_ERROR,
-    );
-  });
-
-  it("should return 200 when last attempt update password succeed and can login", async () => {
-    const isAttempt = configService.get("auth.password.attempt");
-    const maxAttempt = configService.get("auth.password.maxAttempt");
-    const newPassword = "abc123";
-    if (isAttempt) {
-      let attempt = 0;
-      // make last attempt
-      while (attempt < maxAttempt - 1) {
+        });
+        jest.spyOn(userService, "findOneById").mockResolvedValue({
+          _id: faker.string.uuid(),
+          passwordAttempt: 5,
+        });
         const { status, body } = await request(app.getHttpServer())
           .patch(USER_CHANGE_PASSWORD_URL)
           .set("x-api-key", xApiKey)
           .set("Authorization", `Bearer ${userAccessToken}`)
-          .send({ newPassword, oldPassword: "xyz123" } as UserChangePasswordDto);
-        attempt++;
+          .send({ newPassword: "abc123", oldPassword: "xyz123" } as UserChangePasswordDto);
+
+        expect(status).toBe(403);
+        expect(body.statusCode).toBe(ENUM_USER_STATUS_CODE_ERROR.USER_PASSWORD_ATTEMPT_MAX_ERROR);
+      });
+      it("should return 400 when old password not match", async () => {
+        const { status, body } = await request(app.getHttpServer())
+          .patch(USER_CHANGE_PASSWORD_URL)
+          .set("x-api-key", xApiKey)
+          .set("Authorization", `Bearer ${userAccessToken}`)
+          .send({ newPassword: "abc123", oldPassword: "xyz123" } as UserChangePasswordDto);
+
         expect(status).toBe(400);
         expect(body.statusCode).toBe(ENUM_USER_STATUS_CODE_ERROR.USER_PASSWORD_NOT_MATCH_ERROR);
-      }
-      await request(app.getHttpServer())
+      });
+      it("should return 403 when try oldPassword not match and maxAttempt", async () => {
+        jest.spyOn(configService, "get").mockImplementation((path: string) => {
+          switch (path) {
+            case "auth.password.attempt":
+              return true;
+            case "auth.password.maxAttempt":
+              return 2;
+          }
+        });
+        let attempt = 1;
+        while (attempt < 2) {
+          const { status, body } = await request(app.getHttpServer())
+            .patch(USER_CHANGE_PASSWORD_URL)
+            .set("x-api-key", xApiKey)
+            .set("Authorization", `Bearer ${userAccessToken}`)
+            .send({ newPassword: "abc123", oldPassword: "xyz123" } as UserChangePasswordDto);
+          attempt++;
+          expect(status).toBe(400);
+          expect(body.statusCode).toBe(ENUM_USER_STATUS_CODE_ERROR.USER_PASSWORD_NOT_MATCH_ERROR);
+        }
+        const { status, body } = await request(app.getHttpServer())
+          .patch(USER_CHANGE_PASSWORD_URL)
+          .set("x-api-key", xApiKey)
+          .set("Authorization", `Bearer ${userAccessToken}`)
+          .send({ newPassword: "abc123", oldPassword: "xyz123" } as UserChangePasswordDto);
+
+        expect(status).toBe(403);
+        expect(body.statusCode).toBe(ENUM_USER_STATUS_CODE_ERROR.USER_PASSWORD_ATTEMPT_MAX_ERROR);
+      });
+    });
+  });
+  describe("change-password logic", () => {
+    const newPassword = faker.string.alphanumeric(8);
+    it("should return 400 when newPassword is same oldPassword", async () => {
+      const { status, body } = await request(app.getHttpServer())
         .patch(USER_CHANGE_PASSWORD_URL)
         .set("x-api-key", xApiKey)
         .set("Authorization", `Bearer ${userAccessToken}`)
-        .send({ newPassword, oldPassword: mockPassword } as UserChangePasswordDto);
+        .send({ newPassword: mockPassword, oldPassword: mockPassword } as UserChangePasswordDto);
 
+      expect(status).toBe(400);
+      expect(body.statusCode).toBe(
+        ENUM_USER_STATUS_CODE_ERROR.USER_PASSWORD_NEW_MUST_DIFFERENCE_ERROR,
+      );
+    });
+    it("should return 200 when update password", async () => {
       const { status } = await request(app.getHttpServer())
-        .post("/public/user/login")
-        .send({ email: user.email, password: newPassword })
-        .set("x-api-key", xApiKey);
+        .patch(USER_CHANGE_PASSWORD_URL)
+        .set("x-api-key", xApiKey)
+        .set("Authorization", `Bearer ${userAccessToken}`)
+        .send({
+          newPassword,
+          oldPassword: mockPassword,
+        } as UserChangePasswordDto);
 
       expect(status).toBe(200);
-    }
+    });
+    it("should return 400 when login after update password", async () => {
+      const { status } = await request(app.getHttpServer())
+        .patch(USER_CHANGE_PASSWORD_URL)
+        .set("x-api-key", xApiKey)
+        .set("Authorization", `Bearer ${userAccessToken}`)
+        .send({
+          newPassword: faker.string.alphanumeric(8),
+          oldPassword: newPassword,
+        } as UserChangePasswordDto);
+
+      expect(status).toBe(200);
+
+      const response = await request(app.getHttpServer())
+        .post("/public/user/login")
+        .send({ email: user.email, password: mockPassword })
+        .set("x-api-key", xApiKey);
+
+      expect(response.status).toBe(400);
+      expect(response.body.statusCode).toBe(
+        ENUM_USER_STATUS_CODE_ERROR.USER_PASSWORD_NOT_MATCH_ERROR,
+      );
+    });
   });
 });

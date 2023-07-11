@@ -30,7 +30,7 @@ describe("role active e2e", () => {
   let rolePublicDoc: RoleDoc;
   let roleInActivePublicDoc: RoleDoc;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const modRef: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
@@ -78,7 +78,7 @@ describe("role active e2e", () => {
     userAccessToken = responses[1].body.data.accessToken;
   });
 
-  afterEach(async () => {
+  afterAll(async () => {
     await userService.deleteMany({});
     await roleService.deleteMany({});
     await apiKeyService.deleteMany({});

@@ -11,7 +11,7 @@ export const createApiKey = async (app: INestApplication, type = ENUM_API_KEY_TY
   const apiKeyService = app.get(ApiKeyService);
   try {
     const apikey = await apiKeyService.createRaw({
-      name: "api key from createApiKey",
+      name: faker.word.words(),
       type,
       key: faker.string.alphanumeric(20),
       secret: faker.string.alphanumeric(20),

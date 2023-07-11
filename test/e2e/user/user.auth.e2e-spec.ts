@@ -21,7 +21,7 @@ describe("user auth e2e", () => {
   let xApiKey: string;
   let userRefreshToken: string;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const modRef: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
@@ -50,13 +50,14 @@ describe("user auth e2e", () => {
     userRefreshToken = userRes.body.data.refreshToken;
   });
 
-  afterEach(async () => {
-    jest.clearAllMocks();
-    await userService.deleteMany({});
-    await roleService.deleteMany({});
+  beforeEach(() => {
+    jest.restoreAllMocks();
   });
 
   afterAll(async () => {
+    jest.clearAllMocks();
+    await userService.deleteMany({});
+    await roleService.deleteMany({});
     await app.close();
   });
   describe(`Post ${USER_REFRESH_URL}`, () => {

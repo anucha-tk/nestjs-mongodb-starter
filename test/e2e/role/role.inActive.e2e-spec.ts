@@ -30,7 +30,7 @@ describe("role inActive e2e", () => {
   let xApiKey: string;
   let rolePublicDoc: RoleDoc;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const modRef: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
@@ -76,7 +76,11 @@ describe("role inActive e2e", () => {
     userAccessToken = responses[1].body.data.accessToken;
   });
 
-  afterEach(async () => {
+  beforeEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  afterAll(async () => {
     await userService.deleteMany({});
     await roleService.deleteMany({});
     await apiKeyService.deleteMany({});

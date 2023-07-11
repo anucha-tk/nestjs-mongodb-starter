@@ -10,17 +10,19 @@ import { createRoleUser } from "test/e2e/helper/role";
 import { createApiKey } from "test/e2e/helper/apiKey";
 import { createUser, mockPassword } from "test/e2e/helper/user";
 import { ENUM_API_KEY_STATUS_CODE_ERROR } from "src/common/api-key/constants/api-key.status-code.constant";
+import { ApiKeyService } from "src/common/api-key/services/api-key.service";
 
 describe("user info e2e", () => {
   const USER_INFO_URL = "/auth/user/info";
   let app: INestApplication;
   let userService: UserService;
   let roleService: RoleService;
+  let apiKeyService: ApiKeyService;
   let user: UserDoc;
   let xApiKey: string;
   let userAccessToken: string;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const modRef: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
@@ -28,6 +30,7 @@ describe("user info e2e", () => {
     app = modRef.createNestApplication();
     userService = modRef.get<UserService>(UserService);
     roleService = modRef.get<RoleService>(RoleService);
+    apiKeyService = modRef.get<ApiKeyService>(ApiKeyService);
     await app.init();
 
     // create userRole
@@ -48,15 +51,14 @@ describe("user info e2e", () => {
     userAccessToken = userRes.body.data.accessToken;
   });
 
-  afterEach(async () => {
+  afterAll(async () => {
     jest.clearAllMocks();
     await userService.deleteMany({});
     await roleService.deleteMany({});
-  });
-
-  afterAll(async () => {
+    await apiKeyService.deleteMany({});
     await app.close();
   });
+
   describe(`GET ${USER_INFO_URL}`, () => {
     describe("x-api-key", () => {
       it("should return 401 when not send x-api-key", async () => {
