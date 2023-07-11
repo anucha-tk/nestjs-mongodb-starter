@@ -8,9 +8,11 @@ import {
   DocResponse,
 } from "src/common/doc/decorators/doc.decorator";
 import { ENUM_USER_STATUS_CODE_ERROR } from "../constants/user.status-code.constant";
+import { UserUpdateNameDto } from "../dtos/user.update-name.dto";
 import { UserInfoSerialization } from "../serializations/user.info.serialization";
 import { UserProfileSerialization } from "../serializations/user.profile.serialization";
 import { UserRefreshSerialization } from "../serializations/user.refresh.serialization";
+import { UserUpdateNameSerialization } from "../serializations/user.update-name.serialization";
 
 export function UserAuthRefreshDoc(): MethodDecorator {
   return applyDecorators(
@@ -97,5 +99,19 @@ export function UserAuthChangePasswordDoc(): MethodDecorator {
         },
       ),
     ]),
+  );
+}
+
+export function UserAuthUpdateNameDoc(): MethodDecorator {
+  return applyDecorators(
+    Doc({
+      operation: "modules.auth.user",
+      description: "Api user firstName and lastName",
+    }),
+    DocAuth({
+      jwtAccessToken: true,
+      apiKey: true,
+    }),
+    DocResponse("user.updateName", { serialization: UserUpdateNameSerialization }),
   );
 }

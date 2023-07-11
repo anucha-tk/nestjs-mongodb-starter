@@ -6,6 +6,7 @@ import {
 } from "src/common/database/interfaces/database.interface";
 import { UserCreateDto } from "../dtos/user.create.dto";
 import { UserUpdateGoogleSSODto } from "../dtos/user.update-google-sso.dto";
+import { UserUpdateNameDto } from "../dtos/user.update-name.dto";
 import { UserDoc } from "../repository/entities/user.entity";
 import { UserPayloadSerialization } from "../serializations/user.payload.serialization";
 import { IUserDoc, IUserEntity } from "./user.interface";
@@ -34,4 +35,9 @@ export interface IUserService {
     repository: UserDoc,
     { accessToken, refreshToken }: UserUpdateGoogleSSODto,
   ): Promise<UserDoc>;
+  updatePassword(
+    repository: UserDoc,
+    { passwordHash, passwordExpired, passwordCreated, salt }: IAuthPassword,
+  ): Promise<UserDoc>;
+  updateName(repository: UserDoc, { firstName, lastName }: UserUpdateNameDto): Promise<UserDoc>;
 }

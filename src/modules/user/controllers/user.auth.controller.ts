@@ -31,6 +31,7 @@ import {
   UserAuthInfoDoc,
   UserAuthProfileDoc,
   UserAuthRefreshDoc,
+  UserAuthUpdateNameDoc,
 } from "../docs/user.auth.doc";
 import { UserAuthProtected, UserProtected } from "../decorators/user.decorator";
 import { UserPayloadSerialization } from "../serializations/user.payload.serialization";
@@ -39,6 +40,8 @@ import { UserProfileSerialization } from "../serializations/user.profile.seriali
 import { UserChangePasswordDto } from "../dtos/user.change-password.dto";
 import { ConfigService } from "@nestjs/config";
 import { ENUM_USER_STATUS_CODE_ERROR } from "../constants/user.status-code.constant";
+import { UserUpdateNameDto } from "../dtos/user.update-name.dto";
+import { UserUpdateNameSerialization } from "../serializations/user.update-name.serialization";
 
 @ApiKeyPublicProtected()
 @ApiTags("modules.auth.user")
@@ -145,7 +148,6 @@ export class UserAuthController {
     ]);
 
     await this.userService.updatePassword(user, newAuthPassword);
-
     return;
   }
 
@@ -166,7 +168,16 @@ export class UserAuthController {
     const userWithRole = await this.userService.joinWithRole(user);
     return { data: userWithRole.toObject() };
   }
-  // TODO: Update Profile
-  // TODO: Claim Username
-  // TODO: Upload
+
+  @UserAuthUpdateNameDoc()
+  @Response("user.updateName", { serialization: UserUpdateNameSerialization })
+  @UserProtected()
+  @AuthJwtAccessProtected()
+  @Patch("/update-name")
+  async updateName(@GetUser() user: UserDoc, @Body() body: UserUpdateNameDto): Promise<IResponse> {
+    const { firstName, lastName } = await this.userService
+      .updateName(user, body)
+      .then((e) => e.toObject());
+    return { data: { _id: user._id, firstName, lastName } };
+  }
 }

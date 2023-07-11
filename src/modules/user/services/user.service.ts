@@ -10,6 +10,7 @@ import { HelperDateService } from "src/common/helper/services/helper.date.servic
 import { RoleEntity } from "src/modules/role/repository/entities/role.entity";
 import { UserCreateDto } from "../dtos/user.create.dto";
 import { UserUpdateGoogleSSODto } from "../dtos/user.update-google-sso.dto";
+import { UserUpdateNameDto } from "../dtos/user.update-name.dto";
 import { IUserDoc, IUserEntity } from "../interfaces/user.interface";
 import { IUserService } from "../interfaces/user.service.interface";
 import { UserDoc, UserEntity } from "../repository/entities/user.entity";
@@ -204,6 +205,26 @@ export class UserService implements IUserService {
     repository.passwordExpired = passwordExpired;
     repository.passwordCreated = passwordCreated;
     repository.salt = salt;
+
+    return this.userRepository.save(repository);
+  }
+
+  /**
+   * Update firstName and lastName user
+   *
+   * @param repository User repository
+   * @param name UserUpdateNameDto
+   * @param name.firstName firstName string user
+   * @param name.lastName lastName string user
+   *
+   * @returns Promise UserDoc
+   * */
+  async updateName(
+    repository: UserDoc,
+    { firstName, lastName }: UserUpdateNameDto,
+  ): Promise<UserDoc> {
+    repository.firstName = firstName;
+    repository.lastName = lastName;
 
     return this.userRepository.save(repository);
   }

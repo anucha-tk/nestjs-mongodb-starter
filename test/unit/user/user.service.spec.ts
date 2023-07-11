@@ -158,6 +158,9 @@ describe("user service", () => {
               .fn()
               .mockImplementation(
                 ({
+                  userName,
+                  firstName,
+                  lastName,
                   blocked,
                   passwordAttempt,
                   isActive,
@@ -170,6 +173,9 @@ describe("user service", () => {
                 }) => {
                   const find = new userKeyEntityDoc();
                   find._id = userKeyId;
+                  find.username = userName;
+                  find.firstName = firstName;
+                  find.lastName = lastName;
                   find.blocked = blocked;
                   find.passwordAttempt = passwordAttempt;
                   find.isActive = isActive;
@@ -418,6 +424,21 @@ describe("user service", () => {
       expect(result.passwordCreated).toBe(authPassword.passwordCreated);
       expect(result.passwordExpired).toBe(authPassword.passwordExpired);
       expect(userRepository.save).toBeCalled();
+    });
+  });
+
+  describe("updateName", () => {
+    it("should return firstName and lastName", async () => {
+      const user = new userKeyEntityDoc();
+      user.firstName = "abc";
+      user.lastName = "xyz";
+      const firstName = faker.person.firstName();
+      const lastName = faker.person.lastName();
+      const result = await userService.updateName(user, { firstName, lastName });
+
+      expect(result).toBeDefined();
+      expect(result).toHaveProperty("firstName", firstName.toLowerCase());
+      expect(result).toHaveProperty("lastName", lastName.toLowerCase());
     });
   });
 });
