@@ -64,11 +64,32 @@ export class PaginationService implements IPaginationService {
     return totalPage > PAGINATION_MAX_PAGE ? PAGINATION_MAX_PAGE : totalPage;
   }
 
+  /**
+   * return object filter in
+   *
+   * @example
+   * paginationService.filterIn('name', ['name_a', 'name_b']) // { name: { '$in': ['name_a', 'name_b']}}
+   *
+   * @returns Record<string, { $in: T[] }>
+   * */
   filterIn<T = string>(field: string, filterValue: T[]): Record<string, { $in: T[] }> {
     return {
       [field]: {
         $in: filterValue,
       },
     };
+  }
+
+  /**
+   * return object filter equal
+   *
+   * @example
+   * paginationService.filterEqual('role', 'c2529516-2960-4705-93cd-21ee0b8c8c05')
+   * // { role: : 'c2529516-2960-4705-93cd-21ee0b8c8c05'}
+   *
+   * @returns Record<string, T>
+   * */
+  filterEqual<T = string>(field: string, filterValue: T): Record<string, T> {
+    return { [field]: filterValue };
   }
 }

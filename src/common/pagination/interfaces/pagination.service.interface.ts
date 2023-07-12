@@ -12,4 +12,5 @@ export interface IPaginationService {
     availableOrderBy?: string[],
   ): IPaginationOrder;
   filterIn<T = string>(field: string, filterValue: T[]): Record<string, { $in: T[] }>;
+  filterEqual<T = string>(field: string, filterValue: T): Record<string, T>;
 }

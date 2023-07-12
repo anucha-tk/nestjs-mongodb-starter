@@ -126,4 +126,18 @@ describe("pagination service", () => {
       expect(result).toBe(20);
     });
   });
+
+  describe("filterIn", () => {
+    it("should return filter in", async () => {
+      const result = paginationService.filterIn("name", ["name_a", "name_b"]);
+      expect(result).toEqual({ name: { $in: ["name_a", "name_b"] } });
+    });
+  });
+
+  describe("filterEqual", () => {
+    it("should return object equal", async () => {
+      const result = paginationService.filterEqual("name", ["name_a", "name_b"]);
+      expect(result).toEqual({ name: ["name_a", "name_b"] });
+    });
+  });
 });
