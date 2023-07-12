@@ -7,6 +7,7 @@ import {
   PaginationQuery,
   PaginationQueryFilterEqualObjectId,
   PaginationQueryFilterInBoolean,
+  PaginationQueryJoin,
 } from "src/common/pagination/decorators/pagination.decorator";
 import { PaginationListDto } from "src/common/pagination/dtos/pagination.list.dto";
 import { PaginationService } from "src/common/pagination/services/pagination.service";
@@ -83,6 +84,8 @@ export class UserAdminController {
     inactivePermanent: Record<string, any>,
     @PaginationQueryFilterEqualObjectId("role", "role", true)
     role: Record<string, any>,
+    @PaginationQueryJoin({ defaultValue: false })
+    join: boolean,
   ): Promise<IResponsePaging> {
     const find: Record<string, any> = {
       ..._search,
@@ -98,6 +101,7 @@ export class UserAdminController {
         offset: _offset,
       },
       order: _order,
+      join,
     });
 
     const total: number = await this.userService.getTotal(find);

@@ -12,6 +12,7 @@ import {
   UserDocQueryBlocked,
   UserDocQueryInactivePermanent,
   UserDocQueryIsActive,
+  UserDocQueryJoin,
   UserDocQueryRole,
 } from "../constants/user.doc.constant";
 import { UserListSerialization } from "../serializations/user.list.serialization";
@@ -78,6 +79,7 @@ export function UserAdminListDoc(): MethodDecorator {
         ...UserDocQueryBlocked,
         ...UserDocQueryIsActive,
         ...UserDocQueryInactivePermanent,
+        ...UserDocQueryJoin,
       ],
     }),
     DocAuth({

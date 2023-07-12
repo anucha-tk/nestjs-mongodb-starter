@@ -50,5 +50,17 @@ export const UserDocQueryRole = [
     required: false,
     type: "string",
     example: faker.string.uuid(),
+    description: "role uuid string for query",
+  },
+];
+
+export const UserDocQueryJoin = [
+  {
+    name: "join",
+    allowEmptyValue: true,
+    required: false,
+    type: "boolean",
+    example: faker.datatype.boolean(),
+    description: "boolean value for join on documents",
   },
 ];

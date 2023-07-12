@@ -3,6 +3,7 @@ import { ENUM_PAGINATION_ORDER_DIRECTION_TYPE } from "../constants/pagination.en
 import { PaginationFilterEqualObjectIdPipe } from "../pipes/pagination.filter-equal-object-id.pipe";
 import { PaginationFilterInBooleanPipe } from "../pipes/pagination.filter-in-boolean.pipe";
 import { PaginationFilterInEnumPipe } from "../pipes/pagination.filter-in-enum.pipe";
+import { PaginationJoinPipe } from "../pipes/pagination.join.pipe";
 import { PaginationOrderPipe } from "../pipes/pagination.order.pipe";
 import { PaginationPagingPipe } from "../pipes/pagination.paging.pipe";
 import { PaginationSearchPipe } from "../pipes/pagination.search.pipe";
@@ -49,7 +50,6 @@ export function PaginationQueryFilterInEnum<T>(
  * @param field field string for query
  * @param queryField name string of single property to extract from the `query` object
  * @param raw boolean return raw type
- *
  */
 export function PaginationQueryFilterEqualObjectId(
   field: string,
@@ -57,4 +57,20 @@ export function PaginationQueryFilterEqualObjectId(
   raw = false,
 ): ParameterDecorator {
   return Query(queryField ?? field, PaginationFilterEqualObjectIdPipe(field, raw));
+}
+
+/**
+ * Pagination query populate document when find all.
+ *
+ * @param queryField name string of single property to extract from the `query` object
+ * @param defaultValue boolean to join
+ */
+export function PaginationQueryJoin({
+  queryField = "join",
+  defaultValue,
+}: {
+  queryField?: string;
+  defaultValue: boolean;
+}): ParameterDecorator {
+  return Query(queryField, PaginationJoinPipe(defaultValue));
 }

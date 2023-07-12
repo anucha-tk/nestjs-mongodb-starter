@@ -72,7 +72,7 @@ export class UserService implements IUserService {
   }
 
   /**
-   * Find all user with join
+   * Find all user with join true (default)
    *
    * @param find Object to find Record<string, any>
    * @param options Optional IDatabaseFindOneOptions
@@ -90,7 +90,7 @@ export class UserService implements IUserService {
   ): Promise<IUserEntity[]> {
     return this.userRepository.findAll<IUserEntity>(find, {
       ...options,
-      join: true,
+      join: options.join ?? true,
     });
   }
 
