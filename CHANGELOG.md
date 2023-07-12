@@ -1,3 +1,12 @@
+## [0.4.0](https://github.com/anucha-tk/spec-finder-api/compare/0.3.0...0.4.0) (2023-07-12)
+
+### Features
+
+- **user:** updatePassword user controller api and testing ([4e0de72](https://github.com/anucha-tk/spec-finder-api/commit/4e0de72532e8535327357096cf0d88bbcc4acc83))
+- **user:** user info controller api ([6ab0fd8](https://github.com/anucha-tk/spec-finder-api/commit/6ab0fd865bd91be2d2e5a35bc4a9d96921304c70))
+- **user:** user profile controller api ([00a44a2](https://github.com/anucha-tk/spec-finder-api/commit/00a44a28af1782d7e7c2c6c8eeb816113c01e83c))
+- **user:** user update-name controller api and test ([7a61622](https://github.com/anucha-tk/spec-finder-api/commit/7a616223ee2dddd01ab83eb2d914073f9b7a5f35))
+
 ## [0.3.0](https://github.com/anucha-tk/spec-finder-api/compare/0.2.0...0.3.0) (2023-07-08)
 
 ### Features
