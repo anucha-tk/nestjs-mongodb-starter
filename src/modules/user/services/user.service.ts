@@ -71,6 +71,19 @@ export class UserService implements IUserService {
     return this.userRepository.findOneById<T>(_id, options);
   }
 
+  /**
+   * Find all user with join
+   *
+   * @param find Object to find Record<string, any>
+   * @param options Optional IDatabaseFindOneOptions
+   * @param options.select Optional boolean
+   * @param options.join Optional boolean
+   * @param options.withDelete Optional boolean
+   * @param options.order Optional Record<string,ENUM_PAGINATION_ORDER_DIRECTION_TYPE>
+   * @param options.paging Optional IPaginationOptions
+   *
+   * @returns Promise IUserEntity[]
+   * */
   async findAll(
     find?: Record<string, any>,
     options?: IDatabaseFindAllOptions,
@@ -227,5 +240,15 @@ export class UserService implements IUserService {
     repository.lastName = lastName;
 
     return this.userRepository.save(repository);
+  }
+
+  /**
+   * Get total user number with find condition(Optional) from database
+   *
+   * @param find Optional find Record<string, any> condition
+   * @returns Promise user number
+   */
+  async getTotal(find?: Record<string, any>): Promise<number> {
+    return this.userRepository.getTotal(find);
   }
 }

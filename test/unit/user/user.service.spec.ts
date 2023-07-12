@@ -189,6 +189,11 @@ describe("user service", () => {
                   return find;
                 },
               ),
+            getTotal: jest.fn().mockImplementation((find) => {
+              if (find) return 1;
+
+              return 2;
+            }),
           },
         },
       ],
@@ -439,6 +444,19 @@ describe("user service", () => {
       expect(result).toBeDefined();
       expect(result).toHaveProperty("firstName", firstName.toLowerCase());
       expect(result).toHaveProperty("lastName", lastName.toLowerCase());
+    });
+  });
+
+  describe("getTotal", () => {
+    it("should return two user", async () => {
+      const result = await userService.getTotal();
+      expect(typeof result).toBe("number");
+      expect(result).toBe(2);
+    });
+    it("should return one user when find", async () => {
+      const result = await userService.getTotal({ name: "abc" });
+      expect(typeof result).toBe("number");
+      expect(result).toBe(1);
     });
   });
 });

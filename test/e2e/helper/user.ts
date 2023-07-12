@@ -11,7 +11,7 @@ export const mockPassword = "xxyyZZ@@123444";
 export const createUser = async ({
   app,
   roleId,
-  password = mockPassword,
+  password,
 }: {
   app: INestApplication;
   roleId: string;
@@ -20,12 +20,12 @@ export const createUser = async ({
   const authService = app.get(AuthService);
   const userService = app.get(UserService);
 
-  const [passwordHash] = await Promise.all([authService.createPassword(password)]);
+  const [passwordHash] = await Promise.all([authService.createPassword(password ?? mockPassword)]);
   const userCreateDto: UserCreateDto = {
-    firstName: faker.person.firstName(),
-    lastName: faker.person.lastName(),
-    email: faker.internet.email(),
-    password,
+    firstName: `user_${faker.person.firstName()}`,
+    lastName: `user_${faker.person.lastName()}`,
+    email: `user_${faker.internet.email()}`,
+    password: password ?? mockPassword,
     signUpFrom: ENUM_USER_SIGN_UP_FROM.LOCAL,
     role: roleId,
     mobileNumber: faker.phone.number("##########"),
@@ -48,9 +48,9 @@ export const createAdmin = async ({
 
   const [passwordHash] = await Promise.all([authService.createPassword(password)]);
   const userCreateDto = {
-    firstName: faker.person.firstName(),
-    lastName: faker.person.lastName(),
-    email: faker.internet.email(),
+    firstName: `admin_${faker.person.firstName()}`,
+    lastName: `admin_${faker.person.lastName()}`,
+    email: `admin_${faker.internet.email()}`,
     password,
     signUpFrom: ENUM_USER_SIGN_UP_FROM.LOCAL,
     role: roleId,

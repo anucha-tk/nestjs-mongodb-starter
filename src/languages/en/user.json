@@ -13,6 +13,7 @@
   "profile": "Profile success",
   "change-password": "Change password success",
   "updateName": "Update name success",
+  "list": "List success",
   "error": {
     "emailExist": "Email user used",
     "mobileNumberExist": "Mobile Number user used",

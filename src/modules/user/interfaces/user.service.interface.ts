@@ -40,4 +40,5 @@ export interface IUserService {
     { passwordHash, passwordExpired, passwordCreated, salt }: IAuthPassword,
   ): Promise<UserDoc>;
   updateName(repository: UserDoc, { firstName, lastName }: UserUpdateNameDto): Promise<UserDoc>;
+  getTotal(find?: Record<string, any>): Promise<number>;
 }
