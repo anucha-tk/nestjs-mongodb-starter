@@ -9,6 +9,7 @@ import { RoleDoc } from "../repository/entities/role.entity";
 export interface IRoleService {
   create(data: RoleCreateDto): Promise<RoleDoc>;
   createMany(data: RoleCreateDto[]): Promise<boolean>;
+  findOne(find: Record<string, any>, options?: IDatabaseFindOneOptions): Promise<RoleDoc>;
   findOneByName(name: string, options?: IDatabaseFindOneOptions): Promise<RoleDoc>;
   findOneById(_id: string, options?: IDatabaseFindOneOptions): Promise<RoleDoc>;
   deleteMany(find: Record<string, any>): Promise<boolean>;

@@ -19,6 +19,7 @@ export interface IDatabaseExistOptions
   extends Pick<IDatabaseFindOneOptions, "withDeleted" | "join"> {
   excludeId?: string[];
 }
+export type IDatabaseExistDeletedOptions = Omit<IDatabaseExistOptions, "withDeleted">;
 
 export type IDatabaseManyOptions = Pick<IDatabaseFindOneOptions, "join">;
 

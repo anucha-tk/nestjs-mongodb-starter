@@ -361,4 +361,11 @@ describe("role service", () => {
       );
     });
   });
+  describe("findOne", () => {
+    it("should return roleDoc", async () => {
+      const result = await roleService.findOne({ name: "abc" });
+      expect(result).toBeDefined();
+      expect(roleRepository.findOne).toBeCalledWith({ name: "abc" }, undefined);
+    });
+  });
 });

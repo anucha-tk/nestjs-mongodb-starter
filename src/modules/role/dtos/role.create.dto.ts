@@ -17,7 +17,7 @@ import {
 import { ENUM_ROLE_TYPE } from "../constants/role.enum.constant";
 import { RoleUpdateDescriptionDto } from "./role.update-description.dto";
 
-class RolePermissionsDto {
+export class RolePermissionsDto {
   @ApiProperty({
     required: true,
     description: "Permission subject",

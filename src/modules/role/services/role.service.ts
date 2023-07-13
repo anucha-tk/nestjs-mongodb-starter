@@ -22,6 +22,23 @@ export class RoleService implements IRoleService {
     return this.roleRepository.findAll<RoleEntity>(find, options);
   }
 
+  /**
+   * Find one role
+   *
+   * @param find Record<string, any>
+   * @param options IOptional DatabaseFindOneOptions
+   * @param options.join Optional join relation another schema
+   * @param options.withDeleted Optional boolean merge find document withDeleted
+   * @param options.excludeId Optional exclude id string
+   * @param options.order Optional Record<string, order>
+   * @param options.select Optional Record<string, boolean | number>
+   *
+   * @returns Promise RoleDoc
+   */
+  async findOne(find: Record<string, any>, options?: IDatabaseFindOneOptions): Promise<RoleDoc> {
+    return this.roleRepository.findOne<RoleDoc>(find, options);
+  }
+
   async findOneById(_id: string, options?: IDatabaseFindOneOptions): Promise<RoleDoc> {
     return this.roleRepository.findOne({ _id }, options);
   }
