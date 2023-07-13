@@ -18,7 +18,7 @@ import {
 import { PolicyAbilityProtected } from "src/common/policy/decorators/policy.decorator";
 import { RequestParamGuard } from "src/common/request/decorators/request.decorator";
 import { Response, ResponsePaging } from "src/common/response/decorators/response.decorator";
-import { IResponsePaging } from "src/common/response/interfaces/response.interface";
+import { IResponse, IResponsePaging } from "src/common/response/interfaces/response.interface";
 import {
   USER_DEFAULT_AVAILABLE_ORDER_BY,
   USER_DEFAULT_AVAILABLE_SEARCH,
@@ -31,6 +31,7 @@ import {
 } from "../constants/user.list.constant";
 import {
   GetUser,
+  UserAdminGetGuard,
   UserAdminUpdateActiveGuard,
   UserAdminUpdateBlockedGuard,
   UserAdminUpdateInactiveGuard,
@@ -38,12 +39,14 @@ import {
 import {
   UserAdminActiveDoc,
   UserAdminBlockedDoc,
+  UserAdminGetDoc,
   UserAdminInactiveDoc,
   UserAdminListDoc,
 } from "../docs/user.admin.doc";
 import { UserRequestDto } from "../dtos/user.request.dto";
 import { IUserEntity } from "../interfaces/user.interface";
 import { UserDoc } from "../repository/entities/user.entity";
+import { UserGetSerialization } from "../serializations/user.get.serialization";
 import { UserListSerialization } from "../serializations/user.list.serialization";
 import { UserService } from "../services/user.service";
 
@@ -113,7 +116,20 @@ export class UserAdminController {
     };
   }
 
-  // TODO: get
+  @UserAdminGetDoc()
+  @Response("user.get", { serialization: UserGetSerialization })
+  @UserAdminGetGuard()
+  @PolicyAbilityProtected({
+    subject: ENUM_POLICY_SUBJECT.USER,
+    action: [ENUM_POLICY_ACTION.READ],
+  })
+  @AuthJwtAdminAccessProtected()
+  @RequestParamGuard(UserRequestDto)
+  @Get("/get/:user")
+  async get(@GetUser(true) user: UserDoc): Promise<IResponse> {
+    return { data: user };
+  }
+
   // TODO: create
   // TODO: update
   // TODO: delete

@@ -15,6 +15,7 @@ import {
   UserDocQueryJoin,
   UserDocQueryRole,
 } from "../constants/user.doc.constant";
+import { UserGetSerialization } from "../serializations/user.get.serialization";
 import { UserListSerialization } from "../serializations/user.list.serialization";
 
 export function UserAdminBlockedDoc(): MethodDecorator {
@@ -88,5 +89,22 @@ export function UserAdminListDoc(): MethodDecorator {
     }),
     DocGuard({ role: true, policy: true }),
     DocResponsePaging("user.list", { serialization: UserListSerialization }),
+  );
+}
+
+export function UserAdminGetDoc(): MethodDecorator {
+  return applyDecorators(
+    Doc({
+      operation: "modules.admin.user",
+    }),
+    DocRequest({
+      params: UserDocParamsId,
+    }),
+    DocAuth({
+      jwtAccessToken: true,
+      apiKey: true,
+    }),
+    DocGuard({ role: true, policy: true }),
+    DocResponse("user.get", { serialization: UserGetSerialization }),
   );
 }
