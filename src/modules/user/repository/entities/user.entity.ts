@@ -18,6 +18,7 @@ export class UserEntity extends DatabaseMongoUUIDEntityAbstract {
     type: String,
     unique: true,
     maxlength: 100,
+    lowercase: true,
   })
   username?: string;
 
@@ -165,6 +166,7 @@ export type UserDoc = UserEntity & Document;
 
 UserSchema.pre("save", function (next: CallbackWithoutResultAndOptionalError) {
   this.email = this.email.toLowerCase();
+  this.username = this.username?.toLowerCase();
   this.firstName = this.firstName.toLowerCase();
   this.lastName = this.lastName.toLowerCase();
 

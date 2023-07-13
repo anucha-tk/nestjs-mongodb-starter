@@ -334,7 +334,6 @@ export class UserPublicController {
           email,
           firstName,
           lastName,
-          password: passwordString,
           role: role._id,
           signUpFrom: ENUM_USER_SIGN_UP_FROM.GOOGLE,
         },

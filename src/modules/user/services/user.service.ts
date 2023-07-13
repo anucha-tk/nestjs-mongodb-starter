@@ -2,16 +2,15 @@ import { Injectable } from "@nestjs/common";
 import { plainToInstance } from "class-transformer";
 import { IAuthPassword } from "src/common/auth/interfaces/auth.interface";
 import {
-  IDatabaseExistOptions,
+  IDatabaseExistDeletedOptions,
   IDatabaseFindAllOptions,
   IDatabaseFindOneOptions,
 } from "src/common/database/interfaces/database.interface";
 import { HelperDateService } from "src/common/helper/services/helper.date.service";
 import { RoleEntity } from "src/modules/role/repository/entities/role.entity";
-import { UserCreateDto } from "../dtos/user.create.dto";
 import { UserUpdateGoogleSSODto } from "../dtos/user.update-google-sso.dto";
 import { UserUpdateNameDto } from "../dtos/user.update-name.dto";
-import { IUserDoc, IUserEntity } from "../interfaces/user.interface";
+import { IUserCreate, IUserDoc, IUserEntity } from "../interfaces/user.interface";
 import { IUserService } from "../interfaces/user.service.interface";
 import { UserDoc, UserEntity } from "../repository/entities/user.entity";
 import { UserRepository } from "../repository/repositories/user.repository";
@@ -25,7 +24,7 @@ export class UserService implements IUserService {
   ) {}
 
   async create(
-    { firstName, lastName, email, mobileNumber, role, signUpFrom, userName }: UserCreateDto,
+    { firstName, lastName, email, mobileNumber, role, signUpFrom, userName }: IUserCreate,
     { passwordExpired, passwordHash, salt, passwordCreated }: IAuthPassword,
   ): Promise<UserDoc> {
     const create: UserEntity = new UserEntity();
@@ -90,7 +89,7 @@ export class UserService implements IUserService {
   ): Promise<IUserEntity[]> {
     return this.userRepository.findAll<IUserEntity>(find, {
       ...options,
-      join: options.join ?? true,
+      join: options?.join ?? true,
     });
   }
 
@@ -162,7 +161,17 @@ export class UserService implements IUserService {
     return this.userRepository.save(repository);
   }
 
-  async existByEmail(email: string, options?: IDatabaseExistOptions): Promise<boolean> {
+  /**
+   * Check email user exist withDeleted
+   *
+   * @param email user email
+   * @param options IDatabaseExistDeletedOptions
+   * @param options.join Optional join boolean
+   * @param options.excludeId Optional excludeId boolean
+   *
+   * @returns Promise boolean
+   */
+  async existByEmail(email: string, options?: IDatabaseExistDeletedOptions): Promise<boolean> {
     return this.userRepository.exists(
       {
         email: {
@@ -170,19 +179,29 @@ export class UserService implements IUserService {
           $options: "i",
         },
       },
-      { ...options },
+      { ...options, withDeleted: true },
     );
   }
 
+  /**
+   * Check mobileNumber user exist withDeleted
+   *
+   * @param mobileNumber string of user mobileNumber
+   * @param options IDatabaseExistDeletedOptions
+   * @param options.join Optional join boolean
+   * @param options.excludeId Optional excludeId boolean
+   *
+   * @returns Promise boolean
+   */
   async existByMobileNumber(
     mobileNumber: string,
-    options?: IDatabaseExistOptions,
+    options?: IDatabaseExistDeletedOptions,
   ): Promise<boolean> {
     return this.userRepository.exists(
       {
         mobileNumber,
       },
-      { ...options },
+      { ...options, withDeleted: true },
     );
   }
 
@@ -250,5 +269,22 @@ export class UserService implements IUserService {
    */
   async getTotal(find?: Record<string, any>): Promise<number> {
     return this.userRepository.getTotal(find);
+  }
+
+  /**
+   * Check username user exist withDeleted
+   *
+   * @param username string of userName user
+   * @param options IDatabaseExistDeletedOptions
+   * @param options.join Optional join boolean
+   * @param options.excludeId Optional excludeId boolean
+   *
+   * @returns Promise boolean
+   */
+  async existByUsername(
+    username: string,
+    options?: IDatabaseExistDeletedOptions,
+  ): Promise<boolean> {
+    return this.userRepository.exists({ username }, { ...options, withDeleted: true });
   }
 }

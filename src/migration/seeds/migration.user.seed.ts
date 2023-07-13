@@ -25,13 +25,12 @@ export class MigrationUserSeed {
     const adminRole: RoleDoc = await this.roleService.findOneByName("admin");
     const memberRole: RoleDoc = await this.roleService.findOneByName("member");
     const userRole: RoleDoc = await this.roleService.findOneByName("user");
-    const passwordHash = await this.authService.createPassword("aaAA@@123444");
+    const passwordHash = await this.authService.createPassword(password);
     const user1: Promise<UserDoc> = this.userService.create(
       {
         firstName: "superadmin",
         lastName: "test",
         email: "superadmin@mail.com",
-        password,
         mobileNumber: "08111111222",
         signUpFrom: ENUM_USER_SIGN_UP_FROM.LOCAL,
         role: superadminRole._id,
@@ -43,7 +42,6 @@ export class MigrationUserSeed {
         firstName: "admin",
         lastName: "test",
         email: "admin@mail.com",
-        password,
         signUpFrom: ENUM_USER_SIGN_UP_FROM.LOCAL,
         role: adminRole._id,
       },
@@ -54,7 +52,6 @@ export class MigrationUserSeed {
         firstName: "user",
         lastName: "test",
         email: "user@mail.com",
-        password,
         signUpFrom: ENUM_USER_SIGN_UP_FROM.LOCAL,
         role: userRole._id,
       },
@@ -65,7 +62,6 @@ export class MigrationUserSeed {
         firstName: "member",
         lastName: "test",
         email: "member@mail.com",
-        password,
         signUpFrom: ENUM_USER_SIGN_UP_FROM.LOCAL,
         role: memberRole._id,
       },

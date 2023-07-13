@@ -1,19 +1,18 @@
 import { IAuthPassword } from "src/common/auth/interfaces/auth.interface";
 import {
-  IDatabaseExistOptions,
+  IDatabaseExistDeletedOptions,
   IDatabaseFindAllOptions,
   IDatabaseFindOneOptions,
 } from "src/common/database/interfaces/database.interface";
-import { UserCreateDto } from "../dtos/user.create.dto";
 import { UserUpdateGoogleSSODto } from "../dtos/user.update-google-sso.dto";
 import { UserUpdateNameDto } from "../dtos/user.update-name.dto";
 import { UserDoc } from "../repository/entities/user.entity";
 import { UserPayloadSerialization } from "../serializations/user.payload.serialization";
-import { IUserDoc, IUserEntity } from "./user.interface";
+import { IUserCreate, IUserDoc, IUserEntity } from "./user.interface";
 
 export interface IUserService {
   create(
-    { firstName, lastName, email, mobileNumber, role, userName }: UserCreateDto,
+    { firstName, lastName, email, mobileNumber, role, userName }: IUserCreate,
     { passwordExpired, passwordHash, salt, passwordCreated }: IAuthPassword,
   ): Promise<UserDoc>;
   findOne<T = UserDoc>(find: Record<string, any>, options?: IDatabaseFindOneOptions): Promise<T>;
@@ -29,8 +28,11 @@ export interface IUserService {
   inactive(repository: UserDoc): Promise<UserDoc>;
   active(repository: UserDoc): Promise<UserDoc>;
   inactivePermanent(repository: UserDoc): Promise<UserDoc>;
-  existByEmail(email: string, options?: IDatabaseExistOptions): Promise<boolean>;
-  existByMobileNumber(mobileNumber: string, options?: IDatabaseExistOptions): Promise<boolean>;
+  existByEmail(email: string, options?: IDatabaseExistDeletedOptions): Promise<boolean>;
+  existByMobileNumber(
+    mobileNumber: string,
+    options?: IDatabaseExistDeletedOptions,
+  ): Promise<boolean>;
   updateGoogleSSO(
     repository: UserDoc,
     { accessToken, refreshToken }: UserUpdateGoogleSSODto,

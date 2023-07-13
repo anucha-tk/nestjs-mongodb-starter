@@ -207,25 +207,23 @@ describe("user service", () => {
     jest.clearAllMocks();
   });
 
-  describe("find", () => {
-    describe("findAll", () => {
-      it("should return user array", async () => {
-        const users = await userService.findAll();
+  describe("findAll", () => {
+    it("should return user array", async () => {
+      const users = await userService.findAll();
 
-        expect(users).toBeDefined();
-        expect(users).toHaveLength(3);
-        expect(userRepository.findAll).toHaveBeenCalled();
-      });
+      expect(users).toBeDefined();
+      expect(users).toHaveLength(3);
+      expect(userRepository.findAll).toHaveBeenCalled();
     });
-    describe("findOneByEmail", () => {
-      it("should return userDoc when findOneByEmail successful", async () => {
-        const email = faker.internet.email();
-        const result = await userService.findOneByEmail(email);
+  });
+  describe("findOneByEmail", () => {
+    it("should return userDoc when findOneByEmail successful", async () => {
+      const email = faker.internet.email();
+      const result = await userService.findOneByEmail(email);
 
-        expect(result).toBeDefined();
-        expect(userRepository.findOne).toHaveBeenCalled();
-        expect(userRepository.findOne).toBeCalledWith({ email }, undefined);
-      });
+      expect(result).toBeDefined();
+      expect(userRepository.findOne).toHaveBeenCalled();
+      expect(userRepository.findOne).toBeCalledWith({ email }, undefined);
     });
   });
 
@@ -457,6 +455,15 @@ describe("user service", () => {
       const result = await userService.getTotal({ name: "abc" });
       expect(typeof result).toBe("number");
       expect(result).toBe(1);
+    });
+  });
+
+  describe("existByUsername", () => {
+    it("should return userDoc", async () => {
+      const result = await userService.existByUsername("abc");
+
+      expect(typeof result).toBe("boolean");
+      expect(userRepository.exists).toBeCalledWith({ username: "abc" }, { withDeleted: true });
     });
   });
 });
