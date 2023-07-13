@@ -6,8 +6,14 @@ import { UserCreateDto } from "src/modules/user/dtos/user.create.dto";
 import { UserDoc } from "src/modules/user/repository/entities/user.entity";
 import { UserService } from "src/modules/user/services/user.service";
 
+/**
+ * @deprecated
+ * */
 export const mockPassword = "xxyyZZ@@123444";
 
+/**
+ * @deprecated use UserFaker instead
+ * */
 export const createUser = async ({
   app,
   roleId,
@@ -34,6 +40,9 @@ export const createUser = async ({
   return userService.create(userCreateDto, passwordHash);
 };
 
+/**
+ * @deprecated
+ * */
 export const createAdmin = async ({
   app,
   roleId,

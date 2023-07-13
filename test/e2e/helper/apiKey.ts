@@ -4,8 +4,7 @@ import { ENUM_API_KEY_TYPE } from "src/common/api-key/constants/api-key.enum.con
 import { ApiKeyService } from "src/common/api-key/services/api-key.service";
 
 /**
- * Create ApiKey
- * @default type - ENUM_API_KEY_TYPE.PUBLIC
+ * @deprecated
  * */
 export const createApiKey = async (app: INestApplication, type = ENUM_API_KEY_TYPE.PUBLIC) => {
   const apiKeyService = app.get(ApiKeyService);

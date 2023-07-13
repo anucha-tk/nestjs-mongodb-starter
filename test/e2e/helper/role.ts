@@ -8,11 +8,17 @@ import { RoleCreateDto } from "src/modules/role/dtos/role.create.dto";
 import { RoleRepository } from "src/modules/role/repository/repositories/role.repository";
 import { RoleService } from "src/modules/role/services/role.service";
 
+/**
+ * @deprecated
+ * */
 interface CreateUserIPolicyRule {
   subject: ENUM_POLICY_SUBJECT;
   action: ENUM_POLICY_ACTION[];
 }
 
+/**
+ * @deprecated
+ * */
 export const createRoleUser = (
   app: INestApplication,
   name: string,
@@ -28,6 +34,9 @@ export const createRoleUser = (
   return roleService.create(roles);
 };
 
+/**
+ * @deprecated
+ * */
 export const createInActiveRoleUser = async (
   app: INestApplication,
   name: string,
@@ -46,6 +55,9 @@ export const createInActiveRoleUser = async (
   return roleRepository.save(role);
 };
 
+/**
+ * @deprecated
+ * */
 export const createRoleAdmin = (
   app: INestApplication,
   name: string,
@@ -66,6 +78,9 @@ export const createRoleAdmin = (
   return roleService.create(role);
 };
 
+/**
+ * @deprecated
+ * */
 export const createRoleSuperAdmin = (app: INestApplication, name: string) => {
   const role: RoleCreateDto = {
     name,
