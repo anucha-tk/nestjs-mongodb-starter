@@ -89,6 +89,12 @@ export class UserCreateDto {
   @MaxLength(50)
   readonly password: string;
 
+  @ApiProperty({
+    description: "user signup from",
+    example: ENUM_USER_SIGN_UP_FROM.LOCAL,
+    nullable: false,
+    required: true,
+  })
   @IsEnum(ENUM_USER_SIGN_UP_FROM)
   @IsString()
   @IsNotEmpty()

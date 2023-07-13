@@ -15,7 +15,9 @@
   "updateName": "Update name success",
   "list": "List success",
   "get": "Get success",
+  "create": "Create success",
   "error": {
+    "userNameExist": "Email user used",
     "emailExist": "Email user used",
     "mobileNumberExist": "Mobile Number user used",
     "notFound": "User not found.",

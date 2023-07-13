@@ -1,7 +1,18 @@
-import { Controller, Get, InternalServerErrorException, Patch } from "@nestjs/common";
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  InternalServerErrorException,
+  NotFoundException,
+  Patch,
+  Post,
+} from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { ApiKeyPublicProtected } from "src/common/api-key/decorators/api-key.decorator";
 import { AuthJwtAdminAccessProtected } from "src/common/auth/decorators/auth.jwt.decorator";
+import { IAuthPassword } from "src/common/auth/interfaces/auth.interface";
+import { AuthService } from "src/common/auth/services/auth.service";
 import { ENUM_ERROR_STATUS_CODE_ERROR } from "src/common/error/constants/error.status-code.constant";
 import {
   PaginationQuery,
@@ -19,6 +30,8 @@ import { PolicyAbilityProtected } from "src/common/policy/decorators/policy.deco
 import { RequestParamGuard } from "src/common/request/decorators/request.decorator";
 import { Response, ResponsePaging } from "src/common/response/decorators/response.decorator";
 import { IResponse, IResponsePaging } from "src/common/response/interfaces/response.interface";
+import { ENUM_ROLE_STATUS_CODE_ERROR } from "src/modules/role/constants/role.status-code.constant";
+import { RoleService } from "src/modules/role/services/role.service";
 import {
   USER_DEFAULT_AVAILABLE_ORDER_BY,
   USER_DEFAULT_AVAILABLE_SEARCH,
@@ -29,6 +42,7 @@ import {
   USER_DEFAULT_ORDER_DIRECTION,
   USER_DEFAULT_PER_PAGE,
 } from "../constants/user.list.constant";
+import { ENUM_USER_STATUS_CODE_ERROR } from "../constants/user.status-code.constant";
 import {
   GetUser,
   UserAdminGetGuard,
@@ -39,13 +53,16 @@ import {
 import {
   UserAdminActiveDoc,
   UserAdminBlockedDoc,
+  UserAdminCreateDoc,
   UserAdminGetDoc,
   UserAdminInactiveDoc,
   UserAdminListDoc,
 } from "../docs/user.admin.doc";
+import { UserCreateDto } from "../dtos/user.create.dto";
 import { UserRequestDto } from "../dtos/user.request.dto";
 import { IUserEntity } from "../interfaces/user.interface";
 import { UserDoc } from "../repository/entities/user.entity";
+import { UserCreateSerialization } from "../serializations/user.create.serialization";
 import { UserGetSerialization } from "../serializations/user.get.serialization";
 import { UserListSerialization } from "../serializations/user.list.serialization";
 import { UserService } from "../services/user.service";
@@ -59,6 +76,8 @@ import { UserService } from "../services/user.service";
 export class UserAdminController {
   constructor(
     private readonly userService: UserService,
+    private readonly roleService: RoleService,
+    private readonly authService: AuthService,
     private readonly paginationService: PaginationService,
   ) {}
 
@@ -130,7 +149,69 @@ export class UserAdminController {
     return { data: user };
   }
 
-  // TODO: create
+  @UserAdminCreateDoc()
+  @Response("user.create", { serialization: UserCreateSerialization })
+  @PolicyAbilityProtected({
+    subject: ENUM_POLICY_SUBJECT.USER,
+    action: [ENUM_POLICY_ACTION.CREATE],
+  })
+  @AuthJwtAdminAccessProtected()
+  @Post("/create")
+  async create(
+    @Body() { userName, email, password, mobileNumber, role, ...body }: UserCreateDto,
+  ): Promise<IResponse> {
+    const [roleDoc, isEmailExist] = await Promise.all([
+      this.roleService.findOneById(role),
+      this.userService.existByEmail(email),
+    ]);
+
+    if (!roleDoc) {
+      throw new NotFoundException({
+        statusCode: ENUM_ROLE_STATUS_CODE_ERROR.ROLE_NOT_FOUND_ERROR,
+        message: "role.error.notFound",
+      });
+    } else if (!roleDoc.isActive) {
+      throw new BadRequestException({
+        statusCode: ENUM_ROLE_STATUS_CODE_ERROR.ROLE_IS_ACTIVE_ERROR,
+        message: "role.error.isActiveInvalid",
+      });
+    }
+    if (isEmailExist) {
+      throw new BadRequestException({
+        statusCode: ENUM_USER_STATUS_CODE_ERROR.USER_EMAIL_EXIST_ERROR,
+        message: "user.error.emailExist",
+      });
+    }
+
+    if (userName) {
+      const isUserNameExist: boolean = await this.userService.existByUsername(userName);
+      if (isUserNameExist) {
+        throw new BadRequestException({
+          statusCode: ENUM_USER_STATUS_CODE_ERROR.USER_USERNAME_EXISTS_ERROR,
+          message: "user.error.userNameExist",
+        });
+      }
+    }
+
+    if (mobileNumber) {
+      const isMobileNumberExist: boolean = await this.userService.existByMobileNumber(mobileNumber);
+
+      if (isMobileNumberExist) {
+        throw new BadRequestException({
+          statusCode: ENUM_USER_STATUS_CODE_ERROR.USER_MOBILE_NUMBER_EXIST_ERROR,
+          message: "user.error.mobileNumberExist",
+        });
+      }
+    }
+
+    const iAuthPassword: IAuthPassword = await this.authService.createPassword(password);
+    const user = await this.userService.create(
+      { userName, email, role, mobileNumber, ...body },
+      iAuthPassword,
+    );
+
+    return { data: user };
+  }
   // TODO: update
   // TODO: delete
   // TODO: import

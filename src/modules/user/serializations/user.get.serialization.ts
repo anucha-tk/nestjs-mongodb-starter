@@ -105,7 +105,7 @@ export class UserGetSerialization extends ResponseIdSerialization {
   @ApiProperty({
     required: true,
     nullable: false,
-    example: [1, 0],
+    example: "0",
   })
   readonly passwordAttempt: number;
 

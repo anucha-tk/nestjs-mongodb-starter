@@ -1,4 +1,5 @@
 import { applyDecorators } from "@nestjs/common";
+import { ENUM_DOC_REQUEST_BODY_TYPE } from "src/common/doc/constants/doc.enum.constant";
 import {
   Doc,
   DocAuth,
@@ -15,6 +16,7 @@ import {
   UserDocQueryJoin,
   UserDocQueryRole,
 } from "../constants/user.doc.constant";
+import { UserCreateSerialization } from "../serializations/user.create.serialization";
 import { UserGetSerialization } from "../serializations/user.get.serialization";
 import { UserListSerialization } from "../serializations/user.list.serialization";
 
@@ -106,5 +108,21 @@ export function UserAdminGetDoc(): MethodDecorator {
     }),
     DocGuard({ role: true, policy: true }),
     DocResponse("user.get", { serialization: UserGetSerialization }),
+  );
+}
+export function UserAdminCreateDoc(): MethodDecorator {
+  return applyDecorators(
+    Doc({
+      operation: "modules.admin.user",
+    }),
+    DocRequest({
+      bodyType: ENUM_DOC_REQUEST_BODY_TYPE.JSON,
+    }),
+    DocAuth({
+      jwtAccessToken: true,
+      apiKey: true,
+    }),
+    DocGuard({ role: true, policy: true }),
+    DocResponse("user.create", { serialization: UserCreateSerialization }),
   );
 }
