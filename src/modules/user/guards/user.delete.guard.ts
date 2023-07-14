@@ -7,7 +7,7 @@ import { UserDoc } from "src/modules/user/repository/entities/user.entity";
  * Guard 404 when `request.__user.deletedAt` is not exist
  * */
 @Injectable()
-export class UserRestoreGuard implements CanActivate {
+export class UserDeletedGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const { __user } = context.switchToHttp().getRequest<IRequestApp & { __user: UserDoc }>();
 

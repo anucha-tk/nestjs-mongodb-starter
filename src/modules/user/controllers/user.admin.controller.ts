@@ -51,6 +51,7 @@ import {
 import { ENUM_USER_STATUS_CODE_ERROR } from "../constants/user.status-code.constant";
 import {
   GetUser,
+  UserAdminDeleteGuard,
   UserAdminGetGuard,
   UserAdminRestoreGuard,
   UserAdminSoftDeleteGuard,
@@ -62,6 +63,7 @@ import {
   UserAdminActiveDoc,
   UserAdminBlockedDoc,
   UserAdminCreateDoc,
+  UserAdminDeleteDoc,
   UserAdminGetDoc,
   UserAdminInactiveDoc,
   UserAdminListDoc,
@@ -276,7 +278,21 @@ export class UserAdminController {
     return { data: { _id: user._id } };
   }
 
-  // TODO: deleteOne
+  @UserAdminDeleteDoc()
+  @ResponseId("user.delete")
+  @UserAdminDeleteGuard()
+  @PolicyAbilityProtected({
+    subject: ENUM_POLICY_SUBJECT.USER,
+    action: [ENUM_POLICY_ACTION.READ, ENUM_POLICY_ACTION.DELETE],
+  })
+  @AuthJwtAdminAccessProtected()
+  @RequestParamGuard(UserRequestDto)
+  @Delete("/delete/:user")
+  async delete(@GetUser() user: UserDoc): Promise<IResponse> {
+    await this.userService.deleteOne(user);
+    return { data: { _id: user._id } };
+  }
+
   // TODO: import
   // TODO: export
 

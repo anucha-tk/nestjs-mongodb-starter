@@ -1,14 +1,14 @@
 import { ExecutionContext, NotFoundException } from "@nestjs/common";
 import { createMock } from "@golevelup/ts-jest";
 import { UserDoc } from "src/modules/user/repository/entities/user.entity";
-import { UserRestoreGuard } from "src/modules/user/guards/user.restore.guard";
+import { UserDeletedGuard } from "src/modules/user/guards/user.delete.guard";
 
 describe("UserRestoreGuard", () => {
-  let userRestoreGuard: UserRestoreGuard;
+  let userRestoreGuard: UserDeletedGuard;
   let mockContext: ExecutionContext;
 
   beforeEach(() => {
-    userRestoreGuard = new UserRestoreGuard();
+    userRestoreGuard = new UserDeletedGuard();
     mockContext = createMock<ExecutionContext>();
   });
 

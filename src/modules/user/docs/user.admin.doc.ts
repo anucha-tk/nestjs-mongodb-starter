@@ -182,3 +182,20 @@ export function UserAdminRestoreDoc(): MethodDecorator {
     DocResponseId("user.restore"),
   );
 }
+
+export function UserAdminDeleteDoc(): MethodDecorator {
+  return applyDecorators(
+    Doc({
+      operation: "modules.admin.user",
+    }),
+    DocRequest({
+      params: UserDocParamsId,
+    }),
+    DocAuth({
+      jwtAccessToken: true,
+      apiKey: true,
+    }),
+    DocGuard({ role: true, policy: true }),
+    DocResponseId("user.delete"),
+  );
+}

@@ -18,6 +18,7 @@
   "create": "Create success",
   "softDelete": "Soft delete success",
   "restore": "Restore success",
+  "delete": "Delete success",
   "error": {
     "userNameExist": "Email user used",
     "emailExist": "Email user used",
