@@ -64,3 +64,14 @@ export const UserDocQueryJoin = [
     description: "boolean value for join on documents",
   },
 ];
+
+export const UserDocQueryWithDeleted = [
+  {
+    name: "withDeleted",
+    allowEmptyValue: true,
+    required: false,
+    type: "boolean",
+    example: faker.datatype.boolean(),
+    description: "boolean value for find documents withDeleted",
+  },
+];

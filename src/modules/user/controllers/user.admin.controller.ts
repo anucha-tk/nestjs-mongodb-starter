@@ -142,7 +142,7 @@ export class UserAdminController {
       withDeleted,
     });
 
-    const total: number = await this.userService.getTotal(find);
+    const total: number = await this.userService.getTotal(find, { withDeleted });
     const totalPage: number = this.paginationService.totalPage(total, _limit);
 
     return {

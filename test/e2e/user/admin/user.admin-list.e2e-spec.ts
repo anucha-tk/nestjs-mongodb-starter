@@ -4,15 +4,16 @@ import { AppModule } from "src/app/app.module";
 import { ENUM_API_KEY_STATUS_CODE_ERROR } from "src/common/api-key/constants/api-key.status-code.constant";
 import { ApiKeyService } from "src/common/api-key/services/api-key.service";
 import { ENUM_AUTH_STATUS_CODE_ERROR } from "src/common/auth/constants/auth.status-code.constant";
+import { AuthService } from "src/common/auth/services/auth.service";
 import { ENUM_POLICY_STATUS_CODE_ERROR } from "src/common/policy/constants/policy.status-code.constant";
 import { ENUM_ROLE_STATUS_CODE_ERROR } from "src/modules/role/constants/role.status-code.constant";
 import { RoleService } from "src/modules/role/services/role.service";
 import { UserDoc } from "src/modules/user/repository/entities/user.entity";
 import { UserService } from "src/modules/user/services/user.service";
 import request from "supertest";
-import { createApiKey } from "test/e2e/helper/apiKey";
-import { createRoleAdmin, createRoleUser } from "test/e2e/helper/role";
-import { createAdmin, createUser, mockPassword } from "test/e2e/helper/user";
+import { ApiKeyFaker } from "test/e2e/helper/api-key.faker";
+import { AuthFaker } from "test/e2e/helper/auth.faker";
+import { UserFaker } from "test/e2e/helper/user.faker";
 
 describe("user admin e2e", () => {
   const USER_LIST_URL = "/admin/user/list";
@@ -20,13 +21,12 @@ describe("user admin e2e", () => {
   let userService: UserService;
   let roleService: RoleService;
   let apiKeyService: ApiKeyService;
-  let user: UserDoc;
-  let admin: UserDoc;
-  let adminUnPolicy: UserDoc;
   let xApiKey: string;
   let userAccessToken: string;
   let adminAccessToken: string;
   let adminUnPolicyAccessToken: string;
+  let user: UserDoc;
+  let admin: UserDoc;
 
   beforeAll(async () => {
     const modRef: TestingModule = await Test.createTestingModule({
@@ -37,46 +37,33 @@ describe("user admin e2e", () => {
     userService = modRef.get<UserService>(UserService);
     roleService = modRef.get<RoleService>(RoleService);
     apiKeyService = modRef.get<ApiKeyService>(ApiKeyService);
+    const authService = modRef.get(AuthService);
     await app.init();
 
-    // create userRole
-    const [apiKeyRes, roleUser, roleAdmin, roleAdminUnPolicy] = await Promise.all([
-      createApiKey(app),
-      createRoleUser(app, "user"),
-      createRoleAdmin(app, "admin"),
-      createRoleAdmin(app, "adminUnPolicy", []),
-    ]);
-    xApiKey = `${apiKeyRes.doc.key}:${apiKeyRes.secret}`;
+    const userFaker = new UserFaker(authService, userService, roleService);
+    const apiKeyFaker = new ApiKeyFaker(apiKeyService);
+    const authFaker = new AuthFaker(app);
+
+    const apiKey = await apiKeyFaker.createApiKey({});
+    xApiKey = apiKeyFaker.getXApiKey(apiKey);
 
     // create user
-    user = await createUser({ app, roleId: roleUser._id });
-    admin = await createAdmin({ app, roleId: roleAdmin._id });
-    adminUnPolicy = await createAdmin({ app, roleId: roleAdminUnPolicy._id });
+    admin = await userFaker.createAdmin({});
+    const adminUnPolicy = await userFaker.createAdmin({ permissions: [] });
+    user = await userFaker.createUser({});
+    await Promise.all([userFaker.createSuperAdmin({}), userFaker.createUser({ deleted: true })]);
 
     // login by user
-    const [adminRes, userRes, adminUnPolicyRes] = await Promise.all([
-      request(app.getHttpServer())
-        .post("/public/user/login")
-        .send({ email: admin.email, password: mockPassword })
-        .set("x-api-key", xApiKey),
-      request(app.getHttpServer())
-        .post("/public/user/login")
-        .send({ email: user.email, password: mockPassword })
-        .set("x-api-key", xApiKey),
-      request(app.getHttpServer())
-        .post("/public/user/login")
-        .send({ email: adminUnPolicy.email, password: mockPassword })
-        .set("x-api-key", xApiKey),
+    const loginResponse = await Promise.all([
+      authFaker.login({ email: admin.email, xApiKey }),
+      authFaker.login({ email: adminUnPolicy.email, xApiKey }),
+      authFaker.login({ email: user.email, xApiKey }),
     ]);
 
     // get accessToken
-    adminAccessToken = adminRes.body.data.accessToken;
-    userAccessToken = userRes.body.data.accessToken;
-    adminUnPolicyAccessToken = adminUnPolicyRes.body.data.accessToken;
-  });
-
-  beforeEach(() => {
-    jest.restoreAllMocks();
+    adminAccessToken = loginResponse[0];
+    adminUnPolicyAccessToken = loginResponse[1];
+    userAccessToken = loginResponse[2];
   });
 
   afterAll(async () => {
@@ -124,6 +111,14 @@ describe("user admin e2e", () => {
     });
   });
   describe("query", () => {
+    beforeAll(async () => {
+      const modRef: TestingModule = await Test.createTestingModule({
+        imports: [AppModule],
+      }).compile();
+
+      app = modRef.createNestApplication();
+      await app.init();
+    });
     it("should return 200 when list success", async () => {
       const { status, body } = await request(app.getHttpServer())
         .get(USER_LIST_URL)
@@ -135,7 +130,7 @@ describe("user admin e2e", () => {
       expect(body.data.length).toBeTruthy();
     });
     describe("page", () => {
-      it("should return 3 user by default maxPerPage 20", async () => {
+      it("should return 4 user (not include deleted user) by default maxPerPage 20", async () => {
         const { status, body } = await request(app.getHttpServer())
           .get(`${USER_LIST_URL}?perPage=20`)
           .set("x-api-key", xApiKey)
@@ -143,7 +138,17 @@ describe("user admin e2e", () => {
 
         expect(status).toBe(200);
         expect(body._metadata.pagination).toBeDefined();
-        expect(body.data).toHaveLength(3);
+        expect(body.data).toHaveLength(4);
+      });
+      it("should return 5 user (include deleted user) by default maxPerPage 20", async () => {
+        const { status, body } = await request(app.getHttpServer())
+          .get(`${USER_LIST_URL}?perPage=20&withDeleted=true`)
+          .set("x-api-key", xApiKey)
+          .set("authorization", `Bearer ${adminAccessToken}`);
+
+        expect(status).toBe(200);
+        expect(body._metadata.pagination).toBeDefined();
+        expect(body.data).toHaveLength(5);
       });
       it("should return 2 user by default maxPerPage 2", async () => {
         const { status, body } = await request(app.getHttpServer())
@@ -155,7 +160,7 @@ describe("user admin e2e", () => {
         expect(body._metadata.pagination).toBeDefined();
         expect(body.data).toHaveLength(2);
       });
-      it("should return 1 user by default maxPerPage 2 and page 2", async () => {
+      it("should return 2 user by default maxPerPage 2 and page 2", async () => {
         const { status, body } = await request(app.getHttpServer())
           .get(`${USER_LIST_URL}?perPage=2&page=2`)
           .set("x-api-key", xApiKey)
@@ -163,7 +168,7 @@ describe("user admin e2e", () => {
 
         expect(status).toBe(200);
         expect(body._metadata.pagination).toBeDefined();
-        expect(body.data).toHaveLength(1);
+        expect(body.data).toHaveLength(2);
       });
     });
     describe("search", () => {
@@ -177,7 +182,7 @@ describe("user admin e2e", () => {
         expect(body._metadata.pagination).toBeDefined();
         expect(body.data).toHaveLength(1);
       });
-      it("should return 200 and 2 user when search admin", async () => {
+      it("should return 200 and 3 user admin when search admin", async () => {
         const { status, body } = await request(app.getHttpServer())
           .get(`${USER_LIST_URL}?search=admin`)
           .set("x-api-key", xApiKey)
@@ -185,7 +190,7 @@ describe("user admin e2e", () => {
 
         expect(status).toBe(200);
         expect(body._metadata.pagination).toBeDefined();
-        expect(body.data).toHaveLength(2);
+        expect(body.data).toHaveLength(3);
       });
     });
   });

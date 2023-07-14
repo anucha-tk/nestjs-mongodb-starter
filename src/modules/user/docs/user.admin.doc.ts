@@ -16,6 +16,7 @@ import {
   UserDocQueryIsActive,
   UserDocQueryJoin,
   UserDocQueryRole,
+  UserDocQueryWithDeleted,
 } from "../constants/user.doc.constant";
 import { UserCreateSerialization } from "../serializations/user.create.serialization";
 import { UserGetSerialization } from "../serializations/user.get.serialization";
@@ -85,6 +86,7 @@ export function UserAdminListDoc(): MethodDecorator {
         ...UserDocQueryIsActive,
         ...UserDocQueryInactivePermanent,
         ...UserDocQueryJoin,
+        ...UserDocQueryWithDeleted,
       ],
     }),
     DocAuth({

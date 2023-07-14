@@ -5,6 +5,7 @@ import {
   IDatabaseExistDeletedOptions,
   IDatabaseFindAllOptions,
   IDatabaseFindOneOptions,
+  IDatabaseGetTotalOptions,
 } from "src/common/database/interfaces/database.interface";
 import { HelperDateService } from "src/common/helper/services/helper.date.service";
 import { RoleEntity } from "src/modules/role/repository/entities/role.entity";
@@ -277,10 +278,14 @@ export class UserService implements IUserService {
    * Get total user number with find condition(Optional) from database
    *
    * @param find Optional find Record<string, any> condition
+   * @param options Optional IDatabaseGetTotalOptions
+   * @param options.join Optional join boolean
+   * @param options.withDeleted Optional withDeleted boolean
+   *
    * @returns Promise user number
    */
-  async getTotal(find?: Record<string, any>): Promise<number> {
-    return this.userRepository.getTotal(find);
+  async getTotal(find?: Record<string, any>, options?: IDatabaseGetTotalOptions): Promise<number> {
+    return this.userRepository.getTotal(find, options);
   }
 
   /**

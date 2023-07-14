@@ -470,11 +470,18 @@ describe("user service", () => {
       const result = await userService.getTotal();
       expect(typeof result).toBe("number");
       expect(result).toBe(2);
+      expect(userRepository.getTotal).toBeCalledWith(undefined, undefined);
     });
     it("should return one user when find", async () => {
       const result = await userService.getTotal({ name: "abc" });
       expect(typeof result).toBe("number");
       expect(result).toBe(1);
+      expect(userRepository.getTotal).toBeCalledWith({ name: "abc" }, undefined);
+    });
+    it("should call withDeleted", async () => {
+      const result = await userService.getTotal({}, { withDeleted: true });
+      expect(typeof result).toBe("number");
+      expect(userRepository.getTotal).toBeCalledWith({}, { withDeleted: true });
     });
   });
 
