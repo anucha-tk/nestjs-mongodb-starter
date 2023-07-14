@@ -7,6 +7,7 @@ import {
   NotFoundException,
   Patch,
   Post,
+  Put,
 } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { ApiKeyPublicProtected } from "src/common/api-key/decorators/api-key.decorator";
@@ -57,14 +58,17 @@ import {
   UserAdminGetDoc,
   UserAdminInactiveDoc,
   UserAdminListDoc,
+  UserAdminUpdateNameDoc,
 } from "../docs/user.admin.doc";
 import { UserCreateDto } from "../dtos/user.create.dto";
 import { UserRequestDto } from "../dtos/user.request.dto";
+import { UserUpdateNameDto } from "../dtos/user.update-name.dto";
 import { IUserEntity } from "../interfaces/user.interface";
 import { UserDoc } from "../repository/entities/user.entity";
 import { UserCreateSerialization } from "../serializations/user.create.serialization";
 import { UserGetSerialization } from "../serializations/user.get.serialization";
 import { UserListSerialization } from "../serializations/user.list.serialization";
+import { UserUpdateNameSerialization } from "../serializations/user.update-name.serialization";
 import { UserService } from "../services/user.service";
 
 @ApiKeyPublicProtected()
@@ -212,7 +216,22 @@ export class UserAdminController {
 
     return { data: user };
   }
-  // TODO: update
+
+  @UserAdminUpdateNameDoc()
+  @Response("user.updateName", { serialization: UserUpdateNameSerialization })
+  @UserAdminGetGuard()
+  @PolicyAbilityProtected({
+    subject: ENUM_POLICY_SUBJECT.USER,
+    action: [ENUM_POLICY_ACTION.READ, ENUM_POLICY_ACTION.UPDATE],
+  })
+  @AuthJwtAdminAccessProtected()
+  @RequestParamGuard(UserRequestDto)
+  @Put("/update-name/:user")
+  async update(@GetUser() user: UserDoc, @Body() body: UserUpdateNameDto): Promise<IResponse> {
+    const update = await this.userService.updateName(user, body).then((e) => e.toObject());
+    return { data: update };
+  }
+
   // TODO: delete
   // TODO: import
   // TODO: export

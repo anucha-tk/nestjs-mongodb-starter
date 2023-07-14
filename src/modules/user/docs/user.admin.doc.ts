@@ -19,6 +19,7 @@ import {
 import { UserCreateSerialization } from "../serializations/user.create.serialization";
 import { UserGetSerialization } from "../serializations/user.get.serialization";
 import { UserListSerialization } from "../serializations/user.list.serialization";
+import { UserUpdateNameSerialization } from "../serializations/user.update-name.serialization";
 
 export function UserAdminBlockedDoc(): MethodDecorator {
   return applyDecorators(
@@ -124,5 +125,22 @@ export function UserAdminCreateDoc(): MethodDecorator {
     }),
     DocGuard({ role: true, policy: true }),
     DocResponse("user.create", { serialization: UserCreateSerialization }),
+  );
+}
+
+export function UserAdminUpdateNameDoc(): MethodDecorator {
+  return applyDecorators(
+    Doc({
+      operation: "modules.admin.user",
+      description: "Api user admin update firstName and lastName",
+    }),
+    DocRequest({
+      bodyType: ENUM_DOC_REQUEST_BODY_TYPE.JSON,
+    }),
+    DocAuth({
+      jwtAccessToken: true,
+      apiKey: true,
+    }),
+    DocResponse("user.updateName", { serialization: UserUpdateNameSerialization }),
   );
 }
