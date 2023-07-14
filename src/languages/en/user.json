@@ -16,6 +16,7 @@
   "list": "List success",
   "get": "Get success",
   "create": "Create success",
+  "softDelete": "Soft delete success",
   "error": {
     "userNameExist": "Email user used",
     "emailExist": "Email user used",

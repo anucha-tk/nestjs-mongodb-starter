@@ -104,3 +104,16 @@ export const UserAdminUpdateInactiveGuard = (): MethodDecorator =>
     SetMetadata(USER_ACTIVE_META_KEY, [true]),
     SetMetadata(USER_BLOCKED_META_KEY, [false]),
   );
+
+/**
+ * Decorator Guards includes
+ * 1. UserPutToRequestGuard - find user from param and put to `request.__user`
+ * 2. UserNotFoundGuard - throw 404 if `request.__user` it not exist
+ * 3. UserCanNotOurSelfGuard - user login can't allow self
+ * @returns MethodDecorator
+ * */
+export function UserAdminSoftDeleteGuard(): MethodDecorator {
+  return applyDecorators(
+    UseGuards(UserPutToRequestGuard, UserNotFoundGuard, UserCanNotOurSelfGuard),
+  );
+}

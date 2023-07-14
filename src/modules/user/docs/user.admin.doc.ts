@@ -6,6 +6,7 @@ import {
   DocGuard,
   DocRequest,
   DocResponse,
+  DocResponseId,
   DocResponsePaging,
 } from "src/common/doc/decorators/doc.decorator";
 import {
@@ -111,6 +112,7 @@ export function UserAdminGetDoc(): MethodDecorator {
     DocResponse("user.get", { serialization: UserGetSerialization }),
   );
 }
+
 export function UserAdminCreateDoc(): MethodDecorator {
   return applyDecorators(
     Doc({
@@ -142,5 +144,22 @@ export function UserAdminUpdateNameDoc(): MethodDecorator {
       apiKey: true,
     }),
     DocResponse("user.updateName", { serialization: UserUpdateNameSerialization }),
+  );
+}
+
+export function UserAdminSoftDeleteDoc(): MethodDecorator {
+  return applyDecorators(
+    Doc({
+      operation: "modules.admin.user",
+    }),
+    DocRequest({
+      params: UserDocParamsId,
+    }),
+    DocAuth({
+      jwtAccessToken: true,
+      apiKey: true,
+    }),
+    DocGuard({ role: true, policy: true }),
+    DocResponseId("user.softDelete"),
   );
 }

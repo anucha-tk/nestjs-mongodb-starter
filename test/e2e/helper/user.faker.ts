@@ -42,12 +42,19 @@ export class UserFaker {
    *
    * @param Object Optional
    * @param Object.password Optional user password string
+   * @param Object.deleted Optional user deletedAt boolean
    * @default password here UserFaker.password or "xyZZ@@123444"
    * @example
-   *    createUser({ password: "abc" })
+   *    createUser({ password: "abc", deleted: true })
    * @returns Promise UserDoc
    */
-  public async createUser({ password }: { password?: string }): Promise<UserDoc> {
+  public async createUser({
+    password,
+    deleted,
+  }: {
+    password?: string;
+    deleted?: boolean;
+  }): Promise<UserDoc> {
     const passwordHash = await this.authService.createPassword(password ?? UserFaker.password);
     const role = await this.roleFaker.createRoleUser({});
 
@@ -62,7 +69,13 @@ export class UserFaker {
       userName: faker.person.middleName(),
     };
 
-    return this.userService.create(userCreateDto, passwordHash);
+    const user = await this.userService.create(userCreateDto, passwordHash);
+
+    if (deleted) {
+      return this.userService.softDelete(user);
+    }
+
+    return user;
   }
 
   /**
@@ -90,6 +103,33 @@ export class UserFaker {
       firstName: `admin_${faker.person.firstName()}`,
       lastName: `admin_${faker.person.lastName()}`,
       email: `admin_${faker.internet.email()}`,
+      password: password ?? UserFaker.password,
+      signUpFrom: ENUM_USER_SIGN_UP_FROM.LOCAL,
+      role: role._id,
+      mobileNumber: faker.phone.number("##########"),
+    };
+
+    return this.userService.create(userCreateDto, passwordHash);
+  }
+
+  /**
+   * CreateSuperAdmin user and create role `ENUM_ROLE_TYPE.SUPER_ADMIN.`
+   *
+   * @param Object Optional
+   * @param Object.password Optional password string
+   * @default password here UserFaker.password or "xyZZ@@123444"
+   * @example
+   *    createSuperAdmin({ password: "abc" })
+   * @returns Promise UserDoc
+   */
+  public async createSuperAdmin({ password }: { password?: string }): Promise<UserDoc> {
+    const passwordHash = await this.authService.createPassword(password ?? UserFaker.password);
+    const role = await this.roleFaker.createRoleSuperAdmin({});
+
+    const userCreateDto: UserCreateDto = {
+      firstName: `superadmin_${faker.person.firstName()}`,
+      lastName: `superadmin_${faker.person.lastName()}`,
+      email: `superadmin_${faker.internet.email()}`,
       password: password ?? UserFaker.password,
       signUpFrom: ENUM_USER_SIGN_UP_FROM.LOCAL,
       role: role._id,

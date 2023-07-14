@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
   InternalServerErrorException,
   NotFoundException,
@@ -29,7 +30,11 @@ import {
 } from "src/common/policy/constants/policy.enum.constant";
 import { PolicyAbilityProtected } from "src/common/policy/decorators/policy.decorator";
 import { RequestParamGuard } from "src/common/request/decorators/request.decorator";
-import { Response, ResponsePaging } from "src/common/response/decorators/response.decorator";
+import {
+  Response,
+  ResponseId,
+  ResponsePaging,
+} from "src/common/response/decorators/response.decorator";
 import { IResponse, IResponsePaging } from "src/common/response/interfaces/response.interface";
 import { ENUM_ROLE_STATUS_CODE_ERROR } from "src/modules/role/constants/role.status-code.constant";
 import { RoleService } from "src/modules/role/services/role.service";
@@ -47,6 +52,7 @@ import { ENUM_USER_STATUS_CODE_ERROR } from "../constants/user.status-code.const
 import {
   GetUser,
   UserAdminGetGuard,
+  UserAdminSoftDeleteGuard,
   UserAdminUpdateActiveGuard,
   UserAdminUpdateBlockedGuard,
   UserAdminUpdateInactiveGuard,
@@ -58,6 +64,7 @@ import {
   UserAdminGetDoc,
   UserAdminInactiveDoc,
   UserAdminListDoc,
+  UserAdminSoftDeleteDoc,
   UserAdminUpdateNameDoc,
 } from "../docs/user.admin.doc";
 import { UserCreateDto } from "../dtos/user.create.dto";
@@ -232,7 +239,22 @@ export class UserAdminController {
     return { data: update };
   }
 
-  // TODO: delete
+  @UserAdminSoftDeleteDoc()
+  @ResponseId("user.softDelete")
+  @UserAdminSoftDeleteGuard()
+  @PolicyAbilityProtected({
+    subject: ENUM_POLICY_SUBJECT.USER,
+    action: [ENUM_POLICY_ACTION.READ, ENUM_POLICY_ACTION.DELETE],
+  })
+  @AuthJwtAdminAccessProtected()
+  @RequestParamGuard(UserRequestDto)
+  @Response("user.softDelete")
+  @Delete("/soft-delete/:user")
+  async softDelete(@GetUser() user: UserDoc): Promise<IResponse> {
+    await this.userService.softDelete(user);
+    return { data: { _id: user._id } };
+  }
+  // TODO: deleteOne
   // TODO: import
   // TODO: export
 
