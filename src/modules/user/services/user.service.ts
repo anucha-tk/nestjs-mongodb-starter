@@ -97,8 +97,20 @@ export class UserService implements IUserService {
     return this.userRepository.findOne<T>({ email }, options);
   }
 
+  async softDelete(repository: UserDoc): Promise<UserDoc> {
+    return this.userRepository.softDelete(repository);
+  }
+
+  async deleteOne(repository: UserDoc): Promise<UserDoc> {
+    return this.userRepository.deleteOne(repository);
+  }
+
   async deleteMany(find: Record<string, any>): Promise<boolean> {
     return this.userRepository.deleteMany(find);
+  }
+
+  async restore(repository: UserDoc): Promise<UserDoc> {
+    return this.userRepository.restore(repository);
   }
 
   async increasePasswordAttempt(repository: UserDoc): Promise<UserDoc> {

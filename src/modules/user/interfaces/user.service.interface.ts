@@ -19,6 +19,9 @@ export interface IUserService {
   findAll(find?: Record<string, any>, options?: IDatabaseFindAllOptions): Promise<IUserEntity[]>;
   findOneById<T>(_id: string, options?: IDatabaseFindOneOptions): Promise<T>;
   findOneByEmail<T>(email: string, options?: IDatabaseFindOneOptions): Promise<T>;
+  softDelete(repository: UserDoc): Promise<UserDoc>;
+  deleteOne(repository: UserDoc): Promise<UserDoc>;
+  restore(repository: UserDoc): Promise<UserDoc>;
   deleteMany(find: Record<string, any>): Promise<boolean>;
   resetPasswordAttempt(repository: UserDoc): Promise<UserDoc>;
   increasePasswordAttempt(repository: UserDoc): Promise<UserDoc>;
