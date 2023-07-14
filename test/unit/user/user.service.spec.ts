@@ -152,7 +152,27 @@ describe("user service", () => {
 
               return find;
             }),
+            softDelete: jest.fn().mockImplementation(() => {
+              const find = new userKeyEntityDoc();
+              find._id = userKeyId;
+              find.deletedAt = new Date();
+
+              return find;
+            }),
+            deleteOne: jest.fn().mockImplementation(() => {
+              const find = new userKeyEntityDoc();
+              find._id = userKeyId;
+
+              return find;
+            }),
             deleteMany: jest.fn().mockResolvedValue(true),
+            restore: jest.fn().mockImplementation(() => {
+              const find = new userKeyEntityDoc();
+              find._id = userKeyId;
+              find.deletedAt = undefined;
+
+              return find;
+            }),
             exists: jest.fn().mockResolvedValue(true),
             save: jest
               .fn()
@@ -464,6 +484,39 @@ describe("user service", () => {
 
       expect(typeof result).toBe("boolean");
       expect(userRepository.exists).toBeCalledWith({ username: "abc" }, { withDeleted: true });
+    });
+  });
+
+  describe("softDelete", () => {
+    it("should soft delete userDoc", async () => {
+      const user = new userKeyEntityDoc();
+      const result = await userService.softDelete(user);
+
+      expect(result).toHaveProperty("deletedAt");
+      expect(userRepository.softDelete).toBeCalled();
+      expect(userRepository.softDelete).toBeCalledWith(user);
+    });
+  });
+
+  describe("deleteOne", () => {
+    it("should deleteOne userDoc", async () => {
+      const user = new userKeyEntityDoc();
+      const result = await userService.deleteOne(user);
+
+      expect(result).toBeDefined();
+      expect(userRepository.deleteOne).toBeCalled();
+      expect(userRepository.deleteOne).toBeCalledWith(user);
+    });
+  });
+
+  describe("restore", () => {
+    it("should restore userDoc", async () => {
+      const user = new userKeyEntityDoc();
+      const result = await userService.restore(user);
+
+      expect(result.deletedAt).toBeUndefined();
+      expect(userRepository.restore).toBeCalled();
+      expect(userRepository.restore).toBeCalledWith(user);
     });
   });
 });

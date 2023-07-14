@@ -21,4 +21,6 @@ export abstract class DatabaseBaseRepositoryAbstract<Entity> {
   abstract save(repository: Entity): Promise<Entity>;
   abstract softDelete(repository: Entity): Promise<Entity>;
   abstract deleteMany(find: Record<string, any>): Promise<boolean>;
+  abstract deleteOne(repository: Entity): Promise<Entity>;
+  abstract restore(repository: Entity): Promise<Entity>;
 }

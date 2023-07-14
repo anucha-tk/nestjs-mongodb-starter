@@ -245,10 +245,39 @@ export abstract class DatabaseMongoUUIDRepositoryAbstract<
     return result ? true : false;
   }
 
+  /**
+   * Soft delete document.
+   * @param repository repository document and assign deletedAt Date
+   *
+   * @returns Promise EntityDocument
+   * */
   async softDelete(
     repository: EntityDocument & Document<string> & { deletedAt?: Date },
   ): Promise<EntityDocument> {
     repository.deletedAt = new Date();
+    return repository.save();
+  }
+
+  /**
+   * Delete one document.
+   * @param repository repository document
+   *
+   * @returns Promise EntityDocument
+   * */
+  async deleteOne(repository: EntityDocument & Document<string>): Promise<EntityDocument> {
+    return repository.deleteOne();
+  }
+
+  /**
+   * Restore soft delete document.
+   * @param repository repository document and assign deletedAt Date
+   *
+   * @returns Promise EntityDocument
+   * */
+  async restore(
+    repository: EntityDocument & Document<string> & { deletedAt?: Date },
+  ): Promise<EntityDocument> {
+    repository.deletedAt = undefined;
     return repository.save();
   }
 }
