@@ -17,6 +17,7 @@
   "get": "Get success",
   "create": "Create success",
   "softDelete": "Soft delete success",
+  "restore": "Restore success",
   "error": {
     "userNameExist": "Email user used",
     "emailExist": "Email user used",

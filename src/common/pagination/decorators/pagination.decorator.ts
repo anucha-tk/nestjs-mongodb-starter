@@ -60,16 +60,23 @@ export function PaginationQueryFilterEqualObjectId(
 }
 
 /**
- * Pagination query populate document when find all.
+ * Pagination query boolean
  *
  * @param queryField name string of single property to extract from the `query` object
- * @param defaultValue boolean to join
+ * @param defaultValue boolean
+ *
+ * @example
+ *    `@PaginationQueryBoolean({ defaultValue: false })`
+ *    join: boolean,
+ *
+ *    `@PaginationQueryBoolean({ defaultValue: false })`
+ *    withDeleted: boolean,
  */
-export function PaginationQueryJoin({
-  queryField = "join",
+export function PaginationQueryBoolean({
+  queryField,
   defaultValue,
 }: {
-  queryField?: string;
+  queryField: string;
   defaultValue: boolean;
 }): ParameterDecorator {
   return Query(queryField, PaginationJoinPipe(defaultValue));

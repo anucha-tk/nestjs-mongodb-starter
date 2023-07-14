@@ -6,6 +6,7 @@ import { faker } from "@faker-js/faker";
 import { Test, TestingModule } from "@nestjs/testing";
 import { UserRepository } from "src/modules/user/repository/repositories/user.repository";
 import { HelperDateService } from "src/common/helper/services/helper.date.service";
+import { Reflector } from "@nestjs/core";
 
 describe("UserPutToRequestGuard", () => {
   let userPutToRequestGuard: UserPutToRequestGuard;
@@ -16,8 +17,10 @@ describe("UserPutToRequestGuard", () => {
     _id: mockId,
     name: faker.person.firstName(),
   };
+  let reflector: Reflector;
 
   beforeAll(async () => {
+    reflector = new Reflector();
     const modRef: TestingModule = await Test.createTestingModule({
       providers: [
         {
@@ -43,7 +46,7 @@ describe("UserPutToRequestGuard", () => {
     }).compile();
 
     userService = modRef.get<UserService>(UserService);
-    userPutToRequestGuard = new UserPutToRequestGuard(userService);
+    userPutToRequestGuard = new UserPutToRequestGuard(userService, reflector);
     mockContext = createMock<ExecutionContext>();
   });
 
@@ -51,7 +54,7 @@ describe("UserPutToRequestGuard", () => {
     jest.clearAllMocks();
   });
 
-  it("should return request.__user equal undefined", async () => {
+  it("should return request.__user equal undefined when user not exist", async () => {
     const mockRequest = {
       params: {
         user: faker.string.uuid(),
@@ -59,6 +62,7 @@ describe("UserPutToRequestGuard", () => {
       __user: undefined, // Initialize with undefined
     } as any;
 
+    jest.spyOn(reflector, "getAllAndOverride").mockReturnValue({});
     jest.spyOn(mockContext, "switchToHttp").mockReturnValue({
       getRequest: jest.fn().mockReturnValue(mockRequest),
     } as any);
@@ -68,7 +72,8 @@ describe("UserPutToRequestGuard", () => {
     expect(result).toBe(true);
     expect(mockRequest.__user).toEqual(undefined);
   });
-  it("should return request.__user equal userDoc", async () => {
+
+  it("should return request.__user equal userDoc when user exist", async () => {
     const mockRequest = {
       params: {
         user: mockId,
@@ -76,6 +81,7 @@ describe("UserPutToRequestGuard", () => {
       __user: undefined, // Initialize with undefined
     } as any;
 
+    jest.spyOn(reflector, "getAllAndOverride").mockReturnValue({});
     jest.spyOn(mockContext, "switchToHttp").mockReturnValue({
       getRequest: jest.fn().mockReturnValue(mockRequest),
     } as any);

@@ -163,3 +163,20 @@ export function UserAdminSoftDeleteDoc(): MethodDecorator {
     DocResponseId("user.softDelete"),
   );
 }
+
+export function UserAdminRestoreDoc(): MethodDecorator {
+  return applyDecorators(
+    Doc({
+      operation: "modules.admin.user",
+    }),
+    DocRequest({
+      params: UserDocParamsId,
+    }),
+    DocAuth({
+      jwtAccessToken: true,
+      apiKey: true,
+    }),
+    DocGuard({ role: true, policy: true }),
+    DocResponseId("user.restore"),
+  );
+}

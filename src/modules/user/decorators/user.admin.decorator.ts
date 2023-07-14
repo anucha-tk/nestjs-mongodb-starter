@@ -9,6 +9,7 @@ import { IRequestApp } from "src/common/request/interfaces/request.interface";
 import {
   USER_ACTIVE_META_KEY,
   USER_BLOCKED_META_KEY,
+  USER_DELETED_META_KEY,
   USER_INACTIVE_PERMANENT_META_KEY,
 } from "../constants/user.constant";
 import { UserActiveGuard } from "../guards/user.active.guard";
@@ -17,6 +18,7 @@ import { UserCanNotOurSelfGuard } from "../guards/user.can-not-ourself.guard";
 import { UserInactivePermanentGuard } from "../guards/user.inactive-permanent.guard";
 import { UserNotFoundGuard } from "../guards/user.not-found.guard";
 import { UserPutToRequestGuard } from "../guards/user.put-to-request.guard";
+import { UserRestoreGuard } from "../guards/user.restore.guard";
 import { UserDoc, UserEntity } from "../repository/entities/user.entity";
 
 /**
@@ -115,5 +117,20 @@ export const UserAdminUpdateInactiveGuard = (): MethodDecorator =>
 export function UserAdminSoftDeleteGuard(): MethodDecorator {
   return applyDecorators(
     UseGuards(UserPutToRequestGuard, UserNotFoundGuard, UserCanNotOurSelfGuard),
+  );
+}
+
+/**
+ * Decorator Guards includes
+ * 1. UserPutToRequestGuard - find user from param and put to `request.__user`
+ * 2. UserNotFoundGuard - throw 404 if `request.__user` it not exist
+ * 3. UserRestoreGuard - throw 404 if `request.__user.deleteAt` it not exist
+ *
+ * @returns MethodDecorator
+ * */
+export function UserAdminRestoreGuard(): MethodDecorator {
+  return applyDecorators(
+    UseGuards(UserPutToRequestGuard, UserNotFoundGuard, UserRestoreGuard),
+    SetMetadata(USER_DELETED_META_KEY, true),
   );
 }

@@ -20,7 +20,7 @@ import {
   PaginationQuery,
   PaginationQueryFilterEqualObjectId,
   PaginationQueryFilterInBoolean,
-  PaginationQueryJoin,
+  PaginationQueryBoolean,
 } from "src/common/pagination/decorators/pagination.decorator";
 import { PaginationListDto } from "src/common/pagination/dtos/pagination.list.dto";
 import { PaginationService } from "src/common/pagination/services/pagination.service";
@@ -52,6 +52,7 @@ import { ENUM_USER_STATUS_CODE_ERROR } from "../constants/user.status-code.const
 import {
   GetUser,
   UserAdminGetGuard,
+  UserAdminRestoreGuard,
   UserAdminSoftDeleteGuard,
   UserAdminUpdateActiveGuard,
   UserAdminUpdateBlockedGuard,
@@ -64,6 +65,7 @@ import {
   UserAdminGetDoc,
   UserAdminInactiveDoc,
   UserAdminListDoc,
+  UserAdminRestoreDoc,
   UserAdminSoftDeleteDoc,
   UserAdminUpdateNameDoc,
 } from "../docs/user.admin.doc";
@@ -117,8 +119,10 @@ export class UserAdminController {
     inactivePermanent: Record<string, any>,
     @PaginationQueryFilterEqualObjectId("role", "role", true)
     role: Record<string, any>,
-    @PaginationQueryJoin({ defaultValue: false })
+    @PaginationQueryBoolean({ queryField: "join", defaultValue: false })
     join: boolean,
+    @PaginationQueryBoolean({ queryField: "withDeleted", defaultValue: false })
+    withDeleted: boolean,
   ): Promise<IResponsePaging> {
     const find: Record<string, any> = {
       ..._search,
@@ -135,6 +139,7 @@ export class UserAdminController {
       },
       order: _order,
       join,
+      withDeleted,
     });
 
     const total: number = await this.userService.getTotal(find);
@@ -145,6 +150,7 @@ export class UserAdminController {
       data: users,
     };
   }
+  // TODO: findDelete
 
   @UserAdminGetDoc()
   @Response("user.get", { serialization: UserGetSerialization })
@@ -254,6 +260,22 @@ export class UserAdminController {
     await this.userService.softDelete(user);
     return { data: { _id: user._id } };
   }
+
+  @UserAdminRestoreDoc()
+  @ResponseId("user.restore")
+  @UserAdminRestoreGuard()
+  @PolicyAbilityProtected({
+    subject: ENUM_POLICY_SUBJECT.USER,
+    action: [ENUM_POLICY_ACTION.READ, ENUM_POLICY_ACTION.UPDATE],
+  })
+  @AuthJwtAdminAccessProtected()
+  @RequestParamGuard(UserRequestDto)
+  @Patch("/restore/:user")
+  async restore(@GetUser() user: UserDoc): Promise<IResponse> {
+    await this.userService.restore(user);
+    return { data: { _id: user._id } };
+  }
+
   // TODO: deleteOne
   // TODO: import
   // TODO: export
