@@ -74,7 +74,8 @@
     "swagger-themes": "^1.2.29",
     "ua-parser-js": "^1.0.35",
     "winston": "^3.9.0",
-    "winston-daily-rotate-file": "^4.7.1"
+    "winston-daily-rotate-file": "^4.7.1",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.6.6",

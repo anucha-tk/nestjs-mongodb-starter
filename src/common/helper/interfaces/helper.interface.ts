@@ -1,4 +1,4 @@
-import { ENUM_HELPER_DATE_FORMAT } from "../constants/helper.enum.constant";
+import { ENUM_HELPER_DATE_FORMAT, ENUM_HELPER_FILE_TYPE } from "../constants/helper.enum.constant";
 
 export interface IHelperDateOptionsCreate {
   startOfDay?: boolean;
@@ -29,4 +29,21 @@ export interface IHelperJwtVerifyOptions {
 export interface IHelperJwtOptions extends IHelperJwtVerifyOptions {
   expiredIn: number | string;
   notBefore?: number | string;
+}
+
+// file
+export type IHelperFileRows = Record<string, string | number | Date>;
+
+export interface IHelperFileCreateExcelWorkbookOptions {
+  sheetName?: string;
+}
+
+export interface IHelperFileWriteExcelOptions {
+  password?: string;
+  type?: ENUM_HELPER_FILE_TYPE;
+}
+
+export interface IHelperFileReadExcelOptions {
+  sheet?: string | number;
+  password?: string;
 }

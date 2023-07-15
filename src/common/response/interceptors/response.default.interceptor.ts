@@ -32,6 +32,31 @@ import { IResponse } from "src/common/response/interfaces/response.interface";
 import { ENUM_RESPONSE_STATUS_CODE_ERROR } from "../constants/response.status-error.constant";
 import mongoose from "mongoose";
 
+/**
+ * ResponseDefaultInterceptor.
+ *
+ * @example
+ * # How to use messageProperties
+ * eg. add serviceName to languages json doc
+ *
+ * ## method one messageProperties
+ * {
+ *    serialization: ...,
+ *    messageProperties: { serviceName: "app" },
+ * }
+ *
+ * ## method two return on controller ResponseDefaultInterceptor is track customProperty auto
+ * return {
+ *  _metadata: {
+ *     customProperty: {
+ *       messageProperties: {
+ *         serviceName: this.serviceName,
+ *       },
+ *     },
+ *   },
+ *   data: { },
+ * };
+ */
 @Injectable()
 export class ResponseDefaultInterceptor<T> implements NestInterceptor<Promise<T>> {
   constructor(
