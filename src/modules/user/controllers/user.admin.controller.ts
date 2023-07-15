@@ -4,7 +4,8 @@ import {
   Controller,
   Delete,
   Get,
-  InternalServerErrorException,
+  HttpCode,
+  HttpStatus,
   NotFoundException,
   Patch,
   Post,
@@ -15,7 +16,7 @@ import { ApiKeyPublicProtected } from "src/common/api-key/decorators/api-key.dec
 import { AuthJwtAdminAccessProtected } from "src/common/auth/decorators/auth.jwt.decorator";
 import { IAuthPassword } from "src/common/auth/interfaces/auth.interface";
 import { AuthService } from "src/common/auth/services/auth.service";
-import { ENUM_ERROR_STATUS_CODE_ERROR } from "src/common/error/constants/error.status-code.constant";
+import { ENUM_HELPER_FILE_TYPE } from "src/common/helper/constants/helper.enum.constant";
 import {
   PaginationQuery,
   PaginationQueryFilterEqualObjectId,
@@ -32,6 +33,7 @@ import { PolicyAbilityProtected } from "src/common/policy/decorators/policy.deco
 import { RequestParamGuard } from "src/common/request/decorators/request.decorator";
 import {
   Response,
+  ResponseFile,
   ResponseId,
   ResponsePaging,
 } from "src/common/response/decorators/response.decorator";
@@ -64,6 +66,7 @@ import {
   UserAdminBlockedDoc,
   UserAdminCreateDoc,
   UserAdminDeleteDoc,
+  UserAdminExportDoc,
   UserAdminGetDoc,
   UserAdminInactiveDoc,
   UserAdminListDoc,
@@ -293,9 +296,6 @@ export class UserAdminController {
     return { data: { _id: user._id } };
   }
 
-  // TODO: import
-  // TODO: export
-
   @UserAdminBlockedDoc()
   @Response("user.blocked")
   @UserAdminUpdateBlockedGuard()
@@ -307,15 +307,7 @@ export class UserAdminController {
   @RequestParamGuard(UserRequestDto)
   @Patch("/update/:user/blocked")
   async blocked(@GetUser() user: UserDoc): Promise<void> {
-    try {
-      await this.userService.blocked(user);
-    } catch (err: any) {
-      throw new InternalServerErrorException({
-        statusCode: ENUM_ERROR_STATUS_CODE_ERROR.ERROR_UNKNOWN,
-        message: "http.serverError.internalServerError",
-        _error: err.message,
-      });
-    }
+    await this.userService.blocked(user);
     return;
   }
 
@@ -330,16 +322,7 @@ export class UserAdminController {
   @RequestParamGuard(UserRequestDto)
   @Patch("/update/:user/active")
   async active(@GetUser() user: UserDoc): Promise<void> {
-    try {
-      await this.userService.active(user);
-    } catch (err: any) {
-      throw new InternalServerErrorException({
-        statusCode: ENUM_ERROR_STATUS_CODE_ERROR.ERROR_UNKNOWN,
-        message: "http.serverError.internalServerError",
-        _error: err.message,
-      });
-    }
-
+    await this.userService.active(user);
     return;
   }
 
@@ -354,16 +337,25 @@ export class UserAdminController {
   @RequestParamGuard(UserRequestDto)
   @Patch("/update/:user/inactive")
   async inactive(@GetUser() user: UserDoc): Promise<void> {
-    try {
-      await this.userService.inactive(user);
-    } catch (err: any) {
-      throw new InternalServerErrorException({
-        statusCode: ENUM_ERROR_STATUS_CODE_ERROR.ERROR_UNKNOWN,
-        message: "http.serverError.internalServerError",
-        _error: err.message,
-      });
-    }
-
+    await this.userService.inactive(user);
     return;
+  }
+
+  @UserAdminExportDoc()
+  @ResponseFile({
+    serialization: UserListSerialization,
+    fileType: ENUM_HELPER_FILE_TYPE.CSV,
+  })
+  @PolicyAbilityProtected({
+    subject: ENUM_POLICY_SUBJECT.USER,
+    action: [ENUM_POLICY_ACTION.READ, ENUM_POLICY_ACTION.EXPORT],
+  })
+  @AuthJwtAdminAccessProtected()
+  @HttpCode(HttpStatus.OK)
+  @Post("/export")
+  async export(): Promise<IResponse> {
+    const users: IUserEntity[] = await this.userService.findAll({});
+
+    return { data: users };
   }
 }
