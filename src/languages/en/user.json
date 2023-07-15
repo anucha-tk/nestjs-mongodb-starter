@@ -19,6 +19,7 @@
   "softDelete": "Soft delete success",
   "restore": "Restore success",
   "delete": "Delete success",
+  "import": "Import user Succeed",
   "error": {
     "userNameExist": "Email user used",
     "emailExist": "Email user used",

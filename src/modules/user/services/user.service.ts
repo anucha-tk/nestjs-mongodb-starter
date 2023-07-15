@@ -9,6 +9,7 @@ import {
 } from "src/common/database/interfaces/database.interface";
 import { HelperDateService } from "src/common/helper/services/helper.date.service";
 import { RoleEntity } from "src/modules/role/repository/entities/role.entity";
+import { UserImportDto } from "../dtos/user.import.dto";
 import { UserUpdateGoogleSSODto } from "../dtos/user.update-google-sso.dto";
 import { UserUpdateNameDto } from "../dtos/user.update-name.dto";
 import { IUserCreate, IUserDoc, IUserEntity } from "../interfaces/user.interface";
@@ -303,5 +304,50 @@ export class UserService implements IUserService {
     options?: IDatabaseExistDeletedOptions,
   ): Promise<boolean> {
     return this.userRepository.exists({ username }, { ...options, withDeleted: true });
+  }
+
+  /**
+   * Import user excel
+   * @description make passwordExpired backward 1 day
+   * @params data UserImportDto[]
+   * @params role user role string
+   * @params pass IAuthPassword
+   * @params pass.passwordCreated password created Date
+   * @params pass.passwordHash password hash string
+   * @params pass.salt salt string
+   *
+   * @returns boolean
+   * */
+  async import(
+    data: UserImportDto[],
+    role: string,
+    { passwordCreated, passwordHash, salt }: IAuthPassword,
+  ): Promise<boolean> {
+    const passwordExpired: Date = this.helperDateService.backwardInDays(1);
+    const users: UserEntity[] = data.map(
+      ({ email, firstName, lastName, mobileNumber, signUpFrom, userName }) => {
+        const create: UserEntity = new UserEntity();
+        create.firstName = firstName;
+        create.username = userName;
+        create.email = email;
+        create.password = passwordHash;
+        create.role = role;
+        create.isActive = true;
+        create.inactivePermanent = false;
+        create.blocked = false;
+        create.lastName = lastName;
+        create.salt = salt;
+        create.passwordExpired = passwordExpired;
+        create.passwordCreated = passwordCreated;
+        create.signUpDate = this.helperDateService.create();
+        create.passwordAttempt = 0;
+        create.mobileNumber = mobileNumber ?? undefined;
+        create.signUpFrom = signUpFrom;
+
+        return create;
+      },
+    );
+
+    return this.userRepository.createMany<UserEntity>(users);
   }
 }

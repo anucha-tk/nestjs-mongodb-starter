@@ -10,12 +10,20 @@ import {
   Patch,
   Post,
   Put,
+  UploadedFile,
 } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { ApiKeyPublicProtected } from "src/common/api-key/decorators/api-key.decorator";
 import { AuthJwtAdminAccessProtected } from "src/common/auth/decorators/auth.jwt.decorator";
 import { IAuthPassword } from "src/common/auth/interfaces/auth.interface";
 import { AuthService } from "src/common/auth/services/auth.service";
+import { UploadFileSingle } from "src/common/file/decorators/file.decorator";
+import { IFileExtract } from "src/common/file/interfaces/file.interface";
+import { FileExtractPipe } from "src/common/file/pipes/file.extract.pipe";
+import { FileRequiredPipe } from "src/common/file/pipes/file.required.pipe";
+import { FileSizeExcelPipe } from "src/common/file/pipes/file.size-excel.pipe";
+import { FileTypeExcelPipe } from "src/common/file/pipes/file.type-excel.pipe";
+import { FileValidationPipe } from "src/common/file/pipes/file.validation.pipe";
 import { ENUM_HELPER_FILE_TYPE } from "src/common/helper/constants/helper.enum.constant";
 import {
   PaginationQuery,
@@ -68,6 +76,7 @@ import {
   UserAdminDeleteDoc,
   UserAdminExportDoc,
   UserAdminGetDoc,
+  UserAdminImportDoc,
   UserAdminInactiveDoc,
   UserAdminListDoc,
   UserAdminRestoreDoc,
@@ -75,6 +84,7 @@ import {
   UserAdminUpdateNameDoc,
 } from "../docs/user.admin.doc";
 import { UserCreateDto } from "../dtos/user.create.dto";
+import { UserImportDto } from "../dtos/user.import.dto";
 import { UserRequestDto } from "../dtos/user.request.dto";
 import { UserUpdateNameDto } from "../dtos/user.update-name.dto";
 import { IUserEntity } from "../interfaces/user.interface";
@@ -338,6 +348,37 @@ export class UserAdminController {
   @Patch("/update/:user/inactive")
   async inactive(@GetUser() user: UserDoc): Promise<void> {
     await this.userService.inactive(user);
+    return;
+  }
+
+  @UserAdminImportDoc()
+  @Response("user.import")
+  @UploadFileSingle("file")
+  @PolicyAbilityProtected({
+    subject: ENUM_POLICY_SUBJECT.USER,
+    action: [ENUM_POLICY_ACTION.READ, ENUM_POLICY_ACTION.CREATE, ENUM_POLICY_ACTION.IMPORT],
+  })
+  @AuthJwtAdminAccessProtected()
+  @Post("/import")
+  async import(
+    @UploadedFile(
+      FileRequiredPipe,
+      FileSizeExcelPipe,
+      FileTypeExcelPipe,
+      FileExtractPipe,
+      new FileValidationPipe<UserImportDto>(UserImportDto),
+    )
+    file: IFileExtract<UserImportDto>,
+  ): Promise<void> {
+    const [role, passwordString] = await Promise.all([
+      this.roleService.findOneByName("user"),
+      this.authService.createPasswordRandom(),
+    ]);
+
+    const password: IAuthPassword = await this.authService.createPassword(passwordString);
+
+    await this.userService.import(file.dto, role._id, password);
+
     return;
   }
 

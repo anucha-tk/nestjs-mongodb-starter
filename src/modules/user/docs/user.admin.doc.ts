@@ -1,10 +1,11 @@
-import { applyDecorators } from "@nestjs/common";
+import { applyDecorators, HttpStatus } from "@nestjs/common";
 import { ENUM_DOC_REQUEST_BODY_TYPE } from "src/common/doc/constants/doc.enum.constant";
 import {
   Doc,
   DocAuth,
   DocGuard,
   DocRequest,
+  DocRequestFile,
   DocResponse,
   DocResponseFile,
   DocResponseId,
@@ -198,6 +199,23 @@ export function UserAdminDeleteDoc(): MethodDecorator {
     }),
     DocGuard({ role: true, policy: true }),
     DocResponseId("user.delete"),
+  );
+}
+
+export function UserAdminImportDoc(): MethodDecorator {
+  return applyDecorators(
+    Doc({
+      operation: "modules.admin.user",
+    }),
+    DocAuth({
+      jwtAccessToken: true,
+      apiKey: true,
+    }),
+    DocRequestFile(),
+    DocGuard({ role: true, policy: true }),
+    DocResponse("user.import", {
+      httpStatus: HttpStatus.CREATED,
+    }),
   );
 }
 

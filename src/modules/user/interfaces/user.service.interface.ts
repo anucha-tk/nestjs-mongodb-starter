@@ -4,6 +4,7 @@ import {
   IDatabaseFindAllOptions,
   IDatabaseFindOneOptions,
 } from "src/common/database/interfaces/database.interface";
+import { UserImportDto } from "../dtos/user.import.dto";
 import { UserUpdateGoogleSSODto } from "../dtos/user.update-google-sso.dto";
 import { UserUpdateNameDto } from "../dtos/user.update-name.dto";
 import { UserDoc } from "../repository/entities/user.entity";
@@ -46,4 +47,9 @@ export interface IUserService {
   ): Promise<UserDoc>;
   updateName(repository: UserDoc, { firstName, lastName }: UserUpdateNameDto): Promise<UserDoc>;
   getTotal(find?: Record<string, any>): Promise<number>;
+  import(
+    data: UserImportDto[],
+    role: string,
+    { passwordCreated, passwordHash, salt }: IAuthPassword,
+  ): Promise<boolean>;
 }

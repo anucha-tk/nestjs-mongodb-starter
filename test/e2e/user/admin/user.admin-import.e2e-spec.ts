@@ -5,6 +5,7 @@ import { ENUM_API_KEY_STATUS_CODE_ERROR } from "src/common/api-key/constants/api
 import { ApiKeyService } from "src/common/api-key/services/api-key.service";
 import { ENUM_AUTH_STATUS_CODE_ERROR } from "src/common/auth/constants/auth.status-code.constant";
 import { AuthService } from "src/common/auth/services/auth.service";
+import { ENUM_FILE_STATUS_CODE_ERROR } from "src/common/file/constants/file.status-code.constant";
 import { ENUM_POLICY_STATUS_CODE_ERROR } from "src/common/policy/constants/policy.status-code.constant";
 import { ENUM_ROLE_STATUS_CODE_ERROR } from "src/modules/role/constants/role.status-code.constant";
 import { RoleService } from "src/modules/role/services/role.service";
@@ -15,8 +16,8 @@ import { ApiKeyFaker } from "test/e2e/helper/api-key.faker";
 import { AuthFaker } from "test/e2e/helper/auth.faker";
 import { UserFaker } from "test/e2e/helper/user.faker";
 
-describe("user export e2e", () => {
-  const USER_EXPORT_URL = "/admin/user/export";
+describe("user import e2e", () => {
+  const USER_IMPORT_URL = "/admin/user/import";
   let app: INestApplication;
   let userService: UserService;
   let roleService: RoleService;
@@ -74,7 +75,7 @@ describe("user export e2e", () => {
 
   describe("x-api-key", () => {
     it("should return 401 when not send x-api-key", async () => {
-      const { status, body } = await request(app.getHttpServer()).post(USER_EXPORT_URL);
+      const { status, body } = await request(app.getHttpServer()).post(USER_IMPORT_URL);
 
       expect(status).toBe(401);
       expect(body.statusCode).toBe(ENUM_API_KEY_STATUS_CODE_ERROR.API_KEY_NEEDED_ERROR);
@@ -83,7 +84,7 @@ describe("user export e2e", () => {
   describe("auth", () => {
     it("should return 401 when not auth", async () => {
       const { status, body } = await request(app.getHttpServer())
-        .post(USER_EXPORT_URL)
+        .post(USER_IMPORT_URL)
         .set("x-api-key", xApiKey);
 
       expect(status).toBe(401);
@@ -91,7 +92,7 @@ describe("user export e2e", () => {
     });
     it("should return 403 when not admin or superAdmin", async () => {
       const { status, body } = await request(app.getHttpServer())
-        .post(USER_EXPORT_URL)
+        .post(USER_IMPORT_URL)
         .set("x-api-key", xApiKey)
         .set("Authorization", `Bearer ${userAccessToken}`);
 
@@ -100,7 +101,7 @@ describe("user export e2e", () => {
     });
     it("should return 403 when not admin not have user policy", async () => {
       const { status, body } = await request(app.getHttpServer())
-        .post(USER_EXPORT_URL)
+        .post(USER_IMPORT_URL)
         .set("x-api-key", xApiKey)
         .set("authorization", `Bearer ${adminUnPolicyAccessToken}`);
 
@@ -108,14 +109,22 @@ describe("user export e2e", () => {
       expect(body.statusCode).toBe(ENUM_POLICY_STATUS_CODE_ERROR.POLICY_ABILITY_FORBIDDEN_ERROR);
     });
   });
-  describe("export response", () => {
-    it("should return 200 when export successful", async () => {
-      const { status } = await request(app.getHttpServer())
-        .post(USER_EXPORT_URL)
+  describe("guard", () => {
+    it("should return 422 when empty file", async () => {
+      const { status, body } = await request(app.getHttpServer())
+        .post(USER_IMPORT_URL)
         .set("x-api-key", xApiKey)
         .set("authorization", `Bearer ${adminAccessToken}`);
 
-      expect(status).toBe(200);
+      expect(status).toBe(422);
+      expect(body.statusCode).toBe(ENUM_FILE_STATUS_CODE_ERROR.FILE_NEEDED_ERROR);
     });
+    it.todo("should return 400 when invalid filetype");
+    it.todo("should return 400 when max file");
+    it.todo("should return 400 when max size");
+    it.todo("should return 400 when invalid dto");
+  });
+  describe("import response", () => {
+    it.todo("should return 200 when import success");
   });
 });
