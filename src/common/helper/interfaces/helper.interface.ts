@@ -47,3 +47,5 @@ export interface IHelperFileReadExcelOptions {
   sheet?: string | number;
   password?: string;
 }
+
+export type IHelperDateOptionsBackward = IHelperDateOptionsForward;

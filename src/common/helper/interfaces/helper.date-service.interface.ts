@@ -1,4 +1,5 @@
 import {
+  IHelperDateOptionsBackward,
   IHelperDateOptionsCreate,
   IHelperDateOptionsFormat,
   IHelperDateOptionsForward,
@@ -11,4 +12,5 @@ export interface IHelperDateService {
   startOfDay(date?: Date): Date;
   endOfDay(date?: Date): Date;
   forwardInSeconds(seconds: number, options?: IHelperDateOptionsForward): Date;
+  backwardInDays(days: number, options?: IHelperDateOptionsBackward): Date;
 }

@@ -67,4 +67,11 @@ describe("helper date service", () => {
       expect(result).toEqual(expectedDate);
     });
   });
+
+  describe("backwardInDays", () => {
+    it("should ", async () => {
+      const result = helperDateService.backwardInDays(30);
+      expect(result instanceof Date).toBe(true);
+    });
+  });
 });

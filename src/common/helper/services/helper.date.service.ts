@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { IHelperDateService } from "../interfaces/helper.date-service.interface";
 import {
+  IHelperDateOptionsBackward,
   IHelperDateOptionsCreate,
   IHelperDateOptionsFormat,
   IHelperDateOptionsForward,
@@ -55,5 +56,9 @@ export class HelperDateService implements IHelperDateService {
 
   forwardInSeconds(seconds: number, options?: IHelperDateOptionsForward): Date {
     return moment(options?.fromDate).add(seconds, "s").toDate();
+  }
+
+  backwardInDays(days: number, options?: IHelperDateOptionsBackward): Date {
+    return moment(options?.fromDate).subtract(days, "d").toDate();
   }
 }
