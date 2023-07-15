@@ -1,3 +1,24 @@
+## [1.0.0](https://github.com/anucha-tk/spec-finder-api/compare/0.4.0...1.0.0) (2023-07-15)
+
+### Features
+
+- **database:** add deleteOne and restore repository ([979ae3b](https://github.com/anucha-tk/spec-finder-api/commit/979ae3bea64d6190aa5fadda34d434d7d548dff7))
+- **file:** file decorator, pipe, interceptor and config ([89187b3](https://github.com/anucha-tk/spec-finder-api/commit/89187b307db129374953b18e68f288363e094e39))
+- **helper:** helperDateService ([783d768](https://github.com/anucha-tk/spec-finder-api/commit/783d76831824b7e70f9d3be80b321ea2d9b24f16))
+- **pagination:** filterIn, filterEqualObjectId service, pipe, decorator and test ([7256a46](https://github.com/anucha-tk/spec-finder-api/commit/7256a4687bf2db612e1c2dc5427e097bcd4f900b))
+- **response:** responseFile ([13535e8](https://github.com/anucha-tk/spec-finder-api/commit/13535e873b7fa72721874f257772f0ff5a472124))
+- **role:** findOne serive and unittest ([ce7dd20](https://github.com/anucha-tk/spec-finder-api/commit/ce7dd2057383b6de7a9304bbe6cd545b2560ccd5))
+- **user:** import user controller api ([71e070e](https://github.com/anucha-tk/spec-finder-api/commit/71e070e959c0d725d105e467d39258e1b14dd131))
+- **user:** softDelete controller api and test ([d624be6](https://github.com/anucha-tk/spec-finder-api/commit/d624be6cbc0005946fd262ff799265ae97af6175))
+- **user:** user admin update-name controller api and test ([cc7d4b8](https://github.com/anucha-tk/spec-finder-api/commit/cc7d4b8b1c945d6685806c7f588b2baaf39849e5))
+- **user:** user create controller api and testing ([705f1ff](https://github.com/anucha-tk/spec-finder-api/commit/705f1ffecf38262ec53632aef8f2ba626301b537))
+- **user:** user deleteOne controller api and test ([a42d6e2](https://github.com/anucha-tk/spec-finder-api/commit/a42d6e2c21f27b03e200b22f079c97802efdfeef))
+- **user:** user export allUser file type csv controller api ([39a12fd](https://github.com/anucha-tk/spec-finder-api/commit/39a12fd7e4306716f68f220a2d6ce38e008b2408))
+- **user:** user get controller api and testing ([7e3057f](https://github.com/anucha-tk/spec-finder-api/commit/7e3057f434e85553584d7dcf941a824947bf4065))
+- **user:** user list controller api and e2e testing ([67ff94a](https://github.com/anucha-tk/spec-finder-api/commit/67ff94af024d248438d735d8573bd265484e5164))
+- **user:** user restore controller api and test ([51f03a8](https://github.com/anucha-tk/spec-finder-api/commit/51f03a88fd9a3642c56a86f4d9613553f6584fdd))
+- **user:** userService add softDelete, DeleteOne and restore ([6335400](https://github.com/anucha-tk/spec-finder-api/commit/6335400ee942609eea92c0b1e8480f9a286828b5))
+
 ## [0.4.0](https://github.com/anucha-tk/spec-finder-api/compare/0.3.0...0.4.0) (2023-07-12)
 
 ### Features
