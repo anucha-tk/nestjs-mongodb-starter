@@ -25,13 +25,19 @@ describe("pagination service", () => {
     });
 
     it("should return maxPage 20", () => {
-      const offset = paginationService.offset(1000, 10);
+      const offset = paginationService.offset(1000, 10, true);
       expect(typeof offset).toBe("number");
       expect(offset).toBe(190);
     });
 
+    it("should return real maxPage", () => {
+      const offset = paginationService.offset(1000, 10);
+      expect(typeof offset).toBe("number");
+      expect(offset).toBe(9990);
+    });
+
     it("should return maxPerPage 100", () => {
-      const offset = paginationService.offset(10, 1000);
+      const offset = paginationService.offset(10, 1000, true);
       expect(typeof offset).toBe("number");
       expect(offset).toBe(900);
     });
@@ -48,8 +54,14 @@ describe("pagination service", () => {
       expect(result).toBe(19);
     });
 
+    it("should return page 50", () => {
+      const result = paginationService.page(50);
+      expect(typeof result).toBe("number");
+      expect(result).toBe(50);
+    });
+
     it("should return maxPage 20 when receive then maxPage", () => {
-      const result = paginationService.page(21);
+      const result = paginationService.page(21, true);
       expect(typeof result).toBe("number");
       expect(result).toBe(20);
     });
@@ -121,9 +133,14 @@ describe("pagination service", () => {
     });
 
     it("should return maxPage when page greater than maxPage", () => {
-      const result = paginationService.totalPage(1000, 20);
+      const result = paginationService.totalPage(1000, 20, true);
       expect(typeof result).toBe("number");
       expect(result).toBe(20);
+    });
+    it("should return real page when page greater than maxPage", () => {
+      const result = paginationService.totalPage(1000, 20);
+      expect(typeof result).toBe("number");
+      expect(result).toBe(50);
     });
   });
 
@@ -138,6 +155,28 @@ describe("pagination service", () => {
     it("should return object equal", async () => {
       const result = paginationService.filterEqual("name", ["name_a", "name_b"]);
       expect(result).toEqual({ name: ["name_a", "name_b"] });
+    });
+  });
+
+  describe("filterContain", () => {
+    it("should return a filter object for a partial match on the field", () => {
+      expect(paginationService.filterContain("title", "John")).toEqual({
+        title: {
+          $regex: new RegExp("John"),
+          $options: "i",
+        },
+      });
+    });
+  });
+
+  describe("filterContainFullMatch", () => {
+    it("should return a filter object for a full match on the field", () => {
+      expect(paginationService.filterContainFullMatch("title", "John")).toEqual({
+        title: {
+          $regex: new RegExp("\\bJohn\\b"),
+          $options: "i",
+        },
+      });
     });
   });
 });

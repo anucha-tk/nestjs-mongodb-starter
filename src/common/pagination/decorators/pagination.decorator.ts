@@ -1,5 +1,7 @@
 import { Query } from "@nestjs/common";
 import { ENUM_PAGINATION_ORDER_DIRECTION_TYPE } from "../constants/pagination.enum.constant";
+import { IPaginationFilterStringContainOptions } from "../interfaces/pagination.interface";
+import { PaginationFilterContainPipe } from "../pipes/pagination.filter-contain.pipe";
 import { PaginationFilterEqualObjectIdPipe } from "../pipes/pagination.filter-equal-object-id.pipe";
 import { PaginationFilterInBooleanPipe } from "../pipes/pagination.filter-in-boolean.pipe";
 import { PaginationFilterInEnumPipe } from "../pipes/pagination.filter-in-enum.pipe";
@@ -14,10 +16,11 @@ export function PaginationQuery(
   defaultOrderDirection: ENUM_PAGINATION_ORDER_DIRECTION_TYPE,
   availableSearch: string[],
   availableOrderBy: string[],
+  maxPage = false,
 ): ParameterDecorator {
   return Query(
     PaginationSearchPipe(availableSearch),
-    PaginationPagingPipe(defaultPerPage),
+    PaginationPagingPipe(defaultPerPage, maxPage),
     PaginationOrderPipe(defaultOrderBy, defaultOrderDirection, availableOrderBy),
   );
 }
@@ -80,4 +83,13 @@ export function PaginationQueryBoolean({
   defaultValue: boolean;
 }): ParameterDecorator {
   return Query(queryField, PaginationJoinPipe(defaultValue));
+}
+
+export function PaginationQueryFilterContain(
+  field: string,
+  queryField?: string,
+  options?: IPaginationFilterStringContainOptions,
+  raw = false,
+): ParameterDecorator {
+  return Query(queryField ?? field, PaginationFilterContainPipe(field, raw, options));
 }

@@ -13,16 +13,22 @@ import { IPaginationService } from "../interfaces/pagination.service.interface";
 
 @Injectable()
 export class PaginationService implements IPaginationService {
-  offset(page: number, perPage: number): number {
-    page = page > PAGINATION_MAX_PAGE ? PAGINATION_MAX_PAGE : page;
-    perPage = perPage > PAGINATION_MAX_PER_PAGE ? PAGINATION_MAX_PER_PAGE : perPage;
+  offset(page: number, perPage: number, maxPage = false): number {
+    if (maxPage) {
+      page = page > PAGINATION_MAX_PAGE ? PAGINATION_MAX_PAGE : page;
+      perPage = perPage > PAGINATION_MAX_PER_PAGE ? PAGINATION_MAX_PER_PAGE : perPage;
+    }
     const offset: number = (page - 1) * perPage;
 
     return offset;
   }
 
-  page(page?: number): number {
-    return page ? (page > PAGINATION_MAX_PAGE ? PAGINATION_MAX_PAGE : page) : PAGINATION_PAGE;
+  page(page?: number, maxPage = false): number {
+    return page
+      ? maxPage && page > PAGINATION_MAX_PAGE
+        ? PAGINATION_MAX_PAGE
+        : page
+      : PAGINATION_PAGE;
   }
 
   perPage(perPage?: number): number {
@@ -58,10 +64,18 @@ export class PaginationService implements IPaginationService {
     return { [orderBy]: orderDirectionValue };
   }
 
-  totalPage(totalData: number, perPage: number): number {
+  /**
+   * get total page
+   * @param totalData number of totalData
+   * @param perPage number of perPage
+   * @param maxPage Optional default false, if what to maxPage enable true
+   *
+   * @returns number of total page
+   * */
+  totalPage(totalData: number, perPage: number, maxPage = false): number {
     let totalPage = Math.ceil(totalData / perPage);
     totalPage = totalPage === 0 ? 1 : totalPage;
-    return totalPage > PAGINATION_MAX_PAGE ? PAGINATION_MAX_PAGE : totalPage;
+    return maxPage && totalPage > PAGINATION_MAX_PAGE ? PAGINATION_MAX_PAGE : totalPage;
   }
 
   /**
@@ -91,5 +105,29 @@ export class PaginationService implements IPaginationService {
    * */
   filterEqual<T = string>(field: string, filterValue: T): Record<string, T> {
     return { [field]: filterValue };
+  }
+
+  filterContainFullMatch(
+    field: string,
+    filterValue: string,
+  ): Record<string, { $regex: RegExp; $options: string }> {
+    return {
+      [field]: {
+        $regex: new RegExp(`\\b${filterValue}\\b`),
+        $options: "i",
+      },
+    };
+  }
+
+  filterContain(
+    field: string,
+    filterValue: string,
+  ): Record<string, { $regex: RegExp; $options: string }> {
+    return {
+      [field]: {
+        $regex: new RegExp(filterValue),
+        $options: "i",
+      },
+    };
   }
 }

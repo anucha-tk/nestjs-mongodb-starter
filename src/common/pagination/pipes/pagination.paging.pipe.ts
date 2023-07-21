@@ -5,7 +5,7 @@ import { HelperNumberService } from "src/common/helper/services/helper.number.se
 import { PaginationService } from "src/common/pagination/services/pagination.service";
 import { IRequestApp } from "src/common/request/interfaces/request.interface";
 
-export function PaginationPagingPipe(defaultPerPage: number): Type<PipeTransform> {
+export function PaginationPagingPipe(defaultPerPage: number, maxPage = false): Type<PipeTransform> {
   @Injectable({ scope: Scope.REQUEST })
   class MixinPaginationPagingPipe implements PipeTransform {
     constructor(
@@ -17,11 +17,12 @@ export function PaginationPagingPipe(defaultPerPage: number): Type<PipeTransform
     async transform(value: Record<string, any>): Promise<Record<string, any>> {
       const page: number = this.paginationService.page(
         this.helperNumberService.create(value?.page ?? 1),
+        maxPage,
       );
       const perPage: number = this.paginationService.perPage(
         this.helperNumberService.create(value?.perPage ?? defaultPerPage),
       );
-      const offset: number = this.paginationService.offset(page, perPage);
+      const offset: number = this.paginationService.offset(page, perPage, maxPage);
 
       this.request.__pagination = {
         ...this.request.__pagination,
