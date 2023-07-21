@@ -38,3 +38,14 @@ lerna-debug.log*
 .env
 .env.test
 /data/swagger.json
+
+# database
+/postgresql
+
+# Prisma specific
+/prisma/.env
+/prisma/.prisma
+/prisma/migrations
+/prisma/client
+/prisma/schema.prisma
+/prisma/dev.db

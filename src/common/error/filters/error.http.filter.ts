@@ -27,6 +27,7 @@ import {
 } from "src/common/message/interfaces/message.interface";
 import { MessageService } from "src/common/message/services/message.service";
 import { IRequestApp } from "src/common/request/interfaces/request.interface";
+import { MongoError } from "mongodb";
 
 // If we throw error with HttpException, there will always return object
 // The exception filter only catch HttpException
@@ -56,6 +57,7 @@ export class ErrorHttpFilter implements ExceptionFilter {
     const __version = request.__version ?? this.configService.get<string>("app.versioning.version");
     const __repoVersion =
       request.__repoVersion ?? this.configService.get<string>("app.repoVersion");
+    const env = this.configService.get<string>("app.env");
 
     // Debugger
     try {
@@ -88,6 +90,15 @@ export class ErrorHttpFilter implements ExceptionFilter {
       version: __version,
       repoVersion: __repoVersion,
     };
+
+    // log for dev or test
+    if (env !== "production" && exception instanceof MongoError) {
+      statusCode = +exception.code;
+      const messages = exception.errmsg.split(":");
+      const message = `${messages[2]}${messages[3]}${messages[4]}`.trim();
+      messagePath = message;
+    }
+
     if (exception instanceof HttpException) {
       // Restructure
       const responseException = exception.getResponse();
