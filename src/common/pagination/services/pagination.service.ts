@@ -130,4 +130,39 @@ export class PaginationService implements IPaginationService {
       },
     };
   }
+
+  /**
+   * get multi query operators mongo
+   *
+   * @example queryOperator({ field: "totalCores", operator: "=", value: "24" })
+   * //{ totalCores: { $eq: "24" }}
+   *
+   * @returns Record<string,any>
+   * */
+  multiQueryOperator(queryOperators: Record<string, any>[]): Record<string, any> {
+    const opeObj = {};
+    queryOperators.map((e: any) => {
+      switch (e.operator) {
+        case "=":
+          opeObj[e.field] = { ...opeObj[e.field], $eq: e.value };
+          break;
+        case ">":
+          opeObj[e.field] = { ...opeObj[e.field], $gt: e.value };
+          break;
+        case ">=":
+          opeObj[e.field] = { ...opeObj[e.field], $gte: e.value };
+          break;
+        case "<":
+          opeObj[e.field] = { ...opeObj[e.field], $lt: e.value };
+          break;
+        case "<=":
+          opeObj[e.field] = { ...opeObj[e.field], $lte: e.value };
+          break;
+        case "!=":
+          opeObj[e.field] = { ...opeObj[e.field], $ne: e.value };
+          break;
+      }
+    });
+    return opeObj;
+  }
 }

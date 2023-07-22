@@ -1,7 +1,10 @@
 import { Controller, Get } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { ApiKeyPublicProtected } from "src/common/api-key/decorators/api-key.decorator";
-import { PaginationQuery } from "src/common/pagination/decorators/pagination.decorator";
+import {
+  PaginationQuery,
+  PaginationMultiQueryOperators,
+} from "src/common/pagination/decorators/pagination.decorator";
 import { PaginationListDto } from "src/common/pagination/dtos/pagination.list.dto";
 import { PaginationService } from "src/common/pagination/services/pagination.service";
 import { ResponsePaging } from "src/common/response/decorators/response.decorator";
@@ -42,9 +45,12 @@ export class CPUPublicController {
       CPU_DEFAULT_AVAILABLE_ORDER_BY,
     )
     { _search, _limit, _offset, _order }: PaginationListDto,
+    @PaginationMultiQueryOperators()
+    multiQueryOperators: Record<string, any>,
   ): Promise<IResponsePaging> {
     const find: Record<string, any> = {
       ..._search,
+      ...multiQueryOperators,
     };
 
     const cpus: CPUEntity[] = await this.cpuService.findAll(find, {

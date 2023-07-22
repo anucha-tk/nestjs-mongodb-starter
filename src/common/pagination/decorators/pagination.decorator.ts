@@ -8,6 +8,7 @@ import { PaginationFilterInEnumPipe } from "../pipes/pagination.filter-in-enum.p
 import { PaginationJoinPipe } from "../pipes/pagination.join.pipe";
 import { PaginationOrderPipe } from "../pipes/pagination.order.pipe";
 import { PaginationPagingPipe } from "../pipes/pagination.paging.pipe";
+import { PaginationMultiQueryOperatorsPipe } from "../pipes/pagination.query-operator.pipe";
 import { PaginationSearchPipe } from "../pipes/pagination.search.pipe";
 
 export function PaginationQuery(
@@ -92,4 +93,21 @@ export function PaginationQueryFilterContain(
   raw = false,
 ): ParameterDecorator {
   return Query(queryField ?? field, PaginationFilterContainPipe(field, raw, options));
+}
+
+/**
+ * Pagination query operator
+ * @param queryOperators string like Record<string,any>[]
+ *
+ * @example
+ * # Query
+ *    queryOperators=[{"field":"tdp","operator":">","value":"200"}, {"field":"tdp","operator":"<","value":"210"}]
+ *
+ * # how to use
+ *    `@PaginationMultiQueryOperators()`
+ *    multiQueryOperators: Record<string,any>
+ *
+ * */
+export function PaginationMultiQueryOperators(): ParameterDecorator {
+  return Query("multiQueryOperators", PaginationMultiQueryOperatorsPipe());
 }

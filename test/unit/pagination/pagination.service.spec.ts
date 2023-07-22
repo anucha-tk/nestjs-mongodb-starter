@@ -179,4 +179,16 @@ describe("pagination service", () => {
       });
     });
   });
+
+  describe("multiQueryOperator", () => {
+    it("should return object multi query operator", async () => {
+      const q = [
+        { field: "totalCores", operator: "=", value: "24" },
+        { field: "tdp", operator: ">", value: "200" },
+        { field: "tdp", operator: "<", value: "210" },
+      ];
+      const result = paginationService.multiQueryOperator(q);
+      expect(result).toEqual({ totalCores: { $eq: "24" }, tdp: { $gt: "200", $lt: "210" } });
+    });
+  });
 });

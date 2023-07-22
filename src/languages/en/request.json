@@ -13,5 +13,6 @@
   "MinDateTodayConstraint": "{property} has less date than the {value}",
   "minDateGreaterThan": "{property} has less date than the {value}",
   "MinGreaterThanEqualConstraint": "{property} has greater then the {value}",
-  "isArray": "{property} should be a array"
+  "isArray": "{property} should be a array",
+  "queryOperators": "queryOperators object invalid"
 }
