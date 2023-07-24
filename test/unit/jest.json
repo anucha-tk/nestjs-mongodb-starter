@@ -12,7 +12,7 @@
     "<rootDir>/test/unit/user/**/*.spec.ts",
     "<rootDir>/test/unit/auth/*.spec.ts",
     "<rootDir>/test/unit/debugger/*.spec.ts",
-    "<rootDir>/test/unit/cpu/*.spec.ts"
+    "<rootDir>/test/unit/cpu/**/*.spec.ts"
   ],
   "collectCoverage": false,
   "coverageDirectory": "coverage",
