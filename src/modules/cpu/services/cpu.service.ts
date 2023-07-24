@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import {
   IDatabaseFindAllOptions,
+  IDatabaseFindOneOptions,
   IDatabaseGetTotalOptions,
 } from "src/common/database/interfaces/database.interface";
 import { CPUImportDto } from "../dtos/cpu.import.dto";
@@ -18,7 +19,6 @@ export class CPUService implements ICPUService {
   ): Promise<CPUEntity[]> {
     return this.cpuRepository.findAll<CPUEntity>(find, {
       ...options,
-      join: options?.join ?? true,
     });
   }
 
@@ -35,6 +35,8 @@ export class CPUService implements ICPUService {
         codeName,
         verticalSegment,
         processorNumber,
+        processorGraphics,
+        graphicsBaseFrequency,
         lithography,
         price,
         totalCores,
@@ -50,6 +52,7 @@ export class CPUService implements ICPUService {
         maxOfMemoryChannels,
         socketsSupported,
         packageSize,
+        tjunction,
         brand,
       }) => {
         const create: CPUEntity = new CPUEntity();
@@ -61,6 +64,8 @@ export class CPUService implements ICPUService {
         create.brand = brand;
         create.processorNumber = processorNumber;
         create.lithography = lithography;
+        create.processorGraphics = processorGraphics;
+        create.graphicsBaseFrequency = graphicsBaseFrequency;
         create.price = price;
         create.totalCores = totalCores;
         create.totalThreads = totalThreads;
@@ -73,6 +78,7 @@ export class CPUService implements ICPUService {
         create.maxMemorySize = maxMemorySize;
         create.memoryTypes = memoryTypes;
         create.maxOfMemoryChannels = maxOfMemoryChannels;
+        create.tjunction = tjunction;
         create.socketsSupported = socketsSupported;
         create.packageSize = packageSize;
 
@@ -80,5 +86,9 @@ export class CPUService implements ICPUService {
       },
     );
     return this.cpuRepository.createMany<CPUEntity>(cpus);
+  }
+
+  async findOneById<T>(_id: string, options?: IDatabaseFindOneOptions): Promise<T> {
+    return this.cpuRepository.findOneById<T>(_id, options);
   }
 }

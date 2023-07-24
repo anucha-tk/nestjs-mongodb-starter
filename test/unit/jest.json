@@ -11,7 +11,8 @@
     "<rootDir>/test/unit/pagination/*.spec.ts",
     "<rootDir>/test/unit/user/**/*.spec.ts",
     "<rootDir>/test/unit/auth/*.spec.ts",
-    "<rootDir>/test/unit/debugger/*.spec.ts"
+    "<rootDir>/test/unit/debugger/*.spec.ts",
+    "<rootDir>/test/unit/cpu/*.spec.ts"
   ],
   "collectCoverage": false,
   "coverageDirectory": "coverage",
@@ -21,6 +22,7 @@
     "./src/common/api-key/**",
     "./src/modules/role/**",
     "./src/modules/user/**",
+    "./src/modules/cpu/**",
     "./src/common/pagination/**",
     "./src/common/auth/**",
     "./src/common/debugger/**"
