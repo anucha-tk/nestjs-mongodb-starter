@@ -96,6 +96,7 @@ describe("cpu service", () => {
                   return find;
                 },
               ),
+            deleteMany: jest.fn().mockResolvedValue(true),
           },
         },
       ],
@@ -143,6 +144,13 @@ describe("cpu service", () => {
       const result = await cPuService.create(data);
       expect(result instanceof cPUKeyEntityDoc).toBeTruthy();
       expect(result.toObject()).toEqual({ _id: cPUKeyId, ...data });
+    });
+  });
+
+  describe("deleteMany", () => {
+    it("should return boolean when deleteMany", async () => {
+      const result = await cPuService.deleteMany({});
+      expect(typeof result).toBe("boolean");
     });
   });
 });

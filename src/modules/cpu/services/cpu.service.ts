@@ -150,4 +150,8 @@ export class CPUService implements ICPUService {
 
     return this.cpuRepository.create<CPUEntity>(create);
   }
+
+  async deleteMany(find: Record<string, any>): Promise<boolean> {
+    return this.cpuRepository.deleteMany(find);
+  }
 }
