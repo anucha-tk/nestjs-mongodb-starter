@@ -4,12 +4,14 @@ import { AppModule } from "src/app/app.module";
 import { ENUM_API_KEY_STATUS_CODE_ERROR } from "src/common/api-key/constants/api-key.status-code.constant";
 import { ApiKeyService } from "src/common/api-key/services/api-key.service";
 import { AuthService } from "src/common/auth/services/auth.service";
+import { CPUService } from "src/modules/cpu/services/cpu.service";
 import { RoleService } from "src/modules/role/services/role.service";
 import { UserDoc } from "src/modules/user/repository/entities/user.entity";
 import { UserService } from "src/modules/user/services/user.service";
 import request from "supertest";
 import { ApiKeyFaker } from "test/e2e/helper/api-key.faker";
 import { AuthFaker } from "test/e2e/helper/auth.faker";
+import { CPUFaker } from "test/e2e/helper/cpu.faker";
 import { UserFaker } from "test/e2e/helper/user.faker";
 
 describe("cpu public list e2e", () => {
@@ -18,6 +20,7 @@ describe("cpu public list e2e", () => {
   let userService: UserService;
   let roleService: RoleService;
   let apiKeyService: ApiKeyService;
+  let cPUService: CPUService;
   let xApiKey: string;
   let userAccessToken: string;
   let adminAccessToken: string;
@@ -33,12 +36,16 @@ describe("cpu public list e2e", () => {
     userService = modRef.get<UserService>(UserService);
     roleService = modRef.get<RoleService>(RoleService);
     apiKeyService = modRef.get<ApiKeyService>(ApiKeyService);
+    cPUService = modRef.get<CPUService>(CPUService);
     const authService = modRef.get(AuthService);
     await app.init();
 
     const userFaker = new UserFaker(authService, userService, roleService);
     const apiKeyFaker = new ApiKeyFaker(apiKeyService);
     const authFaker = new AuthFaker(app);
+    const cPUFaker = new CPUFaker(cPUService);
+
+    await cPUFaker.create({});
 
     const apiKey = await apiKeyFaker.createApiKey({});
     xApiKey = apiKeyFaker.getXApiKey(apiKey);
@@ -64,6 +71,7 @@ describe("cpu public list e2e", () => {
     await userService.deleteMany({});
     await roleService.deleteMany({});
     await apiKeyService.deleteMany({});
+    await cPUService.deleteMany({});
     await app.close();
   });
 
@@ -103,6 +111,7 @@ describe("cpu public list e2e", () => {
       expect(status).toBe(200);
       expect(body._metadata.pagination).toBeDefined();
       expect(body.data).toBeDefined();
+      expect(body.data).toHaveLength(1);
     });
   });
 });

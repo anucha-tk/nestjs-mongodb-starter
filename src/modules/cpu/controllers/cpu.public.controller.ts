@@ -7,8 +7,9 @@ import {
 } from "src/common/pagination/decorators/pagination.decorator";
 import { PaginationListDto } from "src/common/pagination/dtos/pagination.list.dto";
 import { PaginationService } from "src/common/pagination/services/pagination.service";
-import { ResponsePaging } from "src/common/response/decorators/response.decorator";
-import { IResponsePaging } from "src/common/response/interfaces/response.interface";
+import { RequestParamGuard } from "src/common/request/decorators/request.decorator";
+import { Response, ResponsePaging } from "src/common/response/decorators/response.decorator";
+import { IResponse, IResponsePaging } from "src/common/response/interfaces/response.interface";
 import {
   CPU_DEFAULT_AVAILABLE_ORDER_BY,
   CPU_DEFAULT_AVAILABLE_SEARCH,
@@ -16,8 +17,11 @@ import {
   CPU_DEFAULT_ORDER_DIRECTION,
   CPU_DEFAULT_PER_PAGE,
 } from "../constants/cpu.list.constant";
-import { CPUAdminListDoc } from "../docs/cpu.public.doc";
+import { CPUPublicGetGuard, GetCPU } from "../decorators/cpu.public.decorator";
+import { CPUPublicGetDoc, CPUPublicListDoc } from "../docs/cpu.public.doc";
+import { CPURequestDto } from "../dtos/cpu.request.dto";
 import { CPUEntity } from "../repository/entities/cpu.entity";
+import { CPUGetSerialization } from "../serializations/cpu.get.serialization";
 import { CPUListSerialization } from "../serializations/cpu.list.serialization";
 import { CPUService } from "../services/cpu.service";
 
@@ -33,7 +37,7 @@ export class CPUPublicController {
     private readonly paginationService: PaginationService,
   ) {}
 
-  @CPUAdminListDoc()
+  @CPUPublicListDoc()
   @ResponsePaging("cpu.list", { serialization: CPUListSerialization })
   @Get("/list")
   async list(
@@ -69,4 +73,18 @@ export class CPUPublicController {
       data: cpus,
     };
   }
+
+  @CPUPublicGetDoc()
+  @Response("cpu.get", { serialization: CPUGetSerialization })
+  @CPUPublicGetGuard()
+  @RequestParamGuard(CPURequestDto)
+  @Get("/get/:cpu")
+  async get(@GetCPU(true) cpu: CPUEntity): Promise<IResponse> {
+    return { data: cpu };
+  }
+
+  // TODO: Get by id
+  // TODO: search by brand
+  // TODO: filter by marketStatus
+  // TODO: search by codeName
 }

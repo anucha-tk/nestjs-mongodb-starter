@@ -3,6 +3,7 @@ import { ApiHideProperty, ApiProperty } from "@nestjs/swagger";
 import { Exclude } from "class-transformer";
 import { ResponseIdSerialization } from "src/common/response/serializations/response.id.serialization";
 import { ENUM_CPU_MARKET_STATUS, ENUM_CPU_VERTICAL_SEGMENT } from "../constants/cpu.enum.constant";
+
 export class CPUGetSerialization extends ResponseIdSerialization {
   @ApiProperty({
     example: "Intel Core i3-8350K Processor",
@@ -54,6 +55,7 @@ export class CPUGetSerialization extends ResponseIdSerialization {
   readonly processorNumber: string;
 
   @ApiProperty({
+    description: "nm unit(nanometer)",
     example: faker.helpers.arrayElement(["7", "14"]),
     required: false,
     nullable: true,
@@ -61,6 +63,22 @@ export class CPUGetSerialization extends ResponseIdSerialization {
   readonly lithography?: number;
 
   @ApiProperty({
+    example: "Intel UHD Graphics P630",
+    required: false,
+    nullable: true,
+  })
+  readonly processorGraphics?: string;
+
+  @ApiProperty({
+    description: "Base on Mhz",
+    example: faker.number.int({ min: 100, max: 1000 }),
+    required: false,
+    nullable: true,
+  })
+  readonly graphicsBaseFrequency?: number;
+
+  @ApiProperty({
+    description: "Base on Dollar($)",
     example: faker.number.float({ min: 50, max: 1000, precision: 0.01 }),
     required: false,
     nullable: true,
@@ -89,6 +107,7 @@ export class CPUGetSerialization extends ResponseIdSerialization {
   readonly maxTurboFrequency?: number;
 
   @ApiProperty({
+    description: "Base on Ghz",
     example: faker.number.float({ min: 1, max: 10, precision: 0.01 }),
     required: false,
     nullable: true,
@@ -96,6 +115,7 @@ export class CPUGetSerialization extends ResponseIdSerialization {
   readonly processorBaseFrequency?: number;
 
   @ApiProperty({
+    description: "Base on MB",
     example: faker.number.int({ min: 1, max: 50 }),
     required: false,
     nullable: true,
@@ -159,6 +179,14 @@ export class CPUGetSerialization extends ResponseIdSerialization {
     nullable: true,
   })
   readonly packageSize?: string;
+
+  @ApiProperty({
+    description: "max temp cpu celsius",
+    example: faker.number.int({ min: 1, max: 100 }),
+    required: false,
+    nullable: true,
+  })
+  readonly tjunction?: number;
 
   @ApiProperty({
     description: "Date created at",

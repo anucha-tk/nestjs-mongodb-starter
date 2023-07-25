@@ -101,6 +101,25 @@ export class CPUImportDto {
   readonly lithography?: number;
 
   @ApiProperty({
+    example: "Intel UHD Graphics P630",
+    required: false,
+    nullable: true,
+  })
+  @IsOptional()
+  @Type(() => String)
+  readonly processorGraphics?: string;
+
+  @ApiProperty({
+    description: "Base on Mhz",
+    example: faker.number.int({ min: 100, max: 1000 }),
+    required: false,
+    nullable: true,
+  })
+  @IsOptional()
+  @Type(() => Number)
+  readonly graphicsBaseFrequency?: number;
+
+  @ApiProperty({
     example: faker.number.float({ min: 50, max: 1000, precision: 0.01 }),
     required: false,
     nullable: true,
@@ -137,6 +156,7 @@ export class CPUImportDto {
   readonly maxTurboFrequency?: number;
 
   @ApiProperty({
+    description: "Base on Ghz",
     example: faker.number.float({ min: 1, max: 10, precision: 0.01 }),
     required: false,
     nullable: true,
@@ -221,6 +241,17 @@ export class CPUImportDto {
   @IsOptional()
   @Type(() => Number)
   readonly maxOfMemoryChannels?: number;
+
+  @ApiProperty({
+    description: "max temp cpu celsius",
+    example: faker.number.int({ min: 1, max: 100 }),
+    required: false,
+    nullable: true,
+  })
+  @IsNumber()
+  @IsOptional()
+  @Type(() => Number)
+  readonly tjunction?: number;
 
   @ApiProperty({
     example: "FCBGA1440",

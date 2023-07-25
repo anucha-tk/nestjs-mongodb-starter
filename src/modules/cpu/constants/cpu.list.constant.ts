@@ -7,7 +7,6 @@ export const CPU_DEFAULT_AVAILABLE_ORDER_BY = [
   "cpuName",
   "productCollection",
   "codeName",
-  "verticalSegment",
   "brand",
   "processorNumber",
   "lithography",

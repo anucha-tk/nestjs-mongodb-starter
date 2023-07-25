@@ -1,4 +1,8 @@
 {
   "list": "CPUs list Success",
-  "import": "CPUs import Success"
+  "import": "CPUs import Success",
+  "get": "CPUs get Success",
+  "error": {
+    "notFound": "CPU not found"
+  }
 }

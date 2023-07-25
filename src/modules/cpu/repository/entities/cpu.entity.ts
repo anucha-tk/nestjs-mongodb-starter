@@ -80,6 +80,17 @@ export class CPUEntity extends DatabaseMongoUUIDEntityAbstract {
   lithography?: number;
 
   @Prop({
+    maxlength: 200,
+    type: String,
+  })
+  processorGraphics?: string;
+
+  @Prop({
+    type: Number,
+  })
+  graphicsBaseFrequency?: number;
+
+  @Prop({
     index: true,
     type: Number,
   })
@@ -152,6 +163,9 @@ export class CPUEntity extends DatabaseMongoUUIDEntityAbstract {
 
   @Prop({ type: String, trim: true })
   packageSize?: string;
+
+  @Prop({ type: Number })
+  tjunction?: number;
 }
 
 export const CPUSchema = SchemaFactory.createForClass(CPUEntity);

@@ -1,3 +1,5 @@
+import { faker } from "@faker-js/faker";
+
 const multiQueryOperatorsDescription = `
 Advanced multi query operator use array object.
 \n **Operators is:**
@@ -17,5 +19,15 @@ export const MultiQueryOperators = [
     type: "string",
     example: `[{"field":"lithography","operator":">=","value":"12"},{"field":"lithography","operator":"<=","value":"24"}]`,
     description: multiQueryOperatorsDescription,
+  },
+];
+
+export const CPUDocParamsId = [
+  {
+    name: "cpu",
+    allowEmptyValue: false,
+    required: true,
+    type: "string",
+    example: faker.string.uuid(),
   },
 ];
