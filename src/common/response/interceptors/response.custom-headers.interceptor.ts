@@ -18,7 +18,7 @@ export class ResponseCustomHeadersInterceptor implements NestInterceptor<Promise
 
       responseExpress.setHeader("x-custom-lang", request.__xCustomLang);
       responseExpress.setHeader("x-timestamp", request.__xTimestamp ?? request.__timestamp);
-      responseExpress.setHeader("x-timezone", request.__timezone);
+      responseExpress.setHeader("x-timezone", request.__timezone ?? null);
       responseExpress.setHeader("x-request-id", request.__id);
       responseExpress.setHeader("x-version", request.__version);
       responseExpress.setHeader("x-repo-version", request.__repoVersion);

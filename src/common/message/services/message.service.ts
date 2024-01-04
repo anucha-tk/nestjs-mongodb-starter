@@ -59,7 +59,10 @@ export class MessageService implements IMessageService {
     const messages: Array<IErrors[]> = [];
     for (const requestError of requestErrors) {
       let children: Record<string, any>[] = requestError.children;
-      let constraints: string[] = Object.keys(requestError.constraints);
+      // FIX: check when not send array on array object eg. not send permission on update role api
+      let constraints: string[] = requestError.constraints
+        ? Object.keys(requestError.constraints)
+        : [];
       let property: string = requestError.property;
       let propertyValue: string = requestError.value;
 

@@ -25,7 +25,7 @@ export class UserInactivePermanentGuard implements CanActivate {
 
     if (!required.includes(__user.inactivePermanent)) {
       throw new BadRequestException({
-        statusCode: ENUM_USER_STATUS_CODE_ERROR.USER_INACTIVE_ERROR,
+        statusCode: ENUM_USER_STATUS_CODE_ERROR.USER_INACTIVE_PERMANENT_ERROR,
         message: "user.error.inactivePermanent",
       });
     }
