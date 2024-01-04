@@ -23,5 +23,4 @@ export enum ENUM_POLICY_SUBJECT {
   SETTING = "SETTING",
   ROLE = "ROLE",
   USER = "USER",
-  CPU = "CPU",
 }

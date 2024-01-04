@@ -1,3 +1,0 @@
-export enum ENUM_CPU_STATUS_CODE_ERROR {
-  CPU_NOT_FOUND_ERROR = 5300,
-}
