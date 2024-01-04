@@ -25,7 +25,7 @@
 ## with mongo docker
 
 ```bash
-  make start-mongo-dev
+make start-mongo-dev
 ```
 
 ## seed user, api-key, role
