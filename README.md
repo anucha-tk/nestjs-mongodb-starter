@@ -1,5 +1,16 @@
 # Nestjs Starter Project
 
+- [Nestjs Starter Project](#nestjs-starter-project)
+  - [Features](#features)
+- [How to start](#how-to-start)
+  - [with mongo docker](#with-mongo-docker)
+  - [seed user, api-key, role](#seed-user-api-key-role)
+  - [run server](#run-server)
+  - [try login](#try-login)
+- [Testing](#testing)
+  - [unit-test](#unit-test)
+  - [e2e-test](#e2e-test)
+
 > this complex Nestjs and more feature
 
 ## Features
@@ -15,7 +26,8 @@
 - docker
 - seed
 - swagger (doc)
-- unit-test(33%) and e2e-test
+- unit-test(33%)
+- e2e-test(92%)
 - and more
 
 # How to start
@@ -52,3 +64,13 @@ yarn start
   "password": "aaAA@@123444"
 }
 ```
+
+# Testing
+
+## unit-test
+
+![My Image](docs/images/unit.png)
+
+## e2e-test
+
+![My Image](docs/images/e2e.png)

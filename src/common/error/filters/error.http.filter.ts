@@ -53,7 +53,8 @@ export class ErrorHttpFilter implements ExceptionFilter {
     const __path = request.path;
     const __timestamp =
       request.__xTimestamp ?? request.__timestamp ?? this.helperDateService.timestamp();
-    const __timezone = request.__timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const __timezone =
+      request.__timezone ?? (Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC");
     const __version = request.__version ?? this.configService.get<string>("app.versioning.version");
     const __repoVersion =
       request.__repoVersion ?? this.configService.get<string>("app.repoVersion");
